@@ -54,13 +54,6 @@
 %Week 4
 \subsection{Ideal Diodes,Full/Half-way rectifiers}
 
-
-% \chapter{Higher-Order Reusable Modelling Libraries in Hydra}
-% \section{Non-Causal Connection Combinators}
-% \section{Analogue Electronics}
-% \section{Translational Mechanics}
-% \section{Rotational Mechanics}
-
 % September
 \chapter{Implementation of Hydra}
 
