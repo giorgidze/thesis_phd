@@ -27,51 +27,24 @@
 %include Chapters/abstract.lhs
 %include Chapters/declaration.lhs
 %include Chapters/acknowledgements.lhs
+
+\newpage
+\vspace*{8cm}
+
+\begin{flushleft} 
+\large \emph{``Unprovided with original learning, unformed in the habits of thinking, unskilled in the arts of composition, I resolved to write a book.''}
+\end{flushleft}
+\begin{flushright} 
+\large
+Edward Gibbon
+\end{flushright}
+
 \tableofcontents
 %include Chapters/introduction.lhs
 %include Chapters/background.lhs
-%include Chapters/relatedWork.lhs
 
-
-% August
-\chapter{Modelling and Simulation in Hydra}
-
-%Week 1
-\section{Concepts}
-\subsection{Signals}
-\subsection{Events}
-\subsection{Hierarchical Systems of Non-causal Equations}
-\subsection{Switches}
-
-%Week 2
-\section{Models with Static Structure}
-\section{Higher-Order Modelling}
-
-%Week 3
-\section{Structural Dynamism}
-\subsection{Breaking Pendulum}
-
-%Week 4
-\subsection{Ideal Diodes,Full/Half-way rectifiers}
-
-% September
-\chapter{Implementation of Hydra}
-
-%Week 1
-\section{Mixed-level Embedding}
-\section{Iterative Staging}
-
-%Week 2
-\section{Symbolic Processing}
-\section{Code Generation}
-
-%Week 3
-\section{Interpretation}
-\section{Just-in-time Compilation}
-
-%Week 4
-\section{Numerical Simulation}
-\section{Event Handling}
+%include Chapters/hydra.lhs
+%include Chapters/implementation.lhs
 
 % October
 \chapter{Evaluation}
@@ -82,6 +55,7 @@
 %Week 3 and 4
 \section{Application of proposed approach in other settings}
 
+%include Chapters/related_work.lhs
 
 \chapter{Conclusions}
 

@@ -1,13 +1,6 @@
 \chapter{Introduction}
 
-Modelling and simulation of physical systems plays an important role in
-design, implementation and analysis of systems in numerous areas of science
-and engineering, e.g., electronics, mechanics, thermodynamics, chemical
-reaction kinetics, population dynamics and neural networks (to mention just a
-few) \cite{Cellier1991}. To cope with ever increasing size and complexity of
-real-world systems, a number modelling and simulation languages have been
-developed. Modelling and simulation languages can be divided in two broad
-categories: \emph{causal} and \emph{non-causal}.
+The field of modelling and simulation of physical systems plays an important role in design, implementation and analysis of systems in numerous areas of science and engineering, e.g., electronics, mechanics, thermodynamics, chemical reaction kinetics, population dynamics and neural networks (to mention just a few) \cite{Cellier1991}. To cope with ever increasing size and complexity of real-world systems, a number modelling and simulation languages have been developed. Modelling and simulation languages can be divided in two broad categories: \emph{causal} and \emph{non-causal}.
 
 Causal languages model systems behaviour in terms of explicit equations, for
 example, \emph{ordinary differential equations} (ODEs) in explicit form. That
@@ -20,16 +13,7 @@ low level simulation code, for example, into a sequence of assignment
 statements and simulate it. Simulink is a prominent representative of causal
 modelling languages \cite{Simulink2008}.
 
-Non-causal models are formulated in terms of implicit equations, for example,
-\emph{differential algebraic equations} (DAEs) in implicit form. In other
-words, equations are undirected: both known and unknown variables may appear
-on both sides of equal sign \cite{Cellier2006}. The translation of non-causal
-models into simulation code involves additional symbolic processing and
-numerical simulation methods that are not necessary for causal modelling and
-simulation, for example, symbolic transformations that try to causalise
-non-causal models and if this is not possible numerical solvers for
-(non-linear) implicit equations. Modelica is a prominent, state-of-the-art
-representative of causal modelling languages \cite{Modelica2007}.
+Non-causal models are formulated in terms of implicit equations, for example, \emph{differential algebraic equations} (DAEs) in implicit form. In other words, equations are undirected: both known and unknown variables may appear on both sides of equal sign \cite{Cellier2006}. The translation of non-causal models into simulation code involves additional symbolic processing and numerical simulation methods that are not necessary for causal modelling and simulation, for example, symbolic transformations that try to causalise non-causal models and if this is not possible numerical solvers for (non-linear) implicit equations. Modelica is a prominent, state-of-the-art representative of non-causal modelling languages \cite{Modelica2007}.
 
 Non-causal modelling has a number of advantages over causal modelling:
 \begin{itemize}
@@ -66,11 +50,9 @@ model of a car can be parametrised on the list of tires it is using or the
 model of an electronic transmission line can be parametrised on the list of
 electronic components on the line.
 
-Since this style of modelling is not supported by non-causal languages like
-Modelica, external imperative programming languages are used to generate
-non-causal models for particular instances of higher-order models. While
-practical for some applications, we think that this defeats the purpose of a
-declarative modelling language.
+Since this style of modelling is not supported by non-causal languages like Modelica, external imperative programming languages are used to generate non-causal models for particular instances of higher-order models. While practical for some applications, we think that this defeats the purpose of a declarative, non-causal modelling language.
+
+% TODO The following two paragraphs should be clarified further
 
 MetaModelica, a Modelica extension supporting compile-time meta-programming,
 has been proposed to tackle the aforementioned problems
@@ -160,11 +142,7 @@ approaches can be used in other non-causal modelling and simulation languages.
 
 \section{Embedding}
 
-Hydra is a Haskell \cite{Haskell98} embedded \emph{domain-specific language}
-(DSL). Here, the domain is non-causal modelling and simulation using
-implicitly formulated DAEs. Haskell is a purely functional, higher-order
-programming language that is widely used for EDSL development
-\cite{Stewart2009a}.
+Hydra is a Haskell \cite{Haskell98} embedded \emph{domain-specific language} (DSL). Here, the domain is non-causal modelling and simulation using implicitly formulated DAEs. Haskell is a purely functional, higher-order programming language that is widely used for embedded DSL development \cite{Stewart2009a}.
 
 Embedding is a powerful and popular way to implement DSLs
 \cite{Hudak1998}. Compared with implementing a language from scratch,
@@ -199,15 +177,7 @@ results thus far, (partly) new equations are \emph{generated} describing a
 \emph{iteratively staged} to emphasise that the domain is characterised by
 repeated program generation, compilation and execution.
 
-Because performance is a primary concern in the domain, the simulation code
-corresponding to the current equations has to be compiled. As this code is
-determined \emph{dynamically}, this necessitates JIT compilation. We use a
-deep embedding for this part of the language along with the Low-Level Virtual
-Machine (LLVM) \cite{Lattner2002a}, a language-independent, portable,
-optimising, compiler back-end with JIT support. In contrast, we retain a
-shallow embedding for the parts of the embedded language concerned with
-high-level, symbolic computations to get maximum leverage from the host
-language.
+Because performance is a primary concern in the domain, the simulation code for each mode of the model has to be compiled. As this code is determined \emph{dynamically}, this necessitates JIT compilation. We use a deep embedding for this part of the language along with the Low-Level Virtual Machine (LLVM) \cite{Lattner2002a}, a language-independent, portable, optimising, compiler back-end with JIT support. In contrast, we retain a shallow embedding for the parts of the embedded language concerned with high-level, symbolic computations to get maximum leverage from the host language.
 
 An alternative might have been to use a \emph{multi-staged} host language like
 MetaOCaml \cite{Taha2004}. The built-in run-time code generation capabilities
