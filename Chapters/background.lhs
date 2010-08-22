@@ -447,129 +447,58 @@ replace the voltage source with a current source in the Modelica model for the
 circuit in Figure \ref{figSimpleCircuit}. We leave this as an exercise for the
 reader.
 
-% TODO here I should illustrate shortcomings of Modelica whent it comes to higher-order and structurally dynamic modelling. I can introduce breaking pendulum example as an structurally dynamic example. I also need an example that about higher-order modelling (e.g., transmission line model, maybe)
+% TODO here I should illustrate shortcomings of Modelica whent it comes to higher-order and structurally dynamic modelling. I can introduce breaking pendulum example as an structurally dynamic example. I also need an example about higher-order modelling (e.g., transmission line model, maybe)
 
-% \section{Non-causal Hybrid Modelling}
-% \label{secHybridModelling}
-% 
-% Often physical systems are hybrid. For example, electrical and mechanical
-% switches, auto-mobiles which have several continuous modes of operation,
-% etc. Hybrid systems are usually modelled using the combination of continuous
-% equations and the switching statements which specify discontinuous changes in
-% the system.
-% 
-% The simulation of pure continuous systems is relatively well understood (see
-% Section \ref{secModelling}). However, hybrid systems introduce a number of
-% unique challenges \cite{Barton2002a,Mosterman1999a}, e.g. handling a large
-% number of continuous modes, accurate event detection, and consistent
-% initialization of state variables during mode switches. The integration of
-% hybrid modeling with non-causal modeling raises further problems, e.g. dynamic
-% causalisation during switches and simulation code generation.
-% 
-% Current non-causal modelling languages and related tools are very limited in
-% their ability to model and simulate hybrid systems. Many of the limitations
-% are related to the symbolic and numerical methods that must be used in the
-% non-causal approach. But another important reason is that most such systems
-% perform all symbolic manipulations and the simulation code generation before
-% simulation begins \cite{Mosterman1999a}.
-% 
-% In this section we discuss hybrid modelling in non-causal languages. The
-% current limitations are illustrated using the Modelica model of an example
-% hybrid system.
-% 
-% \subsection{Modelling Hybrid Systems in Modelica}
-% 
-% Let us consider the catapult system depicted in Figure \ref{figCatapult}. The
-% system is hybrid; it has two modes where the behaviour in each case is
-% determined by a different set of continuous equations. In the first mode,
-% before the stone with mass $m$ on the catapult gets fired, i.e. $\theta >
-% \theta_0$, the stone performs rotational motion and its position is determined
-% by the angle $\theta$. At the moment when $\theta = \theta_0$, the stone is
-% released with the gained initial velocity from the catapult beam and continues
-% its movement under the influence of gravity only. Here is an attempt to model
-% this system in Modelica. The function |length| calculates absolute length of
-% two-dimensional vectors. The comma-separated expressions enclosed in curly
-% braces are vectors.
-% 
-% \begin{figure}[h]
-% \includegraphics[width = \textwidth]{Graphics/catapult}
-% \caption{Catapult model}
-% \label{figCatapult}
-% \end{figure}
-% 
-% \begin{samepage}
-% \begin{code}
-% model Catapult 
-%   parameter Real k = 100, m = 1, theta0 = pi / 8;
-%   parameter Real[2] l0 = {1,0}, h =  {0,1}, g = {0,-9.81};
-%   Real[2] pos, vel;
-%   protected Real[2] force, r, l;
-%   protected Real theta(start = pi / 4), omega;
-%   constant Real pi = 3.14159;
-% equation 
-%   vel = der(pos);
-%   if (theta > theta0) then
-%     pos - r = l0;
-%     pos - l = h;
-%     
-%     omega = der(theta);
-%     r = length(h) * {sin(theta), cos(theta)};
-%     
-%     force[1] * r[2] - force[2] * r[1]  = (m * r * r) * der(omega);
-%     force = k * (length(l0) - length(l)) * (frac (l) (length(l))) + m * g;
-%   else
-%     m * der(vel) = m * g;
-%   end if;
-% end Catapult;
-% \end{code}
-% \end{samepage}
-% 
-% However this code fails to compile. The latest version of the Modelica
-% standard \cite{Modelica2007} asserts that number of equations in both branches
-% of an if statement must be equal when the conditional expression contains a
-% non-parameter variable. This is a bit unfortunate. If considered separately,
-% the equations in both branches do solve the publicly available variables,
-% |pos| and |vel|, successfully. To fix the situation, the modeller might try to
-% add dummy equations for variables not needed in the second mode. This version
-% will compile, but the generated code will fail to simulate the system. This
-% example was tried using OpenModelica \cite{OpenModelica2006} and Dymola
-% \cite{Dymola2008} compilers. One of the problem with this example is that
-% causality changes during the switch between two modes. In the first mode
-% position is calculated from state variable $\theta$, which is not the case
-% after the switch. This makes the job of the simulation code generator a lot
-% harder and as it turns out Modelica tools are not able to handle it. This and
-% related issues are covered in greater detail in
-% \cite{ModelicaTutorial2000}. The suggested solution is more complicated and
-% verbose which requires reformulation of a model by making it causal. The need
-% of manual reformulation to conform to certain causality eliminates the
-% advantages of working in non-causal modelling language. Thus, Modelica as only
-% a limited support for non-causal modelling and simulation of structurally
-% dynamic systems.
-% 
-% For a number of reasons, Modelica does not support modelling and simulation of
-% highly structurally dynamic systems. Firstly, the Modelica language lacks
-% expressiveness to describe structural changes in the physical systems. The
-% catapult example demonstrated the problems which arise when there is a need
-% for change of a number of variables in the system. Secondly, the state of the
-% art Modelica compilers carry out the symbolic processing and generate the
-% simulation code at once. In the presence of highly dynamic systems this is
-% very hard or sometimes impossible to do due to very large or unbounded number
-% of modes which needs to be compiled in advance before the simulation.
-% 
-% Efforts are underway in the non-causal modelling community in general, and in
-% Modelica community in particular, to improve the support for M{\&}S of
-% structurally dynamic systems and to enable M{\&}S of highly structurally
-% dynamic systems.
+\section{Non-causal Hybrid Modelling}
+\label{secHybridModelling}
 
-%% %% \subsection{Other Approaches to Non-causal Hybrid Modelling}
+A physical systems can be hybrid (e.g., systems with electrical and mechanical switches and auto-mobiles which have several continuous modes of operation) A hybrid system is usually modelled using the combination of continuous equations and the switching statements which specify discontinuous changes in the system.
 
-%% %% \subsubsection{MOSILA}
+The simulation of continuous systems is relatively well understood (see Section \ref{secModelling}). However, hybrid systems introduce a number of unique challenges \cite{Barton2002a,Mosterman1999a} (e.g., handling a large or possibly unbounded number of continuous modes, accurate event detection, and consistent initialisation of state variables during mode switches). The integration of hybrid modelling with non-causal modelling raises further problems (e.g., dynamic causalisation during switches and simulation code generation).
 
-%% %% MOSILA is an extension of the Modelica language that supports the description of structural changes using object-oriented statecharts \cite{Nytsch-Geusen2005a}. This enables modelling of structurally dynamic systems. However, the statechart approach implies that all structural modes are specified in advance. This means that MOSILA does not support highly structurally dynamic systems.
+Current non-causal modelling languages and related tools are very limited in their ability to model and simulate hybrid systems. Many of the limitations are related to the symbolic and numerical methods that must be used in the non-causal approach. But more fundamental reason is that most such systems perform all symbolic manipulations and the simulation code generation before simulation begins \cite{Mosterman1999a}.
 
-%% %% \subsubsection{Sol}
+In this section we discuss hybrid modelling in non-causal languages. The
+current limitations are illustrated using the Modelica model of an example
+hybrid system. In particular, by means of the example, we highlight lack of expressiveness of the Modelica language when it comes to dynamic addition and removal of time varying variables and continuous equations to the model, and lack of dynamic recausalisation facilities in Modelica implementations.
 
-%% %% Sol is a Modelica-like language \cite{Zimmer2008a}. It introduces language constructs which enable the description of systems where objects are dynamically created and deleted, with the aim of supporting modelling of highly structurally dynamic systems. However, the work is in its very early stages and the design and implementation of the language has not been completed yet.
+\subsection{Modelling Hybrid Systems in Modelica}
 
+Let us model a physical system whose structural configuration changes abruptly during simulation: a simple pendulum that can break at a specified point in time; see Figure \ref{figPendulum}. The pendulum is modelled as a body represented by a point mass $m$ at the end of a rigid, mass-less rod, subject to gravity $m \vec{g}$. If the rod breaks, the body will fall freely.
 
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.80]{Graphics/pendulum}
+\caption{\label{fig:pendulum}A pendulum subject to gravity.}
+\end{center}
+\end{figure}
+
+Here is an attempt to model this system in Modelica that on the surface appears to solve the problem:
+
+\begin{samepage}
+\begin{code}
+model BreakingPendulum
+  parameter Real l = 1, phi_0 = pi / 4, t = 10;
+  Real x, y, v_x, v_y;
+  protected Real phi(start = pi / 2);
+equation 
+   v_x  =  der x
+   v_y  =  der y
+  if (time > t) then
+    x   =     l  *  sin phi
+    y   =  -  l  *  cos phi
+    der (der phi) + (g / l) * sin phi = 0
+  else
+    der v_x  =  0
+    der v_y  =  -g
+  end if;
+end BreakingPendulum;
+\end{code}
+\end{samepage}
+
+However the model fails to compile. The latest version of the Modelica standard \cite{Modelica2007} asserts that number of equations in both branches of an if statement must be equal when the conditional expression contains a dynamic (i.e., time-varying variable) variable. If considered separately, the equations in both branches do solve the publicly available variables successfully. As a fix, the modeller might try to add a dummy equation for the variable not needed in the second mode. This version compiles, but the generated code fails to simulate the system. This example was tried using OpenModelica \cite{OpenModelica2006} and Dymola \cite{Dymola2008} compilers. 
+
+One of the difficulties of this example is that causality changes during the switch between the two modes. In the first mode position is calculated from state variable |phi|, which is not the case after the switch. This makes the job of the simulation code generator a lot harder and as it turns out Modelica tools are not able to handle it. This and related issues are covered in greater detail in \cite{ModelicaTutorial2000}. The suggested solution is more involved and requires reformulation of the model by making it causal. The need of manual reformulation to conform to certain causality eliminates the advantages of working in non-causal a modelling language.
+
+Currently, the Modelica language lacks expressiveness to describe structural changes. The breaking pendulum example demonstrated the problems that arise when there is a need for change of a number of variables in the system. Secondly, the state of the art Modelica compilers carry out the symbolic processing and generate the simulation code all at once, prior to simulation. In the presence of structurally dynamic systems this is very hard or  impossible in general, as the number of modes may be very large, unbounded, or impossible to determined in advance.
 %}

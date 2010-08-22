@@ -85,11 +85,6 @@ conventional-looking syntax for equality between signals. For example: |a * x
 % TODO mention that <> is used to defined systems of equations hierarchically 
 % TODO mention that systems of equations can be dynamic and present the switch combinator
 
-\subsection{Signals}
-\subsection{Events}
-\subsection{Hierarchical Systems of Non-causal Equations}
-\subsection{Switches}
-
 %Week 2
 \section{Models with Static Structure}
 \section{Higher-Order Modelling}

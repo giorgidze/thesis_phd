@@ -11,4 +11,8 @@
 %format connect   = "\textbf{connect}"
 %format .         = "."
 
-%format (frac (a) (b)) = " \frac{" a "}{" b "} "
+%format v_x = "v_x"
+%format v_y = "v_y"
+%format phi = "\phi"
+%format phi_0 = "\phi_{0}"
+%format pi = "\pi"
