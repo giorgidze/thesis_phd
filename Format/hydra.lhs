@@ -8,7 +8,6 @@
 %format ~=      = "\approx"
 %format .       = "."
 %format connect = "\textbf{connect}"
-%format switch  = "\textbf{switch}"
 %format once    = "\textbf{once}"
 %format init    = "\textbf{init}"
 
@@ -89,3 +88,8 @@
 
 %format f_x = "f_x"
 %format f_y = "f_y"
+
+%format t_1 = "t_1"
+%format t_2 = "t_2"
+
+%format exists = "\exists"
