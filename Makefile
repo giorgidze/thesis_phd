@@ -8,9 +8,7 @@ all: clean
 	$(BIBTEX)
 	$(LATEX)
 	$(LATEX)
-
-wc: all
-	detex -w main.tex | wc -w
+	make clean
 
 clean:
 	rm -f *.aux *.blg *.log *.ptb *.toc *.out main.tex main.bbl

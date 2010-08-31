@@ -1,5 +1,5 @@
 \chapter{Related Work}
-\label{chapRelatedwork}
+\label{chapRelatedWork}
 
 \section{Embedded Domain Specific Languages}
 

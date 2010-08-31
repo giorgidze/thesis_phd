@@ -25,10 +25,8 @@
 \maketitle
 
 %include Chapters/abstract.lhs
-%include Chapters/declaration.lhs
-%include Chapters/acknowledgements.lhs
 
-\newpage
+\chapter*{}
 \vspace*{8cm}
 
 \begin{flushleft} 
@@ -39,27 +37,28 @@
 Edward Gibbon
 \end{flushright}
 
+%include Chapters/declaration.lhs
+%include Chapters/acknowledgements.lhs
 \tableofcontents
 %include Chapters/introduction.lhs
 %include Chapters/background.lhs
-
 %include Chapters/hydra.lhs
+
+\chapter{Definition of Hydra}
+\label{chapDefinition}
+
 %include Chapters/implementation.lhs
 
 % October
 \chapter{Evaluation}
+\label{chapEvaluation}
 
-%Week 1 and 2
-\section{Performance}
-
-%Week 3 and 4
-\section{Application of proposed approach in other settings}
-
-%include Chapters/related_work.lhs
+%include Chapters/relatedWork.lhs
 
 \chapter{Conclusions}
+\label{chapConclusions}
 
-\bibliographystyle{apalike}
+\bibliographystyle{plain}
 \bibliography{main}
 
 \end{document}

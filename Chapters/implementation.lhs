@@ -1,6 +1,6 @@
 % September
 \chapter{Implementation of Hydra}
-\label{chap_implementation}
+\label{chapImplementation}
 
 %Week 1
 \section{Mixed-level Embedding}

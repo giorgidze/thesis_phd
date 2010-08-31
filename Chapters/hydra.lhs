@@ -4,6 +4,7 @@
 
 % August
 \chapter{Modelling and Simulation in Hydra}
+\label{chapHydra}
 
 %Week 1
 \section{Concepts of Hydra}
