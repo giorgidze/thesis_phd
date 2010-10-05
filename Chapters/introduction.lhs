@@ -24,7 +24,7 @@ Current non-causal languages are not treating models as \emph{first-class} value
 
 \begin{itemize}
 \item Can be passed as parameters to and returned as a result from functions
-\item Can be constructed at run time and stored in data structures
+\item Can be constructed at runtime and stored in data structures
 \end{itemize}
 
 Lack of this notion limits the expressiveness and applicability of non-causal languages. In particular, it results in a very limited capabilities in two crucial application areas of modelling languages: \emph{higher-order} and \emph{structurally-dynamic}\footnote{Also referred as variable structure} modelling.
@@ -53,7 +53,7 @@ In this dissertation we present a novel approach to the design and implementatio
 
 \item We show how to enable higher-order modelling capabilities by embedding non-causal models as a first-class entities into a purely functional programming language.
 
-\item We show how to use run-time symbolic processing and \emph{just-in-time} (JIT) compilation to enable efficient simulation of non-causal models that are generated at simulation run time. This enables support both for modelling and simulation of highly dynamic systems and for compilation of simulation code for efficiency.
+\item We show how to use runtime symbolic processing and \emph{just-in-time} (JIT) compilation to enable efficient simulation of non-causal models that are generated at simulation runtime. This enables support both for modelling and simulation of highly dynamic systems and for compilation of simulation code for efficiency.
 
 \end{itemize}
 
@@ -67,15 +67,15 @@ Hydra is a Haskell \cite{Haskell98} embedded \emph{domain-specific language} (DS
 
 Embedding is a powerful and popular way to implement DSLs \cite{Hudak1998}. Compared with implementing a language from scratch, extending a suitable general-purpose programming language, the \emph{host language}, with notions and vocabulary addressing a particular application or problem domain tends to save a lot of design and implementation effort. This is what motivated us to use the embedding approach. The embedding approach allowed us to concentrate our design and implementation efforts on non-causal modelling language notions that are \emph{domain specific} and \emph{absent} in the host language, and to reuse the rest from the host language.
 
-Having said this, the concept of first-class models, and run-time symbolic processing and JIT compilation approaches implemented in Hydra are not predicated on embedded implementation. These language design and implementation approaches can be used in other non-causal modelling languages, embedded or otherwise.
+Having said this, the concept of first-class models, and runtime symbolic processing and JIT compilation approaches implemented in Hydra are not predicated on embedded implementation. These language design and implementation approaches can be used in other non-causal modelling languages, embedded or otherwise.
 
 There are two basic approaches to language embeddings: \emph{shallow} and \emph{deep}. In a shallow embedding, domain-specific notions are expressed directly in host-language terms, typically through a higher-order combinator library. This is a light-weight approach that makes it easy to leverage the facilities of the host language. In contrast, a deep embedding is centred around a \emph{representation} of embedded language terms that then are given meaning by interpretation or compilation. This is a more heavy-weight approach, but also more flexible. In particular, for optimisation or compilation, it is often necessary to inspect terms, suggesting a deep embedding. The two approaches can be combined to draw on the advantages of each. This leads to \emph{mixed-level} embedding.
 
-As mentioned above Hydra supports run-time generation and JIT compilation of non-causal models. Specifically, in response to \emph{events}, which occur at discrete points in time, the simulation is stopped and, \emph{depending} on results thus far, (partly) new equations are \emph{generated} describing a (partly) new problem to be solved. We refer to this kind of DSL as \emph{iteratively staged} to emphasise that the domain is characterised by repeated program generation, compilation and execution.
+As mentioned above Hydra supports runtime generation and JIT compilation of non-causal models. Specifically, in response to \emph{events}, which occur at discrete points in time, the simulation is stopped and, \emph{depending} on results thus far, (partly) new equations are \emph{generated} describing a (partly) new problem to be solved. We refer to this kind of DSL as \emph{iteratively staged} to emphasise that the domain is characterised by repeated program generation, compilation and execution.
 
 Because performance is a primary concern in the domain, the simulation code for each mode of the model has to be compiled. As this code is determined \emph{dynamically}, this necessitates JIT compilation. We use a deep embedding for this part of the language along with the Low-Level Virtual Machine (LLVM) \cite{Lattner2002a}, a language-independent, portable, optimising, compiler back-end with JIT support. In contrast, we retain a shallow embedding for the parts of the embedded language concerned with high-level, symbolic computations to get maximum leverage from the host language.
 
-An alternative might have been to use a \emph{multi-staged} host language like MetaOCaml \cite{Taha2004}. The built-in run-time code generation capabilities of the host language would then have been used instead of relying on an external code generation framework. We did not pursue this approach because we wanted to have tight control over the generated code. Also, not predicating our approach on a multi-staged host language means that some of our ideas and implementation techniques can be more readily deployed in other contexts, for example, to enhance the capabilities of existing implementations of non-causal languages.
+An alternative might have been to use a \emph{multi-staged} host language like MetaOCaml \cite{Taha2004}. The built-in runtime code generation capabilities of the host language then would have been used instead of relying on an external code generation framework. We did not pursue this approach because we wanted to have tight control over the generated code. Also, not predicating our approach on a multi-staged host language means that some of our ideas and implementation techniques can be more readily deployed in other contexts, for example, to enhance the capabilities of existing implementations of non-causal languages.
 
 Compilation of embedded DSLs is today a standard tool in the DSL-implementer's tool box. The seminal example is the work by Elliott et al. on compiling embedded languages, specifically the image synthesis and manipulation language Pan \cite{Elliott2000}. Pan, like our language, provides for program generation by leveraging the host language combined with compilation to speed up the resulting performance-critical computations. However, the program to be compiled is generated once and for all, meaning the host language acts as a powerful but fundamentally conventional macro language: program generation, compilation, and execution is a process with a fixed number of stages.
 

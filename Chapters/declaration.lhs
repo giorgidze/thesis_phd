@@ -6,6 +6,14 @@ Nilsson. This thesis was written by myself. Hydra language presented in this
 dissertation and in the following papers was implemented by myself.
 
 \begin{itemize}
+  
+\item
+Henrik Nilsson and George Giorgidze.
+\newblock Exploiting structural dynamism in functional hybrid modelling for
+  simulation of ideal diodes.
+\newblock In {\em Proceedings of 7th EUROSIM Congress on Modelling and
+  Simulation}, Prague, Sep 2010.
+    
 \item
 George Giorgidze and Henrik Nilsson.
 \newblock Mixed-level embedding and {JIT} compilation for an iteratively staged
