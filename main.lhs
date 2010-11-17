@@ -43,10 +43,7 @@ Edward Gibbon
 %include Chapters/introduction.lhs
 %include Chapters/background.lhs
 %include Chapters/hydra.lhs
-
-\chapter{Definition of Hydra}
-\label{chapDefinition}
-
+%include Chapters/definition.lhs
 %include Chapters/implementation.lhs
 
 % October
