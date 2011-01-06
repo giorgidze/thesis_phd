@@ -1,15 +1,13 @@
 %format sigrel  = "\textbf{sigrel}"
-%format flow  = "\textbf{flow}"
-%format fhm  = "\textbf{\$fhm}"
+%format flow    = "\textbf{flow}"
 %format <>      = "\diamond"
-%format $       = "\$"
-%format |       = "|"
+
 
 %format ~=      = "\approx"
 %format .       = "."
 %format connect = "\textbf{connect}"
-%format once    = "\textbf{once}"
 %format init    = "\textbf{init}"
+%format local   = "\textbf{local}"
 
 %format forall    = "\forall"
 
