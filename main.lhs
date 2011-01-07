@@ -9,7 +9,7 @@
 
 %% \parindent 0pt
 %% \parskip 1ex
-\renewcommand{\baselinestretch}{1.33}
+% \renewcommand{\baselinestretch}{1.33}
 
 \begin{document}
 
