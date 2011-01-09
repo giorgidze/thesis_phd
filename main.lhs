@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{report}
+\documentclass[11pt,a4paper]{report}
 
 %include polycode.fmt
 
