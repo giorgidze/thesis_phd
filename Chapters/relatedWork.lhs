@@ -104,5 +104,7 @@ for structural dynamics for any higher-level language that has a semantics
 defined by translation into MKL. Again, the implementation techniques
 discussed in this paper should be of interest in such a setting.
 
+\subsection{Acumen}
 
+\cite{Taha2010a}.
 

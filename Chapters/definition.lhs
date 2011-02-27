@@ -365,46 +365,28 @@ instance SignalType () where
   data Signal () = Unit
 
 instance SignalType Double where
-  data Signal Double = Time
-                     | Const Double
-                     | Var   Int
-                     | Der   (Signal Double)
-                     | Cur   (Signal Double)
-                     | App1  Func1 (Signal Double)
-                     | App2  Func2 (Signal Double) (Signal Double)
+  data Signal Double =
+       Time
+    |  Const Double
+    |  Var   Int
+    |  Der   (Signal Double)
+    |  Cur   (Signal Double)
+    |  App1  Func1 (Signal Double)
+    |  App2  Func2 (Signal Double) (Signal Double)
 
 
 instance SignalType Bool where
-  data Signal Bool = Or    (Signal Bool) (Signal Bool)
-                   | And   (Signal Bool) (Signal Bool)
-                   | Xor   (Signal Bool) (Signal Bool)
-                   | Comp  CompFun (Signal Double)
-
+  data Signal Bool =
+       Or    (Signal Bool) (Signal Bool)
+    |  And   (Signal Bool) (Signal Bool)
+    |  Xor   (Signal Bool) (Signal Bool)
+    |  Comp  CompFun (Signal Double)
 
 data Func1 =
-    Exp
-  | Sqrt
-  | Log
-  | Sin
-  | Tan
-  | Cos
-  | Asin
-  | Atan
-  | Acos
-  | Sinh
-  | Tanh
-  | Cosh
-  | Asinh
-  | Atanh
-  | Acosh
-  | Abs
-  | Sgn
+  Exp   |  Sqrt  |  Log  |  Sin   |  Tan    |  Cos    |  Asin   |  Atan  |
+  Acos  |  Sinh  |  Tanh |  Cosh  |  Asinh  |  Atanh  |  Acosh  |  Abs   |  Sgn
 
-data Func2 =
-    Add
-  | Mul
-  | Div
-  | Pow
+data Func2 = Add | Mul | Div | Pow
 
 data CompFun = Lt | Lte | Gt | Gte  
 \end{code}

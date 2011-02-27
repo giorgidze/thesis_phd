@@ -14,12 +14,12 @@
 \begin{document}
 
 \title{
-	\Huge{\textbf{First-class Models}} \\
-	\huge{On a Non-causal Language for Higher-order and Structurally-dynamic Modelling and Simulation} \\[2cm]
-	\Large{\textbf{George Giorgidze, BSc, MSc}} \\[2cm]
-	\Large{Thesis submitted to The University of Nottingham \\
-	for the degree of Doctor of Philosophy} \\ \vspace{1cm}
-	\Large{May 2010}
+  \Huge{\textbf{First-class Models}} \\
+  \huge{On a Non-causal Language for Higher-order and Structurally-dynamic Modelling and Simulation} \\[2cm]
+  \Large{\textbf{George Giorgidze, BSc, MSc}} \\[2cm]
+  \Large{Thesis submitted to The University of Nottingham \\
+  for the degree of Doctor of Philosophy} \\ \vspace{1cm}
+  \Large{April 2011}
 }
 \author{} \date{}
 \maketitle
