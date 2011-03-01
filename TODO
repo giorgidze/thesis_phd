@@ -1,0 +1,30 @@
+* Complete Hydra's definition
+  - Translation from untyped to typed representation
+  - Ideal semantics
+  - Minor changes in concepts of Hydra
+
+* Rewrite the implementation section
+
+* In the evaluation section consider more challenging examples
+  - Higher-or modelling example (away day talk, transmission line, etc.)
+  - Half/Full way rectifier
+  - Highly dynamic bouncing balls example (i.e., with splitting balls)
+
+* Demonstrate changes in causal models when adding components
+  into physical models
+
+* Add pretty figures and simulation results to dry text dominated sections
+
+* Update declaration with with publisher information
+
+* Carefully review, edit, carefully review, edit, ..., carefully review edit.
+
+* Rewrite related work
+
+* Write conclusions
+
+* Ask Henrik to review
+
+* Carefully review, edit, carefully review, edit, ..., carefully review, edit.
+
+* Submit

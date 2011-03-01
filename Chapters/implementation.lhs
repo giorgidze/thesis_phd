@@ -2,9 +2,6 @@
 \chapter{Implementation of Hydra}
 \label{chapImplementation}
 
-% TODO This section should be rewritten inline with the new internal
-% representation
-
 \section{Embedding}
 \label{sec:embedding}
 
@@ -200,10 +197,6 @@ Haskell type checker could be used to verify that transformations are type
 preserving). We have not yet evaluated the suitability of the Haskell type
 system for such an undertaking, opting for the simpler, untyped representation
 for now.
-
-
-% TODO This section should be rewritten in line with the new, more modular and
-% extensible simulator
 
 \section{Simulation}
 \label{sec:simulation}

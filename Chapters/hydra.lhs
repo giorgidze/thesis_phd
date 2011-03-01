@@ -9,9 +9,6 @@ In this chapter we introduce the three central concepts Hydra is based on: signa
 
 \section{Concepts of Hydra}
 
-% TODO Here I should also mention that Hydra is based on and implements  concepts of Functional Hybrid Modelling (FHM)
-
-
 \subsection{Signal}
 
 Conceptually, a \emph{signal} is a time-varying value; i.e., a function from time to value:
@@ -277,9 +274,6 @@ acn_v  =  cn_v  =  ln_v  =  gp_v
 
 In Hydra, the expansion of connect constructs into the sum-to-zero and equality constraints is straightforward. In particular, note that all signal variables are counted positively in the sum to zero equations. This is different from Modelica \cite{Modelica2007} where a special ``rule of signs'' is used to determine which flow variables go with a plus sign and which go with a minus sign. Hydra obviates the need for the rule of signs using |flow| qualifiers, which also is a syntactic sugar.
 
-\section{Higher-Order Modelling}
-% TODO This section is missing, away day talk material could be of use here
-
 \section{Structural Dynamism}
 \subsection{Breaking Pendulum}
 
@@ -326,8 +320,6 @@ pendulum l phi0 = [rel| ((x,y),(vx,vy)) ->
 |]
 \end{code}
 
-% TODO Init equations should be mentioned and explained earlier
-
 Equations marked by the keyword |init| are initialisation equations used to specify initial conditions. 
 
 The non-causal nature of Hydra can be seen particularly clearly in the last equation of the unbroken mode that simply states a constraint on the angle of deviation and its second derivative, without making any assumption regarding which of the two time-varying entities is going to be used to solve for the other (both |g| and |l| are time-invariant functional-level variables).
@@ -358,9 +350,5 @@ sr x = switch (sr1 x) sr
 \end{code}
 
 In this case, because the number of instantiations of |sr1| in general cannot be determined statically (and because each instantiation can depend on the parameter in arbitrarily complex ways), there is no way to generate all code prior to simulation. However, the pendulum example is simple and suffice for illustrative purposes. Moreover, despite its simplicity, it is already an example with which present non-causal languages struggle, as mentioned above.
-
-\subsection{Ideal Diodes,Full/Half-way rectifiers}
-% TODO This section should be written
-
 
 %}

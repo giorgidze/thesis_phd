@@ -188,8 +188,6 @@ Derivation of a simulation code from a block diagram is straight forward and is 
 
 Structurally, the block diagram in Figure \ref{figSimpleCircuitBlockDiagram} is quite far removed from the circuit it models. Because of this, construction of block diagrams is generally regarded as a difficult and somewhat invloved task \cite{Nilsson2007}. Moreover, a slight change in a system might require drastic changes in the corresponding block diagram. This is because causal models limit reuse \cite{Cellier1996}. For example, a resistor behaviour is usually modelled using the Ohm's law which can be written as $i = \frac{u}{R}$ or $u = R \cdot i$. Unfortunately, no single causal block can capture the resistor behaviour. If we need to compute the current from the voltage, we should use the block that corresponds to the first equation. If we need to compute the voltage from the current, we should use the block that corresponds to the second equation. As an exercise, the interested reader might want to try to modify the block diagram in order to model a modified circuit where one more resistor is added by connecting its positive pin with the capacitor's positive pin and its negative pin with the inductors negative pin.
 
-% TODO I could do it instead in this section
-
 Simulink can be used to model some hybrid systems, special blocks are used two \emph{switch} between block diagrams as a response to discrete events. This makes Simulink very useful indeed for hybrid simulation of structurally dynamic systems. However, the number of configurations or modes must be finite and all modes must be predetermined before the simulation. Thus Simulink does not enable modelling and simulation of highly structurally dynamic systems. In addition, Simulink block diagrams are first-order thus Simulink does not support higher-order causal modelling.
 
 
@@ -317,8 +315,6 @@ R.p.v   =  L.p.v;
 Connect-equations can be used in any physical domain where flow and potential variables can be identified. The Modelica standard library\footnote{\texttt{http://www.modelica.org/libraries}} includes examples of their usage in electrical, hydraulic, and mechanical domains, for example. Modelica compilers generate executable simulation code from hierarchical systems of equations structured using object-oriented programming constructs by utilising state of the art symbolic and numerical integration methods.
 
 As we have seen, non-causal languages, and in this particular case Modelica, allow us to model physical systems at a high level of abstraction. The structure of the models resemble the modelled systems. Consequently, it is easy to reuse or modify existing models. For example, it is now trivial to add one more resistor as described in Section \ref{secSimulink} to the Modelica model. We leave this as an exercise for the reader.
-
-% TODO I also need an example about higher-order modelling (e.g., transmission line model, maybe)
 
 \section{Non-causal Hybrid Modelling}
 \label{secHybridModelling}
