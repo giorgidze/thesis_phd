@@ -345,42 +345,32 @@ desugarFlowExpr s expr = go expr
 \section{Typed Intermediate Representation}
 
 \begin{code}
-data SR a =
-    SigRel (Signal a -> [Equation])
-  | Switch (SR a) (SF a Bool) (a -> SR a)
+data SR a where
+  SigRel :: (Signal a -> [Equation]) -> SR a
+  Switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
 
-data SF a b = SigFun !(Signal a -> Signal b)
+data SF a b where
+  SigFun :: (Signal a -> Signal b) -> SF a b
 
-data Equation =
-    Local   (Signal Double -> [Equation])
-  | Equal   (Signal Double) (Signal Double)
-  | Init    (Signal Double) (Signal Double)
-  | Reinit  (Signal Double) (Signal Double)
-  | forall a. (SignalType a) => App (SR a) (Signal a)
+data Equation where
+  Local :: (Signal Double -> [Equation]) -> Equation
+  Equal :: Signal Double -> Signal Double -> Equation
+  Init  :: Signal Double -> Signal Double -> Equation
+  App   :: SR a -> Signal a -> Equation
 
-class SignalType a where
-  data Signal a
-
-instance SignalType () where
-  data Signal () = Unit
-
-instance SignalType Double where
-  data Signal Double =
-       Time
-    |  Const Double
-    |  Var   Int
-    |  Der   (Signal Double)
-    |  Cur   (Signal Double)
-    |  App1  Func1 (Signal Double)
-    |  App2  Func2 (Signal Double) (Signal Double)
-
-
-instance SignalType Bool where
-  data Signal Bool =
-       Or    (Signal Bool) (Signal Bool)
-    |  And   (Signal Bool) (Signal Bool)
-    |  Xor   (Signal Bool) (Signal Bool)
-    |  Comp  CompFun (Signal Double)
+data Signal a where
+  Unit  :: Signal ()
+  Time  :: Signal Double
+  Const :: Double -> Signal Double
+  Var   :: Int -> Signal Double
+  Der   :: Signal Double -> Signal Double
+  App1  :: Func1 -> Signal Double -> Signal Double
+  App2  :: Func2 -> Signal Double -> Signal Double -> Signal Double
+  Or    :: Signal Bool -> Signal Bool -> Signal Bool
+  And   :: Signal Bool -> Signal Bool -> Signal Bool
+  Xor   :: Signal Bool -> Signal Bool -> Signal Bool
+  Comp  :: CompFun -> Signal Double -> Signal Bool
+  Pair  :: Signal a -> Signal b -> Signal (a,b)
 
 data Func1 =
   Exp   |  Sqrt  |  Log  |  Sin   |  Tan    |  Cos    |  Asin   |  Atan  |
