@@ -49,9 +49,9 @@ HsExpr literals are recognized by the regular expression
 \(\mbox{`\$'} ({\nonterminal{anychar}} - \mbox{`\$'})* \mbox{`\$'}\)
 
 
-Non-terminals are enclosed between $\langle$ and $\rangle$. 
-The symbols  {\arrow}  (production),  {\delimit}  (union) 
-and {\emptyP} (empty rule) belong to the BNF notation. 
+Non-terminals are enclosed between $\langle$ and $\rangle$.
+The symbols  {\arrow}  (production),  {\delimit}  (union)
+and {\emptyP} (empty rule) belong to the BNF notation.
 All other symbols are terminals.\\
 
 \begin{tabular}{lll}
@@ -100,7 +100,7 @@ All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr1}} & {\arrow}  &{\nonterminal{Expr1}} {\terminal{{$|$}{$|$}}} {\nonterminal{Expr2}}  \\
+{\nonterminal{Expr1}} & {\arrow}  &{\nonterminal{Expr1}} {\terminal{$||||$}} {\nonterminal{Expr2}}  \\
  & {\delimit}  &{\nonterminal{Expr2}}  \\
 \end{tabular}\\
 
@@ -169,176 +169,189 @@ data SigRel = SigRel Pattern [Equation]
 data SigFun = SigFun Pattern Expr
 
 data Pattern =
-   PatternWild
- | PatternName PatternNameQual LIdent
- | PatternTuple [Pattern]
+   PatWild
+ | PatName PatternNameQual LIdent
+ | PatTuple [Pattern]
 
 data PatternNameQual =
-   PatternNameQualEmpty
- | PatternNameQualFlow
+   PatNameQualEmpty
+ | PatNameQualFlow
 
 data Equation =
-   EquationEqual Expr Expr
- | EquationInit Expr Expr
- | EquationLocal LIdent [LIdent]
- | EquationConnect LIdent LIdent [LIdent]
- | EquationConnectFlow LIdent LIdent [LIdent]
- | EquationSigRelApp HsExpr Expr
+   EquEqual Expr Expr
+ | EquInit Expr Expr
+ | EquLocal LIdent [LIdent]
+ | EquConnect LIdent LIdent [LIdent]
+ | EquConnectFlow LIdent LIdent [LIdent]
+ | EquSigRelApp HsExpr Expr
 
 data Expr =
-   ExprOr Expr Expr
- | ExprAnd Expr Expr
- | ExprLt Expr Expr
- | ExprLte Expr Expr
- | ExprGt Expr Expr
- | ExprGte Expr Expr
- | ExprAdd Expr Expr
- | ExprSub Expr Expr
- | ExprDiv Expr Expr
- | ExprMul Expr Expr
- | ExprPow Expr Expr
- | ExprNeg Expr
- | ExprApp Expr Expr
- | ExprVar LIdent
- | ExprAnti HsExpr
- | ExprInt Integer
- | ExprReal Double
- | ExprTuple [Expr]
+   ExpOr Expr Expr
+ | ExpAnd Expr Expr
+ | ExpLt Expr Expr
+ | ExpLte Expr Expr
+ | ExpGt Expr Expr
+ | ExpGte Expr Expr
+ | ExpAdd Expr Expr
+ | ExpSub Expr Expr
+ | ExpDiv Expr Expr
+ | ExpMul Expr Expr
+ | ExpPow Expr Expr
+ | ExpNeg Expr
+ | ExpApp Expr Expr
+ | ExpVar LIdent
+ | ExpAnti HsExpr
+ | ExpInt Integer
+ | ExpReal Double
+ | ExpTuple [Expr]
 \end{code}
 
 \section{Desugaring}
+%{
+%format (desugar  (a)) = "{\llbracket}" a "{\rrbracket}"
 
-Before we turn our attention to the typed intermediate representation of Hydra models, we describe the desugaring rules of Hydra. The rules are given as Haskell functions that work with the abstract syntax of Hydra (i.e., the |SigRel| data type). 
+%format (desugarFlowSigRel         (a)) = "{\llbracket}" a "{\rrbracket}_{flow}"
+%format (desugarFlowFindPattern    (a)) = "{\llbracket}" a "{\rrbracket}_{find}"
+%format (desugarFlowForgetPattern  (a)) = "{\llbracket}" a "{\rrbracket}_{forget}"
+%format (desugarFlowEquations       a ) = "{\llbracket}" a "{\rrbracket}_{eqs}"
+%format (desugarFlowExpr            a ) = "{\llbracket}" a "{\rrbracket}_{exp}"
+
+%format (desugarConnectSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{connect}"
+%format (desugarConnectEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
+
+%format (desugarTupleSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{tuple}"
+%format (desugarTupleEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
+
+%format (desugarLocalSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{local}"
+%format (desugarLocalEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
+
+%format li1
+%format li2
+%format es1
+%format es2
+%format pat1
+%format pat2
+%format eqs1
+%format eqs2
+%format s1
+%format s2
+%format e1
+%format e2
+%format hs1
+
+Before we turn our attention to the typed intermediate representation of Hydra models, we describe the desugaring rules of Hydra. The rules are given as Haskell functions that work with the abstract syntax of Hydra (i.e., the |SigRel| data type).
 
 We break down the rules intro four simple desugaring stages:
 \begin{code}
-desugar :: SigRel -> SigRel
-desugar =
-     desugarFlowSigRel
-  .  desugarConnectSigRel
-  .  desugarTupleSigRel
-  .  desugarLocalSigRel
+desugar  ::  SigRel -> SigRel
+desugar  =   desugarFlowSigRel . desugarConnectSigRel . desugarTupleSigRel . desugarLocalSigRel
 \end{code}
 
 In the first stage, we desugar all local signal variable definitions that bind multiple variables into the definitions that only bind a single variable.
 
 \begin{code}
-desugarLocalSigRel :: SigRel -> SigRel
-desugarLocalSigRel sr = case sr of
-  SigRel pat1 eqs1 -> SigRel pat1 (concatMap desugarLocalEquation eqs1)
+desugarLocalSigRel                   ::  SigRel -> SigRel
+desugarLocalSigRel (SigRel pat eqs)  =   SigRel pat [ desugarLocalEquation eq | eq <- eqs ]
+\end{code}
 
-desugarLocalEquation :: Equation -> [Equation]
-desugarLocalEquation eq = case eq of
-  EquationLocal li1 (li2 : lis) ->
-    (EquationLocal li1 []) : desugarLocalEquation (EquationLocal li2 lis)
-  _ -> [eq]
+\begin{code}
+desugarLocalEquation                             ::  Equation -> [Equation]
+desugarLocalEquation (EquLocal li1 (li2 : lis))  =   (EquLocal li1 []) : desugarLocalEquation (EquLocal li2 lis)
+desugarLocalEquation (eq)                        =   [eq]
 \end{code}
 
 In the second stage, desugar all equations that assert equality of tuple of signals into a number of equations asserting equality of scalar signals that are carried by the tuple signals.
 
 \begin{code}
-desugarTupleSigRel :: SigRel -> SigRel
-desugarTupleSigRel sr = case sr of
-  SigRel pat1 eqs1 -> SigRel pat1 (concatMap desugarTupleEquation eqs1)
+desugarTupleSigRel                   ::  SigRel -> SigRel
+desugarTupleSigRel (SigRel pat eqs)  =   SigRel pat (concat [ desugarTupleEquation eq | eq <- eqs ])
+\end{code}
 
-desugarTupleEquation :: Equation -> [Equation]
-desugarTupleEquation eq = case eq of
-  EquationEqual (ExprTuple es1) (ExprTuple es2) ->
-    if length es1 == length es2
-      then  concatMap desugarTupleEquation (zipWith EquationEqual es1 es2)
+\begin{code}
+desugarTupleEquation                                           ::  Equation -> [Equation]
+desugarTupleEquation (EquEqual (ExpTuple es1) (ExpTuple es2))  =
+  if  length es1 == length es2
+      then  concat [ desugarTupleEquation (EquEqual e1 e2) | (e1,e2) <- zip es1 es2 ]
       else  undefined
-  EquationInit (ExprTuple es1) (ExprTuple es2) ->
-    if length es1 == length es2
-      then  concatMap desugarTupleEquation (zipWith EquationInit es1 es2)
+desugarTupleEquation (EquInit (ExpTuple es1) (ExpTuple es2))   =
+  if  length es1 == length es2
+      then  concat [ desugarTupleEquation (EquInit e1 e2) | (e1,e2) <- zip es1 es2 ]
       else  undefined
-  _ -> [eq]
+desugarTupleEquation (eq)                                      =  [eq]
 \end{code}
 
 In the third stage, we desugar |connect| and |connect flow| equations into the equality constrains and sum to zero equations respectively.
 
 \begin{code}
-desugarConnectSigRel :: SigRel -> SigRel
-desugarConnectSigRel sr = case sr of
-  SigRel pat1 eqs1 -> SigRel pat1 (concatMap desugarConnectEquation eqs1)
+desugarConnectSigRel                     ::  SigRel -> SigRel
+desugarConnectSigRel (SigRel pat1 eqs1)  =   SigRel pat1 (concat [ desugarConnectEquation eq | eq <- eqs1 ])
+\end{code}
 
-desugarConnectEquation :: Equation -> [Equation]
-desugarConnectEquation eq = case eq of
-  EquationConnect li1 li2 lis ->
-    let vs = map ExprVar (li1 : li2 : lis)
-    in  zipWith EquationEqual vs (tail vs)
-  EquationConnectFlow li1 li2 lis ->
-    let vs = map ExprVar (li1 : li2 : lis)
-    in  [EquationEqual  (foldr1 ExprAdd vs) (ExprReal 0.0)]
-  _ -> [eq]
+\begin{code}
+desugarConnectEquation                               ::  Equation -> [Equation]
+desugarConnectEquation (EquConnect li1 li2 lis)      =   let   vs    =  [ ExpVar li | li <- (li1 : li2 : lis) ]
+                                                         in    zipWith EquEqual vs (tail vs)
+desugarConnectEquation (EquConnectFlow li1 li2 lis)  =   let   vs    =  [ ExpVar li | li <- (li1 : li2 : lis) ]
+                                                         in    [EquEqual  (foldr1 ExpAdd vs) (ExpReal 0)]
+desugarConnectEquation (eq)                          =   [eq]
 \end{code}
 
 In the fourth stage, we desugar |flow| signal variable declarations by negating every occurrence of such variables.
 
 \begin{code}
-desugarFlowSigRel :: SigRel -> SigRel
-desugarFlowSigRel (SigRel pat1 eqs1) =
-  let flowVars = desugarFlowFindPattern pat1
-      pat2 = desugarFlowForgetPattern pat1
-      eqs2 = foldr (\s eqs -> desugarFlowEquations s eqs) eqs1 flowVars
-  in  SigRel pat2 eqs2
-
-desugarFlowFindPattern :: Pattern -> [String]
-desugarFlowFindPattern pat = case pat of
-  PatternWild -> []
-  PatternName PatternNameQualEmpty _ -> []
-  PatternName PatternNameQualFlow  (LIdent s1) -> [s1]
-  PatternTuple pats1 -> concatMap desugarFlowFindPattern pats1
-
-desugarFlowForgetPattern :: Pattern -> Pattern
-desugarFlowForgetPattern pat = case pat of
-  PatternWild -> pat
-  PatternName PatternNameQualEmpty _ -> pat
-  PatternName PatternNameQualFlow  li1 -> PatternName PatternNameQualEmpty li1
-  PatternTuple pats1 -> PatternTuple (map desugarFlowForgetPattern pats1)
-
-desugarFlowEquations :: String -> [Equation] -> [Equation]
-desugarFlowEquations _ [] = []
-desugarFlowEquations s (eq : eqs) =
-  let go :: Expr -> Expr
-      go = desugarFlowExpr s
-  in  case eq of
-        EquationSigRelApp hsExpr1 e1 ->
-          (EquationSigRelApp hsExpr1 (go e1)) : desugarFlowEquations s eqs
-        EquationEqual e1 e2          ->
-          (EquationEqual (go e1) (go e2))     : desugarFlowEquations s eqs
-        EquationInit e1 e2           ->
-          (EquationInit (go e1) (go e2))      : desugarFlowEquations s eqs
-        EquationLocal (LIdent s1) [] ->
-          if s1 == s
-             then (eq : eqs)
-             else  eq : desugarFlowEquations s eqs
-
-desugarFlowExpr :: String -> Expr -> Expr
-desugarFlowExpr s expr = go expr
-  where
-  go :: Expr -> Expr
-  go e = case e of
-    ExprVar (LIdent s1) -> if s1 == s then ExprNeg e else e
-
-    ExprAdd e1 e2 -> ExprAdd (go e1) (go e2)
-    ExprSub e1 e2 -> ExprSub (go e1) (go e2)
-    ExprDiv e1 e2 -> ExprDiv (go e1) (go e2)
-    ExprMul e1 e2 -> ExprMul (go e1) (go e2)
-    ExprPow e1 e2 -> ExprPow (go e1) (go e2)
-    ExprOr  e1 e2 -> ExprOr  (go e1) (go e2)
-    ExprAnd e1 e2 -> ExprAnd (go e1) (go e2)
-    ExprLt  e1 e2 -> ExprLt  (go e1) (go e2)
-    ExprLte e1 e2 -> ExprLte (go e1) (go e2)
-    ExprGt  e1 e2 -> ExprGt  (go e1) (go e2)
-    ExprGte e1 e2 -> ExprGte (go e1) (go e2)
-    ExprApp v1 e1 -> ExprApp v1 (go e1)
-    ExprNeg e1    -> ExprNeg (go e1)
-
-    ExprTuple es1 -> ExprTuple (map go es1)
-
-    _ -> e
+desugarFlowSigRel                     ::  SigRel -> SigRel
+desugarFlowSigRel (SigRel pat1 eqs1)  =   let  flowVars = desugarFlowFindPattern pat1
+                                               pat2 = desugarFlowForgetPattern pat1
+                                               eqs2 = foldr (\s eqs -> desugarFlowEquations (s,eqs)) eqs1 flowVars
+                                          in   SigRel pat2 eqs2
 \end{code}
 
+\begin{code}
+desugarFlowFindPattern                                        ::  Pattern -> [String]
+desugarFlowFindPattern (PatWild)                              =   []
+desugarFlowFindPattern (PatName PatNameQualEmpty _)           =   []
+desugarFlowFindPattern (PatName PatNameQualFlow (LIdent s1))  =   [s1]
+desugarFlowFindPattern (PatTuple pats)                        =   concat [ desugarFlowFindPattern p | p <- pats ]
+\end{code}
+
+\begin{code}
+desugarFlowForgetPattern                                       ::  Pattern -> Pattern
+desugarFlowForgetPattern (pat@(PatWild))                       =   pat
+desugarFlowForgetPattern (pat@(PatName PatNameQualEmpty li1))  =   pat
+desugarFlowForgetPattern (pat@(PatName PatNameQualFlow  li1))  =   pat
+desugarFlowForgetPattern (pat@(PatTuple pats))                 =   PatTuple [ desugarFlowForgetPattern p | p <- pats ]
+\end{code}
+
+\begin{code}
+desugarFlowEquations                                             ::  (String,[Equation]) -> [Equation]
+desugarFlowEquations (_  ,  [])                                  =   []
+desugarFlowEquations (s  ,  (EquSigRelApp hs1 e1) : eqs)         =   (EquSigRelApp hs1 (desugarFlowExpr (s,e1)))                   :  desugarFlowEquations (s,eqs)
+desugarFlowEquations (s  ,  (EquEqual e1 e2) : eqs)              =   (EquEqual (desugarFlowExpr (s,e1)) (desugarFlowExpr (s,e2)))  :  desugarFlowEquations (s,eqs)
+desugarFlowEquations (s  ,  (EquInit e1 e2) : eqs)               =   (EquInit (desugarFlowExpr (s,e1)) (desugarFlowExpr (s,e2)))   :  desugarFlowEquations (s,eqs)
+desugarFlowEquations (s  ,  eq@(EquLocal (LIdent s1) []) : eqs)  =   if s1 == s then(eq : eqs) else eq : desugarFlowEquations (s,eqs)
+\end{code}
+
+\begin{code}
+desugarFlowExpr                              ::  (String,Expr) -> Expr
+desugarFlowExpr (s,e@(ExpVar (LIdent s1)))   =   if s1 == s then ExpNeg e else e
+desugarFlowExpr (s,ExpAdd e1 e2)             =   ExpAdd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpSub e1 e2)             =   ExpSub     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpDiv e1 e2)             =   ExpDiv     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpMul e1 e2)             =   ExpMul     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpPow e1 e2)             =   ExpPow     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpOr  e1 e2)             =   ExpOr      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpAnd e1 e2)             =   ExpAnd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpLt  e1 e2)             =   ExpLt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpLte e1 e2)             =   ExpLte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpGt  e1 e2)             =   ExpGt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpGte e1 e2)             =   ExpGte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpApp e1 e2)             =   ExpApp     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpNeg e1)                =   ExpNeg     (desugarFlowExpr (s,e1))
+desugarFlowExpr (s,ExpTuple es1)             =   ExpTuple   [ desugarFlowExpr (s,e) | e <- es1 ]
+desugarFlowExpr (_,e)                        =   e
+\end{code}
+
+%}
 
 \section{Typed Intermediate Representation}
 
@@ -378,7 +391,7 @@ data Func1 =
 
 data Func2 = Add | Mul | Div | Pow
 
-data CompFun = Lt | Lte | Gt | Gte  
+data CompFun = Lt | Lte | Gt | Gte
 \end{code}
 
 \begin{code}
@@ -432,6 +445,8 @@ instance Floating (Signal Double) where
 %format e1
 %format e2
 %format s1
+%format i1
+%format d1
 
 In this section we present translation rules transforming a model in the
 untyped representation into the corresponding model in the typed
@@ -442,49 +457,48 @@ translateSR (SigRel  pattern  equations)   =  SR  (\ translatePat (pattern)  -> 
 translateSF (SigFun  pattern  expression)  =  SF  (\ translatePat (pattern)  ->  translateExp (expression))
 \end{code}
 
-
 \begin{code}
-translatePat (PatternWild)                =  _
-translatePat (PatternName _ (LIdent s1))  =  translateHs (s1)
-translatePat (PatternTuple [])            =  Unit
-translatePat (PatternTuple [pat1])        =  translatePat (pat1)
-translatePat (PatternTuple [pat1,pat2])   =  Pair (translatePat pat1) (translatePat pat2)
+translatePat (PatWild)                =  _
+translatePat (PatName _ (LIdent s1))  =  translateHs (s1)
+translatePat (PatTuple [])            =  Unit
+translatePat (PatTuple [pat1])        =  translatePat (pat1)
+translatePat (PatTuple [pat1,pat2])   =  Pair (translatePat pat1) (translatePat pat2)
 \end{code}
 
 \begin{code}
-translateEqs ([])                                        =  []
-translateEqs ((EquationSigRelApp (HsExpr s1) e1) : eqs)  =  (App    (translateHs s1)   (translateExp e1))  :  translateEqs (eqs)
-translateEqs ((EquationEqual  e1 e2) : eqs)              =  (Equal  (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
-translateEqs ((EquationInit   e1 e2) : eqs)              =  (Init   (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
-translateEqs ((EquationLocal (LIdent s1) _) : eqs)       =  [Local  (\ (translateHs s1) -> (translateEqs eqs))]
-translateEqs ((EquationConnect _ _ _) : _)               = undefined
-translateEqs ((EquationConnectFlow _ _ _) : _)           = undefined
+translateEqs ([])                                   =  []
+translateEqs ((EquSigRelApp (HsExpr s1) e1) : eqs)  =  (App    (translateHs s1)   (translateExp e1))  :  translateEqs (eqs)
+translateEqs ((EquEqual  e1 e2) : eqs)              =  (Equal  (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
+translateEqs ((EquInit   e1 e2) : eqs)              =  (Init   (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
+translateEqs ((EquLocal (LIdent s1) _) : eqs)       =  [Local  (\ (translateHs s1) -> (translateEqs eqs))]
+translateEqs ((EquConnect _ _ _) : _)               =  undefined
+translateEqs ((EquConnectFlow _ _ _) : _)           =  undefined
 \end{code}
 
 \begin{code}
-translateExp (ExprAnti (HsExpr s1))      =  translateHs (s1)
-translateExp (ExprVar (LIdent "time"))   =  Time
-translateExp (ExprVar (LIdent "true"))   =  Comp Gt (Const 1)
-translateExp (ExprVar (LIdent "false"))  =  Comp Lt (Const 1)
-translateExp (ExprVar (LIdent s1))       =  translateHs (s1)
-translateExp (ExprAdd e1 e2)             =  (translateExp e1)  +   (translateExp e2)
-translateExp (ExprSub e1 e2)             =  (translateExp e1)  -   (translateExp e2)
-translateExp (ExprDiv e1 e2)             =  (translateExp e1)  /   (translateExp e2)
-translateExp (ExprMul e1 e2)             =  (translateExp e1)  *   (translateExp e2)
-translateExp (ExprPow e1 e2)             =  (translateExp e1)  **  (translateExp e2)
-translateExp (ExprNeg e1)                =  negate (translateExp e1)
-translateExp (ExprApp e1 e2)             =  (translateExp e1) (translateExp e2)
-translateExp (ExprInt i1)                =  Const (fromIntegral i1)
-translateExp (ExprReal d1)               =  Const d1
-translateExp (ExprTuple [])              =  Unit
-translateExp (ExprTuple [e1])            =  translateExp e1
-translateExp (ExprTuple (e1 : e2 : _))   =  Pair  (translateExp e1) (translateExp e2)
-translateExp (ExprOr  e1 e2)             =  Or    (translateExp e1) (translateExp e2)
-translateExp (ExprAnd e1 e2)             =  And   (translateExp e1) (translateExp e2)
-translateExp (ExprLt  e1  e2)            =  Comp  Lt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprLte e1  e2)            =  Comp  Lte  ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprGt  e1  e2)            =  Comp  Gt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprGte e1  e2)            =  Comp  Gte  ((translateExp e1)  -  (translateExp e2))
+translateExp (ExpAnti (HsExpr s1))      =  translateHs (s1)
+translateExp (ExpVar (LIdent "time"))   =  Time
+translateExp (ExpVar (LIdent "true"))   =  Comp Gt (Const 1)
+translateExp (ExpVar (LIdent "false"))  =  Comp Lt (Const 1)
+translateExp (ExpVar (LIdent s1))       =  translateHs (s1)
+translateExp (ExpAdd e1 e2)             =  (translateExp e1)  +   (translateExp e2)
+translateExp (ExpSub e1 e2)             =  (translateExp e1)  -   (translateExp e2)
+translateExp (ExpDiv e1 e2)             =  (translateExp e1)  /   (translateExp e2)
+translateExp (ExpMul e1 e2)             =  (translateExp e1)  *   (translateExp e2)
+translateExp (ExpPow e1 e2)             =  (translateExp e1)  **  (translateExp e2)
+translateExp (ExpNeg e1)                =  negate (translateExp e1)
+translateExp (ExpApp e1 e2)             =  (translateExp e1) (translateExp e2)
+translateExp (ExpInt i1)                =  Const (fromIntegral i1)
+translateExp (ExpReal d1)               =  Const d1
+translateExp (ExpTuple [])              =  Unit
+translateExp (ExpTuple [e1])            =  translateExp e1
+translateExp (ExpTuple (e1 : e2 : _))   =  Pair  (translateExp e1) (translateExp e2)
+translateExp (ExpOr  e1 e2)             =  Or    (translateExp e1) (translateExp e2)
+translateExp (ExpAnd e1 e2)             =  And   (translateExp e1) (translateExp e2)
+translateExp (ExpLt  e1  e2)            =  Comp  Lt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExpLte e1  e2)            =  Comp  Lte  ((translateExp e1)  -  (translateExp e2))
+translateExp (ExpGt  e1  e2)            =  Comp  Gt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExpGte e1  e2)            =  Comp  Gte  ((translateExp e1)  -  (translateExp e2))
 \end{code}
 %}
 
