@@ -2,6 +2,7 @@
 %format flow    = "\textbf{flow}"
 %format <>      = "\diamond"
 
+%format exists = "\exists"
 
 %format ~=      = "\approx"
 %format .       = "."
@@ -89,5 +90,3 @@
 
 %format t_1 = "t_1"
 %format t_2 = "t_2"
-
-%format exists = "\exists"

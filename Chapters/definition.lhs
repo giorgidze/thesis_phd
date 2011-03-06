@@ -308,8 +308,6 @@ desugarFlowEquations s (eq : eqs) =
           (EquationEqual (go e1) (go e2))     : desugarFlowEquations s eqs
         EquationInit e1 e2           ->
           (EquationInit (go e1) (go e2))      : desugarFlowEquations s eqs
-        EquationReinit e1 e2         ->
-          (EquationReinit (go e1) (go e2))    : desugarFlowEquations s eqs
         EquationLocal (LIdent s1) [] ->
           if s1 == s
              then (eq : eqs)
@@ -344,13 +342,15 @@ desugarFlowExpr s expr = go expr
 
 \section{Typed Intermediate Representation}
 
+The following typed representation of Hydra models embodies the type system of Hydra.
+
 \begin{code}
 data SR a where
-  SigRel :: (Signal a -> [Equation]) -> SR a
-  Switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
+  SR      ::  (Signal a -> [Equation]) -> SR a
+  Switch  ::  SR a -> SF a Bool -> (a -> SR a) -> SR a
 
 data SF a b where
-  SigFun :: (Signal a -> Signal b) -> SF a b
+  SF :: (Signal a -> Signal b) -> SF a b
 
 data Equation where
   Local :: (Signal Double -> [Equation]) -> Equation
@@ -380,5 +380,112 @@ data Func2 = Add | Mul | Div | Pow
 
 data CompFun = Lt | Lte | Gt | Gte  
 \end{code}
+
+\begin{code}
+instance Num (Signal Double) where
+  (+) e1 e2     = App2 Add e1 e2
+  (*) e1 e2     = App2 Mul e1 e2
+  (-) e1 e2     = App2 Add e1 ((Const (-1)) * e2)
+  negate e1     = (Const (-1)) * e1
+  abs e1        = App1 Abs e1
+  signum e1     = App1 Sgn e1
+  fromInteger i = Const (fromIntegral i)
+
+instance Fractional (Signal Double) where
+  (/) e1 e2 = App2 Div e1 e2
+  recip e1 = 1 / e1
+  fromRational r = Const (fromRational r)
+
+instance Floating (Signal Double) where
+  pi          = Const pi
+  exp   e1    = App1 Exp   e1
+  log   e1    = App1 Log   e1
+  sqrt  e1    = App1 Sqrt  e1
+  sin   e1    = App1 Sin   e1
+  cos   e1    = App1 Cos   e1
+  tan   e1    = App1 Tan   e1
+  asin  e1    = App1 Asin  e1
+  acos  e1    = App1 Acos  e1
+  atan  e1    = App1 Atan  e1
+  sinh  e1    = App1 Sinh  e1
+  cosh  e1    = App1 Cosh  e1
+  tanh  e1    = App1 Tanh  e1
+  asinh e1    = App1 Asinh e1
+  acosh e1    = App1 Acosh e1
+  atanh e1    = App1 Atanh e1
+  (**) e1 e2  = App2 Pow e1 e2
+\end{code}
+
+\section{From Untyped to Type Representation}
+
+%{
+
+%format (translateSR  (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"
+%format (translateSF  (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
+%format (translatePat (a)) = "{\llbracket}" a "{\rrbracket}_{pat}"
+%format (translateEqs (a)) = "{\llbracket}" a "{\rrbracket}_{eqs}"
+%format (translateExp (a)) = "{\llbracket}" a "{\rrbracket}_{exp}"
+%format (translateHs  (a)) = "{\llbracket}" a "{\rrbracket}_{hs}"
+
+%format pat1
+%format pat2
+%format e1
+%format e2
+%format s1
+
+In this section we present translation rules transforming a model in the
+untyped representation into the corresponding model in the typed
+representation.
+
+\begin{code}
+translateSR (SigRel  pattern  equations)   =  SR  (\ translatePat (pattern)  ->  translateEqs (equations))
+translateSF (SigFun  pattern  expression)  =  SF  (\ translatePat (pattern)  ->  translateExp (expression))
+\end{code}
+
+
+\begin{code}
+translatePat (PatternWild)                =  _
+translatePat (PatternName _ (LIdent s1))  =  translateHs (s1)
+translatePat (PatternTuple [])            =  Unit
+translatePat (PatternTuple [pat1])        =  translatePat (pat1)
+translatePat (PatternTuple [pat1,pat2])   =  Pair (translatePat pat1) (translatePat pat2)
+\end{code}
+
+\begin{code}
+translateEqs ([])                                        =  []
+translateEqs ((EquationSigRelApp (HsExpr s1) e1) : eqs)  =  (App    (translateHs s1)   (translateExp e1))  :  translateEqs (eqs)
+translateEqs ((EquationEqual  e1 e2) : eqs)              =  (Equal  (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
+translateEqs ((EquationInit   e1 e2) : eqs)              =  (Init   (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
+translateEqs ((EquationLocal (LIdent s1) _) : eqs)       =  [Local  (\ (translateHs s1) -> (translateEqs eqs))]
+translateEqs ((EquationConnect _ _ _) : _)               = undefined
+translateEqs ((EquationConnectFlow _ _ _) : _)           = undefined
+\end{code}
+
+\begin{code}
+translateExp (ExprAnti (HsExpr s1))      =  translateHs (s1)
+translateExp (ExprVar (LIdent "time"))   =  Time
+translateExp (ExprVar (LIdent "true"))   =  Comp Gt (Const 1)
+translateExp (ExprVar (LIdent "false"))  =  Comp Lt (Const 1)
+translateExp (ExprVar (LIdent s1))       =  translateHs (s1)
+translateExp (ExprAdd e1 e2)             =  (translateExp e1)  +   (translateExp e2)
+translateExp (ExprSub e1 e2)             =  (translateExp e1)  -   (translateExp e2)
+translateExp (ExprDiv e1 e2)             =  (translateExp e1)  /   (translateExp e2)
+translateExp (ExprMul e1 e2)             =  (translateExp e1)  *   (translateExp e2)
+translateExp (ExprPow e1 e2)             =  (translateExp e1)  **  (translateExp e2)
+translateExp (ExprNeg e1)                =  negate (translateExp e1)
+translateExp (ExprApp e1 e2)             =  (translateExp e1) (translateExp e2)
+translateExp (ExprInt i1)                =  Const (fromIntegral i1)
+translateExp (ExprReal d1)               =  Const d1
+translateExp (ExprTuple [])              =  Unit
+translateExp (ExprTuple [e1])            =  translateExp e1
+translateExp (ExprTuple (e1 : e2 : _))   =  Pair  (translateExp e1) (translateExp e2)
+translateExp (ExprOr  e1 e2)             =  Or    (translateExp e1) (translateExp e2)
+translateExp (ExprAnd e1 e2)             =  And   (translateExp e1) (translateExp e2)
+translateExp (ExprLt  e1  e2)            =  Comp  Lt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprLte e1  e2)            =  Comp  Lte  ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprGt  e1  e2)            =  Comp  Gt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprGte e1  e2)            =  Comp  Gte  ((translateExp e1)  -  (translateExp e2))
+\end{code}
+%}
 
 \section{Ideal Semantics of Hydra}
