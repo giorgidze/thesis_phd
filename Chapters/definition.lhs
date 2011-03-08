@@ -455,5 +455,31 @@ translateExp (ExpGte e1  e2)            =  Comp  Gte  ((translateExp e1)  -  (tr
 
 \section{Ideal Semantics of Hydra}
 
+Note that the domains of the following denotational semantics of Hydra are the
+same as the conceptual definitions of signals, signal functions, and signal
+relations given in Chapter {chapHydra}.
+
+\begin{code}
+semSR                   ::  SR a -> (Time -> Signal a -> Prop)
+semSR (SR f)            =   \t0 s -> semEqs ((t0,f s))
+semSR (Switch sr sf f)  =   \t0 s -> ...
+
+\end{code}
+
+\begin{code}
+semSF           ::  SF a -> (Signal a -> Signal b)
+semSF (SF sf)   =   sf
+\end{code}
+
+\begin{code}
+semEqs :: (Time,[Equation]) -> Prop
+\end{code}
+
+
+\begin{code}
+semSig :: Signal a -> (Time -> a)
+\end{code}
+
+
 
 %}

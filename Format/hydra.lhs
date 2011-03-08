@@ -34,3 +34,8 @@
 
 %format (desugarLocalSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{local}"
 %format (desugarLocalEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
+
+%format (semSR   (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"
+%format (semSF   (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
+%format (semEqs  (a)) = "{\llbracket}" a "{\rrbracket}_{eqs}"
+%format (semSig  (a)) = "{\llbracket}" a "{\rrbracket}_{sig}"
