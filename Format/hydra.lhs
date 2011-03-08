@@ -1,92 +1,36 @@
 %format sigrel  = "\textbf{sigrel}"
 %format flow    = "\textbf{flow}"
-%format <>      = "\diamond"
-
-%format exists = "\exists"
-
-%format ~=      = "\approx"
-%format .       = "."
 %format connect = "\textbf{connect}"
 %format init    = "\textbf{init}"
 %format local   = "\textbf{local}"
 
-%format forall    = "\forall"
+%format <> = "\diamond"
+%format ~= = "\approx"
 
-%format alpha   = "\alpha"
-%format beta    = "\beta"
-
-%format theta   = "\theta"
-%format theta0  = "\theta_0"
-%format omega  = "\omega"
-%format pi      = "\pi"
-
+%format forall = "\forall"
+%format exists = "\exists"
 %format plus_sf = "+_{SF}"
 
-%format l0      = "l_0"
+%format (translateSR  (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"
+%format (translateSF  (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
+%format (translatePat (a)) = "{\llbracket}" a "{\rrbracket}_{pat}"
+%format (translateEqs (a)) = "{\llbracket}" a "{\rrbracket}_{eqs}"
+%format (translateExp (a)) = "{\llbracket}" a "{\rrbracket}_{exp}"
+%format (translateHs  (a)) = "{\llbracket}" a "{\rrbracket}_{hs}"
 
-%format v1      = "v_1"
-%format v2      = "v_2"
-%format v3      = "v_3"
-%format v4      = "v_4"
+%format (desugar  (a)) = "{\llbracket}" a "{\rrbracket}"
 
-%format p_i      = "p_i"
-%format p_v      = "p_v"
-%format n_i      = "n_i"
-%format n_v      = "n_v"
+%format (desugarFlowSigRel         (a)) = "{\llbracket}" a "{\rrbracket}_{flow}"
+%format (desugarFlowFindPattern    (a)) = "{\llbracket}" a "{\rrbracket}_{find}"
+%format (desugarFlowForgetPattern  (a)) = "{\llbracket}" a "{\rrbracket}_{forget}"
+%format (desugarFlowEquations       a ) = "{\llbracket}" a "{\rrbracket}_{eqs}"
+%format (desugarFlowExpr            a ) = "{\llbracket}" a "{\rrbracket}_{exp}"
 
-%format rp_i      = "rp_i"
-%format rp_v      = "rp_v"
-%format rn_i      = "rn_i"
-%format rn_v      = "rn_v"
+%format (desugarConnectSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{connect}"
+%format (desugarConnectEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
 
-%format cp_i      = "cp_i"
-%format cp_v      = "cp_v"
-%format cn_i      = "cn_i"
-%format cn_v      = "cn_v"
+%format (desugarTupleSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{tuple}"
+%format (desugarTupleEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
 
-%format lp_i      = "lp_i"
-%format lp_v      = "lp_v"
-%format ln_i      = "ln_i"
-%format ln_v      = "ln_v"
-
-%format gp_i      = "gp_i"
-%format gp_v      = "gp_v"
-
-%format acp_i      = "acp_i"
-%format acp_v      = "acp_v"
-%format acn_i      = "acn_i"
-%format acn_v      = "acn_v"
-
-%format p1_i      = "p1_i"
-%format p1_v      = "p1_v"
-%format n1_i      = "n1_i"
-%format n1_v      = "n1_v"
-
-%format p2_i      = "p2_i"
-%format p2_v      = "p2_v"
-%format n2_i      = "n2_i"
-%format n2_v      = "n2_v"
-
-%format l0_x = "l_{0x}"
-%format l0_y = "l_{0y}"
-
-%format h_x = "h_x"
-%format h_y = "h_y"
-
-%format g_x = "g_x"
-%format g_y = "g_y"
-
-%format v_x = "v_x"
-%format v_y = "v_y"
-
-%format r_x = "r_x"
-%format r_y = "r_y"
-
-%format l_x = "l_x"
-%format l_y = "l_y"
-
-%format f_x = "f_x"
-%format f_y = "f_y"
-
-%format t_1 = "t_1"
-%format t_2 = "t_2"
+%format (desugarLocalSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{local}"
+%format (desugarLocalEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"

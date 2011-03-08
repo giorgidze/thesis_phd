@@ -1,6 +1,7 @@
 \documentclass[10pt,a4paper]{report}
 
 %include polycode.fmt
+%include Format/variables.lhs
 
 \usepackage{graphicx}
 \usepackage{subfigure}

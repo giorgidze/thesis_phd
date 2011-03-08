@@ -1,8 +1,10 @@
+%{
+%include ../Format/hydra.lhs
+
 \chapter{Definition of Hydra}
 \label{chapDefinition}
 
 This is highly technical chapter giving a formal definition of the Hydra language. Firstly, we define Hydra's concrete syntax using the regular expression and BNF notations. Secondly, we give Hydra's abstract syntax derived from the concrete syntax as a Haskell algebraic data. Thirdly, we define a typed intermediate representation for the abstract syntax and give translation from the untyped abstract syntax to the typed intermediate representation. The typed intermediated representation also fully embodies Hydra's type system. Finally, we give ideal denotational semantics by giving meaning to the typed intermediated representation using the first-order logic.
-
 
 \section{Concrete Syntax}
 
@@ -207,37 +209,6 @@ data Expr =
 \end{code}
 
 \section{Desugaring}
-%{
-%format (desugar  (a)) = "{\llbracket}" a "{\rrbracket}"
-
-%format (desugarFlowSigRel         (a)) = "{\llbracket}" a "{\rrbracket}_{flow}"
-%format (desugarFlowFindPattern    (a)) = "{\llbracket}" a "{\rrbracket}_{find}"
-%format (desugarFlowForgetPattern  (a)) = "{\llbracket}" a "{\rrbracket}_{forget}"
-%format (desugarFlowEquations       a ) = "{\llbracket}" a "{\rrbracket}_{eqs}"
-%format (desugarFlowExpr            a ) = "{\llbracket}" a "{\rrbracket}_{exp}"
-
-%format (desugarConnectSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{connect}"
-%format (desugarConnectEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
-
-%format (desugarTupleSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{tuple}"
-%format (desugarTupleEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
-
-%format (desugarLocalSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{local}"
-%format (desugarLocalEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
-
-%format li1
-%format li2
-%format es1
-%format es2
-%format pat1
-%format pat2
-%format eqs1
-%format eqs2
-%format s1
-%format s2
-%format e1
-%format e2
-%format hs1
 
 Before we turn our attention to the typed intermediate representation of Hydra models, we describe the desugaring rules of Hydra. The rules are given as Haskell functions that work with the abstract syntax of Hydra (i.e., the |SigRel| data type).
 
@@ -351,8 +322,6 @@ desugarFlowExpr (s,ExpTuple es1)             =   ExpTuple   [ desugarFlowExpr (s
 desugarFlowExpr (_,e)                        =   e
 \end{code}
 
-%}
-
 \section{Typed Intermediate Representation}
 
 The following typed representation of Hydra models embodies the type system of Hydra.
@@ -431,23 +400,6 @@ instance Floating (Signal Double) where
 
 \section{From Untyped to Type Representation}
 
-%{
-
-%format (translateSR  (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"
-%format (translateSF  (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
-%format (translatePat (a)) = "{\llbracket}" a "{\rrbracket}_{pat}"
-%format (translateEqs (a)) = "{\llbracket}" a "{\rrbracket}_{eqs}"
-%format (translateExp (a)) = "{\llbracket}" a "{\rrbracket}_{exp}"
-%format (translateHs  (a)) = "{\llbracket}" a "{\rrbracket}_{hs}"
-
-%format pat1
-%format pat2
-%format e1
-%format e2
-%format s1
-%format i1
-%format d1
-
 In this section we present translation rules transforming a model in the
 untyped representation into the corresponding model in the typed
 representation.
@@ -500,6 +452,8 @@ translateExp (ExpLte e1  e2)            =  Comp  Lte  ((translateExp e1)  -  (tr
 translateExp (ExpGt  e1  e2)            =  Comp  Gt   ((translateExp e1)  -  (translateExp e2))
 translateExp (ExpGte e1  e2)            =  Comp  Gte  ((translateExp e1)  -  (translateExp e2))
 \end{code}
-%}
 
 \section{Ideal Semantics of Hydra}
+
+
+%}
