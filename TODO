@@ -1,7 +1,5 @@
 * Complete Hydra's definition
-  - Translation from untyped to typed representation
   - Ideal semantics
-  - Minor changes in concepts of Hydra
 
 * Rewrite the implementation section
 
