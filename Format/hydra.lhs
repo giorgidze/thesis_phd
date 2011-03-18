@@ -11,6 +11,9 @@
 %format exists = "\exists"
 %format plus_sf = "+_{SF}"
 
+%format (lim (a) (b)) = "\displaystyle\lim_{" a "\to" b "}"
+%format (frac (a) (b)) = "\frac{" a "}{" b "}"
+
 %format (translateSR  (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"
 %format (translateSF  (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
 %format (translatePat (a)) = "{\llbracket}" a "{\rrbracket}_{pat}"
@@ -35,6 +38,7 @@
 %format (desugarLocalSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{local}"
 %format (desugarLocalEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
 
+%format (sem     (a)) = "{\llbracket}" a "{\rrbracket}"
 %format (semSR   (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"
 %format (semSF   (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
 %format (semEqs  (a)) = "{\llbracket}" a "{\rrbracket}_{eqs}"

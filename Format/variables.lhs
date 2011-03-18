@@ -3,6 +3,7 @@
 %format theta   = "\theta"
 %format theta0  = "\theta_0"
 %format omega   = "\omega"
+%format delta   = "\delta"
 %format pi      = "\pi"
 %format l0_x    = "l_{0x}"
 %format l0_y    = "l_{0y}"
@@ -68,6 +69,7 @@
 %format eqs2
 %format s1
 %format s2
+%format s_i
 %format e1
 %format e2
 %format hs1

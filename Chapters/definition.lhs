@@ -344,7 +344,6 @@ data Signal a where
   Unit  :: Signal ()
   Time  :: Signal Double
   Const :: Double -> Signal Double
-  Var   :: Int -> Signal Double
   Der   :: Signal Double -> Signal Double
   App1  :: Func1 -> Signal Double -> Signal Double
   App2  :: Func2 -> Signal Double -> Signal Double -> Signal Double
@@ -461,8 +460,13 @@ relations given in Chapter {chapHydra}.
 
 \begin{code}
 semSR                   ::  SR a -> (Time -> Signal a -> Prop)
-semSR (SR f)            =   \t0 s -> semEqs ((t0,f s))
-semSR (Switch sr sf f)  =   \t0 s -> ...
+semSR (SR f)            =   \t0 s -> semEqs ((0,t0,f s))
+semSR (Switch sr sf f)  =   \t0 s -> forall t, t >= t0 =>
+    ((semSR sr) t0 s) && ((semSF sf) s t) == ((semSF sf) s t0)
+    ||
+    (exists t_e,  (t < t_e   =>  ((semSR sr) t0 s)            &&  ((semSF sf) s t)    ==  ((semSF sf) s t0))
+                  &&
+                  (t >= t_e  =>  ((semSR (f (s t_e))) t_e s)  &&  ((semSF sf) s t_e)  /=  ((semSF sf) s t0)))
 
 \end{code}
 
@@ -472,12 +476,31 @@ semSF (SF sf)   =   sf
 \end{code}
 
 \begin{code}
-semEqs :: (Time,[Equation]) -> Prop
+semEqs                                          ::  (Integer, Time, [Equation]) -> Prop
+semEqs  (_  ,  _   ,  []                     )  =   true
+semEqs  (i  ,  t0  ,  (Local f)      :  eqs  )  =   (exists s_i, semEqs (i + 1,t0,f s_i ++ eqs))
+semEqs  (i  ,  t0  ,  (Equal s1 s2)  :  eqs  )  =   (forall t,  t >= t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
+semEqs  (i  ,  t0  ,  (Init  s1 s2)  :  eqs  )  =   (forall t,  t == t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
+semEqs  (i  ,  t0  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t0 s)                         &&  semEqs  (i,t0,eqs)
 \end{code}
 
 
 \begin{code}
-semSig :: Signal a -> (Time -> a)
+semSig                  ::  Signal a -> (Time -> a)
+semSig (Unit)           =   \_  ->  ()
+semSig (Time)           =   \t  ->  t
+semSig (Const d)        =   \_  ->  d
+semSig (Der s)          =   \t  ->  {-" \displaystyle\lim_{\Delta t \to 0} \frac{s (t + \Delta t) - s (t)}{\Delta t} "-}
+semSig (App1 f1 s1)     =   ...
+semSig (App2 f2 s1 s2)  =   ...
+semSig (Or s1 s2)       =   \t  ->  ((semSig s1)  t)  ||            ((semSig s2) t)
+semSig (And s1 s2)      =   \t  ->  ((semSig s1)  t)  &&            (semSig s2) t
+semSig (Xor s1 s2)      =   \t  ->  ((semSig s1)  t)  {-"\oplus"-}  (semSig s2) t
+semSig (Comp Lt s)      =   \t  ->  ((semSig s)   t)  <   0
+semSig (Comp Lte s)     =   \t  ->  ((semSig s)   t)  <=  0
+semSig (Comp Gt s)      =   \t  ->  ((semSig s)   t)  >   0
+semSig (Comp Gte s)     =   \t  ->  ((semSig s)   t)  >=  0
+semSig (Pair s1 s2)     =   \t  ->  ((semSig s1) t,(semSig s2) t)
 \end{code}
 
 
