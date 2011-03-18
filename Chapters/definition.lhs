@@ -4,7 +4,15 @@
 \chapter{Definition of Hydra}
 \label{chapDefinition}
 
-This is highly technical chapter giving a formal definition of the Hydra language. Firstly, we define Hydra's concrete syntax using the regular expression and BNF notations. Secondly, we give Hydra's abstract syntax derived from the concrete syntax as a Haskell algebraic data. Thirdly, we define a typed intermediate representation for the abstract syntax and give translation from the untyped abstract syntax to the typed intermediate representation. The typed intermediated representation also fully embodies Hydra's type system. Finally, we give ideal denotational semantics by giving meaning to the typed intermediated representation using the first-order logic.
+This is highly technical chapter giving a formal definition of the Hydra
+language. Firstly, we define Hydra's concrete syntax using the regular
+expression and BNF notations. Secondly, we give Hydra's abstract syntax
+derived from the concrete syntax as a Haskell algebraic data. Thirdly, we
+define a typed intermediate representation for the abstract syntax and give
+translation from the untyped abstract syntax to the typed intermediate
+representation. The typed intermediated representation also fully embodies
+Hydra's type system. Finally, we give ideal denotational semantics by giving
+meaning to the typed intermediated representation using the first-order logic.
 
 \section{Concrete Syntax}
 
@@ -37,24 +45,29 @@ The symbols used in Hydra are the following: \\
 
 Single-line comments begin with {\symb{{$-$}{$-$}}}.
 
-Multiple-line comments are  enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
+Multiple-line comments are enclosed with {\symb{\{{$-$}}} and
+{\symb{{$-$}\}}}.
 
 Integer literals \nonterminal{Int}\ are nonempty sequences of digits.
 
-Double-precision float literals \nonterminal{Double}\ have the structure indicated by the regular expression $\nonterminal{digit}+ \mbox{{\it `.'}} \nonterminal{digit}+ (\mbox{{\it `e'}} \mbox{{\it `-'}}? \nonterminal{digit}+)?$, that is, two sequences of digits separated by a decimal point, optionally followed by an unsigned or negative exponent.
+Double-precision float literals \nonterminal{Double}\ have the structure
+indicated by the regular expression $\nonterminal{digit}+ \mbox{{\it `.'}}
+\nonterminal{digit}+ (\mbox{{\it `e'}} \mbox{{\it `-'}}?
+\nonterminal{digit}+)?$, that is, two sequences of digits separated by a
+decimal point, optionally followed by an unsigned or negative exponent.
 
 
 LIdent literals are recognized by the regular expression
-\(({\nonterminal{lower}} \mid \mbox{`\_'}) ({\nonterminal{letter}} \mid {\nonterminal{digit}} \mid \mbox{`\_'})*\)
+\(({\nonterminal{lower}} \mid \mbox{`\_'}) ({\nonterminal{letter}} \mid
+{\nonterminal{digit}} \mid \mbox{`\_'})*\)
 
-HsExpr literals are recognized by the regular expression
-\(\mbox{`\$'} ({\nonterminal{anychar}} - \mbox{`\$'})* \mbox{`\$'}\)
+HsExpr literals are recognized by the regular expression \(\mbox{`\$'}
+({\nonterminal{anychar}} - \mbox{`\$'})* \mbox{`\$'}\)
 
 
-Non-terminals are enclosed between $\langle$ and $\rangle$.
-The symbols  {\arrow}  (production),  {\delimit}  (union)
-and {\emptyP} (empty rule) belong to the BNF notation.
-All other symbols are terminals.\\
+Non-terminals are enclosed between $\langle$ and $\rangle$. The symbols
+{\arrow} (production), {\delimit} (union) and {\emptyP} (empty rule) belong to
+the BNF notation. All other symbols are terminals.\\
 
 \begin{tabular}{lll}
 {\nonterminal{SigRel}} & {\arrow}  &{\nonterminal{Pattern}} {\terminal{{$-$}{$>$}}} {\terminal{\{}} {\nonterminal{ListEquation}} {\terminal{\}}}  \\
@@ -210,7 +223,10 @@ data Expr =
 
 \section{Desugaring}
 
-Before we turn our attention to the typed intermediate representation of Hydra models, we describe the desugaring rules of Hydra. The rules are given as Haskell functions that work with the abstract syntax of Hydra (i.e., the |SigRel| data type).
+Before we turn our attention to the typed intermediate representation of Hydra
+models, we describe the desugaring rules of Hydra. The rules are given as
+Haskell functions that work with the abstract syntax of Hydra (i.e., the
+|SigRel| data type).
 
 We break down the rules intro four simple desugaring stages:
 \begin{code}
@@ -218,7 +234,8 @@ desugar  ::  SigRel -> SigRel
 desugar  =   desugarFlowSigRel . desugarConnectSigRel . desugarTupleSigRel . desugarLocalSigRel
 \end{code}
 
-In the first stage, we desugar all local signal variable definitions that bind multiple variables into the definitions that only bind a single variable.
+In the first stage, we desugar all local signal variable definitions that bind
+multiple variables into the definitions that only bind a single variable.
 
 \begin{code}
 desugarLocalSigRel                   ::  SigRel -> SigRel
@@ -231,7 +248,9 @@ desugarLocalEquation (EquLocal li1 (li2 : lis))  =   (EquLocal li1 []) : desugar
 desugarLocalEquation (eq)                        =   [eq]
 \end{code}
 
-In the second stage, desugar all equations that assert equality of tuple of signals into a number of equations asserting equality of scalar signals that are carried by the tuple signals.
+In the second stage, desugar all equations that assert equality of tuple of
+signals into a number of equations asserting equality of scalar signals that
+are carried by the tuple signals.
 
 \begin{code}
 desugarTupleSigRel                   ::  SigRel -> SigRel
@@ -251,7 +270,8 @@ desugarTupleEquation (EquInit (ExpTuple es1) (ExpTuple es2))   =
 desugarTupleEquation (eq)                                      =  [eq]
 \end{code}
 
-In the third stage, we desugar |connect| and |connect flow| equations into the equality constrains and sum to zero equations respectively.
+In the third stage, we desugar |connect| and |connect flow| equations into the
+equality constrains and sum to zero equations respectively.
 
 \begin{code}
 desugarConnectSigRel                     ::  SigRel -> SigRel
@@ -267,7 +287,8 @@ desugarConnectEquation (EquConnectFlow li1 li2 lis)  =   let   vs    =  [ ExpVar
 desugarConnectEquation (eq)                          =   [eq]
 \end{code}
 
-In the fourth stage, we desugar |flow| signal variable declarations by negating every occurrence of such variables.
+In the fourth stage, we desugar |flow| signal variable declarations by
+negating every occurrence of such variables.
 
 \begin{code}
 desugarFlowSigRel                     ::  SigRel -> SigRel
@@ -324,7 +345,8 @@ desugarFlowExpr (_,e)                        =   e
 
 \section{Typed Intermediate Representation}
 
-The following typed representation of Hydra models embodies the type system of Hydra.
+The following typed representation of Hydra models embodies the type system of
+Hydra.
 
 \begin{code}
 data SR a where
@@ -456,51 +478,66 @@ translateExp (ExpGte e1  e2)            =  Comp  Gte  ((translateExp e1)  -  (tr
 
 Note that the domains of the following denotational semantics of Hydra are the
 same as the conceptual definitions of signals, signal functions, and signal
-relations given in Chapter {chapHydra}.
+relations given in Chapter \ref{chapHydra}.
 
 \begin{code}
-semSR                   ::  SR a -> (Time -> Signal a -> Prop)
 semSR (SR f)            =   \t0 s -> semEqs ((0,t0,f s))
-semSR (Switch sr sf f)  =   \t0 s -> forall t, t >= t0 =>
+semSR (Switch sr sf f)  =   \t0 s -> {-" \forall \, t \in \mathbb{R} . \, "-} t >= t0 =>
     ((semSR sr) t0 s) && ((semSF sf) s t) == ((semSF sf) s t0)
     ||
-    (exists t_e,  (t < t_e   =>  ((semSR sr) t0 s)            &&  ((semSF sf) s t)    ==  ((semSF sf) s t0))
-                  &&
-                  (t >= t_e  =>  ((semSR (f (s t_e))) t_e s)  &&  ((semSF sf) s t_e)  /=  ((semSF sf) s t0)))
+    ({-" \exists \, t_{e} \in \mathbb{R} . \, "-}   (t < t_e   =>  ((semSR sr) t0 s)            &&  ((semSF sf) s t)    ==  ((semSF sf) s t0))
+                                                    &&
+                                                    (t >= t_e  =>  ((semSR (f (s t_e))) t_e s)  &&  ((semSF sf) s t_e)  /=  ((semSF sf) s t0)))
 
 \end{code}
 
 \begin{code}
-semSF           ::  SF a -> (Signal a -> Signal b)
 semSF (SF sf)   =   sf
 \end{code}
 
 \begin{code}
-semEqs                                          ::  (Integer, Time, [Equation]) -> Prop
-semEqs  (_  ,  _   ,  []                     )  =   true
-semEqs  (i  ,  t0  ,  (Local f)      :  eqs  )  =   (exists s_i, semEqs (i + 1,t0,f s_i ++ eqs))
-semEqs  (i  ,  t0  ,  (Equal s1 s2)  :  eqs  )  =   (forall t,  t >= t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
-semEqs  (i  ,  t0  ,  (Init  s1 s2)  :  eqs  )  =   (forall t,  t == t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
+semEqs  (_  ,  _   ,  []                     )  =   {-" \top "-}
+semEqs  (i  ,  t0  ,  (Local f)      :  eqs  )  =   ({-" \exists \, s_{i} \in \mathbb{R} \rightarrow \mathbb{R} . \, "-} (semEqs (i + 1,t0,f s_i ++ eqs)))
+semEqs  (i  ,  t0  ,  (Equal s1 s2)  :  eqs  )  =   ({-" \forall \, t \in \mathbb{R} . \, "-}  t >= t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
+semEqs  (i  ,  t0  ,  (Init  s1 s2)  :  eqs  )  =   ({-" \forall \, t \in \mathbb{R} . \, "-}  t == t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
 semEqs  (i  ,  t0  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t0 s)                         &&  semEqs  (i,t0,eqs)
 \end{code}
 
 
 \begin{code}
-semSig                  ::  Signal a -> (Time -> a)
-semSig (Unit)           =   \_  ->  ()
-semSig (Time)           =   \t  ->  t
-semSig (Const d)        =   \_  ->  d
-semSig (Der s)          =   \t  ->  {-" \displaystyle\lim_{\Delta t \to 0} \frac{s (t + \Delta t) - s (t)}{\Delta t} "-}
-semSig (App1 f1 s1)     =   ...
-semSig (App2 f2 s1 s2)  =   ...
-semSig (Or s1 s2)       =   \t  ->  ((semSig s1)  t)  ||            ((semSig s2) t)
-semSig (And s1 s2)      =   \t  ->  ((semSig s1)  t)  &&            (semSig s2) t
-semSig (Xor s1 s2)      =   \t  ->  ((semSig s1)  t)  {-"\oplus"-}  (semSig s2) t
-semSig (Comp Lt s)      =   \t  ->  ((semSig s)   t)  <   0
-semSig (Comp Lte s)     =   \t  ->  ((semSig s)   t)  <=  0
-semSig (Comp Gt s)      =   \t  ->  ((semSig s)   t)  >   0
-semSig (Comp Gte s)     =   \t  ->  ((semSig s)   t)  >=  0
-semSig (Pair s1 s2)     =   \t  ->  ((semSig s1) t,(semSig s2) t)
+semSig (Unit)            =   \_  ->  ()
+semSig (Time)            =   \t  ->  t
+semSig (Const d)         =   \_  ->  d
+semSig (Der s)           =   \t  ->  {-" \displaystyle\lim_{\Delta t \to 0} \frac{ "-} (semSig s) {-" (t + \Delta t) - "-} (semSig s) {-" (t)}{\Delta t} "-}
+semSig (App1 Exp s)      =   \t  ->  exp      ((semSig s)  t)
+semSig (App1 Sqrt s)     =   \t  ->  sqrt     ((semSig s)  t)
+semSig (App1 Log s)      =   \t  ->  log      ((semSig s)  t)
+semSig (App1 Sin s)      =   \t  ->  sin      ((semSig s)  t)
+semSig (App1 Tan s)      =   \t  ->  tan      ((semSig s)  t)
+semSig (App1 Cos s)      =   \t  ->  cos      ((semSig s)  t)
+semSig (App1 Asin s)     =   \t  ->  asin     ((semSig s)  t)
+semSig (App1 Atan s)     =   \t  ->  atan     ((semSig s)  t)
+semSig (App1 Acos s)     =   \t  ->  acos     ((semSig s)  t)
+semSig (App1 Sinh s)     =   \t  ->  sinh     ((semSig s)  t)
+semSig (App1 Tanh s)     =   \t  ->  tanh     ((semSig s)  t)
+semSig (App1 Cosh s)     =   \t  ->  cosh     ((semSig s)  t)
+semSig (App1 Asinh s)    =   \t  ->  asinh    ((semSig s)  t)
+semSig (App1 Atanh s)    =   \t  ->  atanh    ((semSig s)  t)
+semSig (App1 Acosh s)    =   \t  ->  acosh    ((semSig s)  t)
+semSig (App1 Abs s)      =   \t  ->  abs      ((semSig s)  t)
+semSig (App1 Sgn s)      =   \t  ->  signum   ((semSig s)  t)
+semSig (App2 Add s1 s2)  =   \t  ->  ((semSig s1)  t)  +             ((semSig s2) t)
+semSig (App2 Mul s1 s2)  =   \t  ->  ((semSig s1)  t)  *             ((semSig s2) t)
+semSig (App2 Div s1 s2)  =   \t  ->  ((semSig s1)  t)  /             ((semSig s2) t)
+semSig (App2 Pow s1 s2)  =   \t  ->  ((semSig s1)  t)  ^             ((semSig s2) t)
+semSig (Or s1 s2)        =   \t  ->  ((semSig s1)  t)  ||            ((semSig s2) t)
+semSig (And s1 s2)       =   \t  ->  ((semSig s1)  t)  &&            (semSig s2) t
+semSig (Xor s1 s2)       =   \t  ->  ((semSig s1)  t)  {-"\oplus"-}  (semSig s2) t
+semSig (Comp Lt s)       =   \t  ->  ((semSig s)   t)  <   0
+semSig (Comp Lte s)      =   \t  ->  ((semSig s)   t)  <=  0
+semSig (Comp Gt s)       =   \t  ->  ((semSig s)   t)  >   0
+semSig (Comp Gte s)      =   \t  ->  ((semSig s)   t)  >=  0
+semSig (Pair s1 s2)      =   \t  ->  ((semSig s1) t,(semSig s2) t)
 \end{code}
 
 

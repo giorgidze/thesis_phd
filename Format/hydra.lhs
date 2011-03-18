@@ -7,8 +7,6 @@
 %format <> = "\diamond"
 %format ~= = "\approx"
 
-%format forall = "\forall"
-%format exists = "\exists"
 %format plus_sf = "+_{SF}"
 
 %format (lim (a) (b)) = "\displaystyle\lim_{" a "\to" b "}"
