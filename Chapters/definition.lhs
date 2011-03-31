@@ -207,8 +207,8 @@ data Expr =
  | ExprApp Expr Expr
  | ExprVar Ident
  | ExprAnti HsExpr
- | ExprInt Integer
- | ExprReal Double
+ | ExprInteger Integer
+ | ExprDouble Double
  | ExprUnit
  | ExprPair Expr Expr
 \end{code}
@@ -268,10 +268,10 @@ desugarConnectSigRel (SigRel pat1 eqs1)  =   SigRel pat1 (concat [ desugarConnec
 
 \begin{code}
 desugarConnectEquation                               ::  Equation -> [Equation]
-desugarConnectEquation (EquConnect li1 li2 lis)      =   let   vs    =  [ ExpVar li | li <- (li1 : li2 : lis) ]
+desugarConnectEquation (EquConnect li1 li2 lis)      =   let   vs    =  [ ExprVar li | li <- (li1 : li2 : lis) ]
                                                          in    zipWith EquEqual vs (tail vs)
-desugarConnectEquation (EquConnectFlow li1 li2 lis)  =   let   vs    =  [ ExpVar li | li <- (li1 : li2 : lis) ]
-                                                         in    [EquEqual  (foldr1 ExpAdd vs) (ExpReal 0)]
+desugarConnectEquation (EquConnectFlow li1 li2 lis)  =   let   vs    =  [ ExprVar li | li <- (li1 : li2 : lis) ]
+                                                         in    [EquEqual  (foldr1 ExprAdd vs) (ExprDouble 0)]
 desugarConnectEquation (eq)                          =   [eq]
 \end{code}
 
@@ -314,22 +314,22 @@ desugarFlowEquations (s  ,  eq@(EquLocal (LIdent s1) []) : eqs)  =   if s1 == s 
 \end{code}
 
 \begin{code}
-desugarFlowExpr                               ::  (String,Expr) -> Expr
-desugarFlowExpr (s,e@(ExpVar (LIdent s1)))    =   if s1 == s then ExpNeg e else e
-desugarFlowExpr (s,ExpAdd  e1 e2)             =   ExpAdd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpSub  e1 e2)             =   ExpSub     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpDiv  e1 e2)             =   ExpDiv     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpMul  e1 e2)             =   ExpMul     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpPow  e1 e2)             =   ExpPow     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpOr   e1 e2)             =   ExpOr      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpAnd  e1 e2)             =   ExpAnd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpLt   e1 e2)             =   ExpLt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpLte  e1 e2)             =   ExpLte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpGt   e1 e2)             =   ExpGt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpGte  e1 e2)             =   ExpGte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpApp  e1 e2)             =   ExpApp     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpPair e1 e2)             =   ExpPair    (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpNeg  e1)                =   ExpNeg     (desugarFlowExpr (s,e1))
+desugarFlowExpr                                ::  (String,Expr) -> Expr
+desugarFlowExpr (s,e@(ExprVar (LIdent s1)))    =   if s1 == s then ExprNeg e else e
+desugarFlowExpr (s,ExprAdd  e1 e2)             =   ExprAdd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprSub  e1 e2)             =   ExprSub     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprDiv  e1 e2)             =   ExprDiv     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprMul  e1 e2)             =   ExprMul     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprPow  e1 e2)             =   ExprPow     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprOr   e1 e2)             =   ExprOr      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprAnd  e1 e2)             =   ExprAnd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprLt   e1 e2)             =   ExprLt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprLte  e1 e2)             =   ExprLte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprGt   e1 e2)             =   ExprGt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprGte  e1 e2)             =   ExprGte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprApp  e1 e2)             =   ExprApp     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprPair e1 e2)             =   ExprPair    (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExprNeg  e1)                =   ExprNeg     (desugarFlowExpr (s,e1))
 desugarFlowExpr (_,e)                         =   e
 \end{code}
 
@@ -453,29 +453,29 @@ translateEqs ((EquLocal (LIdent s1) _) : eqs)       =  [Local  (\ (translateHs s
 \end{code}
 
 \begin{code}
-translateExp (ExpAnti (HsExpr s1))      =  translateHs (s1)
-translateExp (ExpVar (LIdent "time"))   =  Time
-translateExp (ExpVar (LIdent "true"))   =  Const True
-translateExp (ExpVar (LIdent "false"))  =  Const False
-translateExp (ExpVar (LIdent "not"))    =  PrimApp Not
-translateExp (ExpVar (LIdent s1))       =  translateHs (s1)
-translateExp (ExpAdd e1 e2)             =  (translateExp e1)  +   (translateExp e2)
-translateExp (ExpSub e1 e2)             =  (translateExp e1)  -   (translateExp e2)
-translateExp (ExpDiv e1 e2)             =  (translateExp e1)  /   (translateExp e2)
-translateExp (ExpMul e1 e2)             =  (translateExp e1)  *   (translateExp e2)
-translateExp (ExpPow e1 e2)             =  (translateExp e1)  **  (translateExp e2)
-translateExp (ExpNeg e1)                =  negate (translateExp e1)
-translateExp (ExpApp e1 e2)             =  (translateExp e1) (translateExp e2)
-translateExp (ExpInt i1)                =  Const (fromIntegral i1)
-translateExp (ExpReal d1)               =  Const d1
-translateExp (ExpUnit [])               =  Unit
-translateExp (ExpPair e1 e2)            =  Pair  (translateExp e1) (translateExp e2)
-translateExp (ExpOr  e1 e2)             =  PrimApp Or   (translateExp e1, translateExp e2)
-translateExp (ExpAnd e1 e2)             =  PrimApp And  (translateExp e1, translateExp e2)
-translateExp (ExpLt  e1  e2)            =  PrimApp Lt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExpLte e1  e2)            =  PrimApp Lte  ((translateExp e1)  -  (translateExp e2))
-translateExp (ExpGt  e1  e2)            =  PrimApp Gt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExpGte e1  e2)            =  PrimApp Gte  ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprAnti (HsExpr s1))      =  translateHs (s1)
+translateExp (ExprVar (LIdent "time"))   =  Time
+translateExp (ExprVar (LIdent "true"))   =  Const True
+translateExp (ExprVar (LIdent "false"))  =  Const False
+translateExp (ExprVar (LIdent "not"))    =  PrimApp Not
+translateExp (ExprVar (LIdent s1))       =  translateHs (s1)
+translateExp (ExprAdd e1 e2)             =  (translateExp e1)  +   (translateExp e2)
+translateExp (ExprSub e1 e2)             =  (translateExp e1)  -   (translateExp e2)
+translateExp (ExprDiv e1 e2)             =  (translateExp e1)  /   (translateExp e2)
+translateExp (ExprMul e1 e2)             =  (translateExp e1)  *   (translateExp e2)
+translateExp (ExprPow e1 e2)             =  (translateExp e1)  **  (translateExp e2)
+translateExp (ExprNeg e1)                =  negate (translateExp e1)
+translateExp (ExprApp e1 e2)             =  (translateExp e1) (translateExp e2)
+translateExp (ExprInteger i1)            =  Const (fromIntegral i1)
+translateExp (ExprDouble d1)             =  Const d1
+translateExp (ExprUnit [])               =  Unit
+translateExp (ExprPair e1 e2)            =  Pair  (translateExp e1) (translateExp e2)
+translateExp (ExprOr  e1 e2)             =  PrimApp Or   (translateExp e1, translateExp e2)
+translateExp (ExprAnd e1 e2)             =  PrimApp And  (translateExp e1, translateExp e2)
+translateExp (ExprLt  e1  e2)            =  PrimApp Lt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprLte e1  e2)            =  PrimApp Lte  ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprGt  e1  e2)            =  PrimApp Gt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprGte e1  e2)            =  PrimApp Gte  ((translateExp e1)  -  (translateExp e2))
 \end{code}
 
 \section{Ideal Semantics of Hydra}
