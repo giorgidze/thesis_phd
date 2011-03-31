@@ -30,8 +30,8 @@
 %format (desugarConnectSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{connect}"
 %format (desugarConnectEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
 
-%format (desugarTupleSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{tuple}"
-%format (desugarTupleEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
+%format (desugarPairSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{pair}"
+%format (desugarPairEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
 
 %format (desugarLocalSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{local}"
 %format (desugarLocalEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"

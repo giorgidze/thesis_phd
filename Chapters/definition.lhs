@@ -4,15 +4,15 @@
 \chapter{Definition of Hydra}
 \label{chapDefinition}
 
-This is highly technical chapter giving a formal definition of the Hydra
-language. Firstly, we define Hydra's concrete syntax using the regular
-expression and BNF notations. Secondly, we give Hydra's abstract syntax
-derived from the concrete syntax as a Haskell algebraic data. Thirdly, we
-define a typed intermediate representation for the abstract syntax and give
-translation from the untyped abstract syntax to the typed intermediate
-representation. The typed intermediated representation also fully embodies
-Hydra's type system. Finally, we give ideal denotational semantics by giving
-meaning to the typed intermediated representation using the first-order logic.
+This is a highly technical chapter giving a formal definition of the Hydra
+language. Firstly, we define Hydra's lexical structure and concrete syntax
+using the regular expression and BNF notations respectively. Secondly, we give
+Hydra's abstract syntax as a Haskell algebraic data type. Thirdly, we define a
+typed intermediate representation and give translation from the untyped
+abstract syntax to the typed intermediate representation. The typed
+intermediate representation fully embodies Hydra's type system. Finally, we
+give ideal denotational semantics of Hydra by giving meaning to the typed
+intermediate representation in terms of the first-order logic.
 
 \section{Concrete Syntax}
 
@@ -25,49 +25,47 @@ meaning to the typed intermediated representation using the first-order logic.
 \newcommand{\literal}[1]{\mbox{{\texttt {#1}}}}
 \newcommand{\symb}[1]{\mbox{{\texttt {#1}}}}
 
-The reserved words used in Hydra are the following: \\
+Identifiers \nonterminal{Ident} are unquoted strings beginning with a letter,
+followed by any combination of letters, digits, and the characters {\tt \_ '},
+reserved words excluded.
 
-\begin{tabular}{llll}
-{\reserved{connect}} &{\reserved{flow}} &{\reserved{init}} & {\reserved{local}}\\
-\end{tabular}\\
-
-The symbols used in Hydra are the following: \\
-
-\begin{tabular}{lll}
-{\symb{{$-$}{$>$}}} &{\symb{\{}} &{\symb{\}}} \\
-{\symb{\_}} &{\symb{(}} &{\symb{)}} \\
-{\symb{,}} &{\symb{{$=$}}} &{\symb{{$<$}{$>$}}} \\
-{\symb{;}} &{\symb{{$||$}{$||$}}} &{\symb{\&\&}} \\
-{\symb{{$<$}}} &{\symb{{$<$}{$=$}}} &{\symb{{$>$}}} \\
-{\symb{{$>$}{$=$}}} &{\symb{{$+$}}} &{\symb{{$-$}}} \\
-{\symb{/}} &{\symb{*}} &{\symb{\^}} \\
-\end{tabular}\\
-
-Single-line comments begin with {\symb{{$-$}{$-$}}}.
-
-Multiple-line comments are enclosed with {\symb{\{{$-$}}} and
-{\symb{{$-$}\}}}.
-
-Integer literals \nonterminal{Int}\ are nonempty sequences of digits.
+Integer literals \nonterminal{Integer}\ are nonempty sequences of digits.
 
 Double-precision float literals \nonterminal{Double}\ have the structure
 indicated by the regular expression $\nonterminal{digit}+ \mbox{{\it `.'}}
 \nonterminal{digit}+ (\mbox{{\it `e'}} \mbox{{\it `-'}}?
-\nonterminal{digit}+)?$, that is, two sequences of digits separated by a
-decimal point, optionally followed by an unsigned or negative exponent.
-
-
-LIdent literals are recognized by the regular expression
-\(({\nonterminal{lower}} \mid \mbox{`\_'}) ({\nonterminal{letter}} \mid
-{\nonterminal{digit}} \mid \mbox{`\_'})*\)
+\nonterminal{digit}+)?$, that is, two sequences of digits separated by a decimal
+point, optionally followed by an unsigned or negative exponent.
 
 HsExpr literals are recognized by the regular expression \(\mbox{`\$'}
 ({\nonterminal{anychar}} - \mbox{`\$'})* \mbox{`\$'}\)
 
+The reserved words used in Hydra are the following:
 
-Non-terminals are enclosed between $\langle$ and $\rangle$. The symbols
-{\arrow} (production), {\delimit} (union) and {\emptyP} (empty rule) belong to
-the BNF notation. All other symbols are terminals.\\
+\begin{tabular}{llll}
+{\reserved{connect}} & {\reserved{flow}} & {\reserved{init}} & {\reserved{local}}
+\end{tabular}
+
+The symbols used in Hydra are the following:
+
+\begin{tabular}{lll}
+{\symb{{$-$}{$>$}}} &{\symb{\{}} &{\symb{\}}} \\
+{\symb{\_}} &{\symb{()}} &{\symb{(}} \\
+{\symb{,}} &{\symb{)}} &{\symb{{$=$}}} \\
+{\symb{{$<$}{$>$}}} &{\symb{{$||$}{$||$}}} &{\symb{\&\&}} \\
+{\symb{{$<$}}} &{\symb{{$<$}{$=$}}} &{\symb{{$>$}}} \\
+{\symb{{$>$}{$=$}}} &{\symb{{$+$}}} &{\symb{{$-$}}} \\
+{\symb{/}} &{\symb{*}} &{\symb{\^}} \\
+{\symb{;}} & & \\
+\end{tabular}\\
+
+Single-line comments begin with {\symb{{$-$}{$-$}}}. Multiple-line comments
+are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
+
+Non-terminals are enclosed between $\langle$ and $\rangle$. 
+The symbols  {\arrow}  (production),  {\delimit}  (union) 
+and {\emptyP} (empty rule) belong to the BNF notation. 
+All other symbols are terminals.\\
 
 \begin{tabular}{lll}
 {\nonterminal{SigRel}} & {\arrow}  &{\nonterminal{Pattern}} {\terminal{{$-$}{$>$}}} {\terminal{\{}} {\nonterminal{ListEquation}} {\terminal{\}}}  \\
@@ -79,43 +77,27 @@ the BNF notation. All other symbols are terminals.\\
 
 \begin{tabular}{lll}
 {\nonterminal{Pattern}} & {\arrow}  &{\terminal{\_}}  \\
- & {\delimit}  &{\nonterminal{PatternNameQual}} {\nonterminal{LIdent}}  \\
- & {\delimit}  &{\terminal{(}} {\nonterminal{ListPattern}} {\terminal{)}}  \\
+ & {\delimit}  &{\nonterminal{Qualifier}} {\nonterminal{Ident}}  \\
+ & {\delimit}  &{\terminal{()}}  \\
+ & {\delimit}  &{\terminal{(}} {\nonterminal{Pattern}} {\terminal{,}} {\nonterminal{Pattern}} {\terminal{)}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{ListPattern}} & {\arrow}  &{\emptyP} \\
- & {\delimit}  &{\nonterminal{Pattern}}  \\
- & {\delimit}  &{\nonterminal{Pattern}} {\terminal{,}} {\nonterminal{ListPattern}}  \\
-\end{tabular}\\
-
-\begin{tabular}{lll}
-{\nonterminal{PatternNameQual}} & {\arrow}  &{\emptyP} \\
+{\nonterminal{Qualifier}} & {\arrow}  &{\emptyP} \\
  & {\delimit}  &{\terminal{flow}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
 {\nonterminal{Equation}} & {\arrow}  &{\nonterminal{Expr}} {\terminal{{$=$}}} {\nonterminal{Expr}}  \\
  & {\delimit}  &{\terminal{init}} {\nonterminal{Expr}} {\terminal{{$=$}}} {\nonterminal{Expr}}  \\
- & {\delimit}  &{\terminal{local}} {\nonterminal{LIdent}} {\nonterminal{ListLIdent}}  \\
- & {\delimit}  &{\terminal{connect}} {\nonterminal{LIdent}} {\nonterminal{LIdent}} {\nonterminal{ListLIdent}}  \\
- & {\delimit}  &{\terminal{connect}} {\terminal{flow}} {\nonterminal{LIdent}} {\nonterminal{LIdent}} {\nonterminal{ListLIdent}}  \\
+ & {\delimit}  &{\terminal{local}} {\nonterminal{Ident}} {\nonterminal{ListIdent}}  \\
+ & {\delimit}  &{\terminal{connect}} {\nonterminal{Ident}} {\nonterminal{Ident}} {\nonterminal{ListIdent}}  \\
+ & {\delimit}  &{\terminal{connect}} {\terminal{flow}} {\nonterminal{Ident}} {\nonterminal{Ident}} {\nonterminal{ListIdent}}  \\
  & {\delimit}  &{\nonterminal{HsExpr}} {\terminal{{$<$}{$>$}}} {\nonterminal{Expr}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{ListEquation}} & {\arrow}  &{\emptyP} \\
- & {\delimit}  &{\nonterminal{Equation}}  \\
- & {\delimit}  &{\nonterminal{Equation}} {\terminal{;}} {\nonterminal{ListEquation}}  \\
-\end{tabular}\\
-
-\begin{tabular}{lll}
-{\nonterminal{ListLIdent}} & {\arrow}  &{\emptyP} \\
- & {\delimit}  &{\nonterminal{LIdent}} {\nonterminal{ListLIdent}}  \\
-\end{tabular}\\
-
-\begin{tabular}{lll}
-{\nonterminal{Expr1}} & {\arrow}  &{\nonterminal{Expr1}} {\terminal{$||||$}} {\nonterminal{Expr2}}  \\
+{\nonterminal{Expr1}} & {\arrow}  &{\nonterminal{Expr1}} {\terminal{{$||$}{$||$}}} {\nonterminal{Expr2}}  \\
  & {\delimit}  &{\nonterminal{Expr2}}  \\
 \end{tabular}\\
 
@@ -156,11 +138,13 @@ the BNF notation. All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr8}} & {\arrow}  &{\nonterminal{LIdent}}  \\
+{\nonterminal{Expr8}} & {\arrow}  &{\nonterminal{Ident}}  \\
  & {\delimit}  &{\nonterminal{HsExpr}}  \\
  & {\delimit}  &{\nonterminal{Integer}}  \\
  & {\delimit}  &{\nonterminal{Double}}  \\
- & {\delimit}  &{\terminal{(}} {\nonterminal{ListExpr}} {\terminal{)}}  \\
+ & {\delimit}  &{\terminal{()}}  \\
+ & {\delimit}  &{\terminal{(}} {\nonterminal{Expr}} {\terminal{,}} {\nonterminal{Expr}} {\terminal{)}}  \\
+ & {\delimit}  &{\terminal{(}} {\nonterminal{Expr}} {\terminal{)}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
@@ -168,15 +152,21 @@ the BNF notation. All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{ListExpr}} & {\arrow}  &{\emptyP} \\
- & {\delimit}  &{\nonterminal{Expr}}  \\
- & {\delimit}  &{\nonterminal{Expr}} {\terminal{,}} {\nonterminal{ListExpr}}  \\
+{\nonterminal{ListEquation}} & {\arrow}  &{\emptyP} \\
+ & {\delimit}  &{\nonterminal{Equation}}  \\
+ & {\delimit}  &{\nonterminal{Equation}} {\terminal{;}} {\nonterminal{ListEquation}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{ListIdent}} & {\arrow}  &{\emptyP} \\
+ & {\delimit}  &{\nonterminal{Ident}} {\nonterminal{ListIdent}}  \\
 \end{tabular}\\
 
 \section{Abstract Syntax}
 
 \begin{code}
-data LIdent = LIdent String
+data Ident = Ident String
+
 data HsExpr = HsExpr String
 
 data SigRel = SigRel Pattern [Equation]
@@ -185,53 +175,58 @@ data SigFun = SigFun Pattern Expr
 
 data Pattern =
    PatWild
- | PatName PatternNameQual LIdent
- | PatTuple [Pattern]
+ | PatName Qualifier Ident
+ | PatUnit
+ | PatPair Pattern Pattern
 
-data PatternNameQual =
-   PatNameQualEmpty
- | PatNameQualFlow
+data Qualifier =
+   QualEmpty
+ | QualFlow
 
 data Equation =
    EquEqual Expr Expr
  | EquInit Expr Expr
- | EquLocal LIdent [LIdent]
- | EquConnect LIdent LIdent [LIdent]
- | EquConnectFlow LIdent LIdent [LIdent]
+ | EquLocal Ident [Ident]
+ | EquConnect Ident Ident [Ident]
+ | EquConnectFlow Ident Ident [Ident]
  | EquSigRelApp HsExpr Expr
 
 data Expr =
-   ExpOr Expr Expr
- | ExpAnd Expr Expr
- | ExpLt Expr Expr
- | ExpLte Expr Expr
- | ExpGt Expr Expr
- | ExpGte Expr Expr
- | ExpAdd Expr Expr
- | ExpSub Expr Expr
- | ExpDiv Expr Expr
- | ExpMul Expr Expr
- | ExpPow Expr Expr
- | ExpNeg Expr
- | ExpApp Expr Expr
- | ExpVar LIdent
- | ExpAnti HsExpr
- | ExpInt Integer
- | ExpReal Double
- | ExpTuple [Expr]
+   ExprOr Expr Expr
+ | ExprAnd Expr Expr
+ | ExprLt Expr Expr
+ | ExprLte Expr Expr
+ | ExprGt Expr Expr
+ | ExprGte Expr Expr
+ | ExprAdd Expr Expr
+ | ExprSub Expr Expr
+ | ExprDiv Expr Expr
+ | ExprMul Expr Expr
+ | ExprPow Expr Expr
+ | ExprNeg Expr
+ | ExprApp Expr Expr
+ | ExprVar Ident
+ | ExprAnti HsExpr
+ | ExprInt Integer
+ | ExprReal Double
+ | ExprUnit
+ | ExprPair Expr Expr
 \end{code}
 
 \section{Desugaring}
 
-Before we turn our attention to the typed intermediate representation of Hydra
-models, we describe the desugaring rules of Hydra. The rules are given as
-Haskell functions that work with the abstract syntax of Hydra (i.e., the
-|SigRel| data type).
+Before we turn our attention to the translation of the untyped abstract syntax
+into the typed intermediate representation, we describe a desugaring
+translation of Hydra. The goal of this translation is to represent a Hydra
+model with fewer constructors. This in turn allows for a simpler typed
+intermediated representation as we show in the following section. The
+translation is given as a Haskell function working with the abstract syntax of
+Hydra.
 
-We break down the rules intro four simple desugaring stages:
+We break down the translation into four simple desugaring stages:
 \begin{code}
 desugar  ::  SigRel -> SigRel
-desugar  =   desugarFlowSigRel . desugarConnectSigRel . desugarTupleSigRel . desugarLocalSigRel
+desugar  =   desugarFlowSigRel . desugarConnectSigRel . desugarPairSigRel . desugarLocalSigRel
 \end{code}
 
 In the first stage, we desugar all local signal variable definitions that bind
@@ -248,26 +243,19 @@ desugarLocalEquation (EquLocal li1 (li2 : lis))  =   (EquLocal li1 []) : desugar
 desugarLocalEquation (eq)                        =   [eq]
 \end{code}
 
-In the second stage, desugar all equations that assert equality of tuple of
-signals into a number of equations asserting equality of scalar signals that
-are carried by the tuple signals.
+In the second stage, we desugar all equations that assert equality of signal
+pairs into equations asserting equality of scalar signals.
 
 \begin{code}
-desugarTupleSigRel                   ::  SigRel -> SigRel
-desugarTupleSigRel (SigRel pat eqs)  =   SigRel pat (concat [ desugarTupleEquation eq | eq <- eqs ])
+desugarPairSigRel                   ::  SigRel -> SigRel
+desugarPairSigRel (SigRel pat eqs)  =   SigRel pat (concat [ desugarPairEquation eq | eq <- eqs ])
 \end{code}
 
 \begin{code}
-desugarTupleEquation                                           ::  Equation -> [Equation]
-desugarTupleEquation (EquEqual (ExpTuple es1) (ExpTuple es2))  =
-  if  length es1 == length es2
-      then  concat [ desugarTupleEquation (EquEqual e1 e2) | (e1,e2) <- zip es1 es2 ]
-      else  undefined
-desugarTupleEquation (EquInit (ExpTuple es1) (ExpTuple es2))   =
-  if  length es1 == length es2
-      then  concat [ desugarTupleEquation (EquInit e1 e2) | (e1,e2) <- zip es1 es2 ]
-      else  undefined
-desugarTupleEquation (eq)                                      =  [eq]
+desugarPairEquation                                         ::  Equation -> [Equation]
+desugarPairEquation (EquEqual  (Pair e1 e2) (Pair e3 e4))   =   desugarPairEquation (EquEqual  e1 e3)  ++ desugarPairEquation (EquEqual  e2 e4)
+desugarPairEquation (EquInit   (Pair e1 e2) (Pair e3 e4))   =   desugarPairEquation (EquInit   e1 e3)  ++ desugarPairEquation (EquInit   e2 e4)
+desugarPairEquation (eq)                                    =   [eq]
 \end{code}
 
 In the third stage, we desugar |connect| and |connect flow| equations into the
@@ -299,19 +287,21 @@ desugarFlowSigRel (SigRel pat1 eqs1)  =   let  flowVars = desugarFlowFindPattern
 \end{code}
 
 \begin{code}
-desugarFlowFindPattern                                        ::  Pattern -> [String]
-desugarFlowFindPattern (PatWild)                              =   []
-desugarFlowFindPattern (PatName PatNameQualEmpty _)           =   []
-desugarFlowFindPattern (PatName PatNameQualFlow (LIdent s1))  =   [s1]
-desugarFlowFindPattern (PatTuple pats)                        =   concat [ desugarFlowFindPattern p | p <- pats ]
+desugarFlowFindPattern                                 ::  Pattern -> [String]
+desugarFlowFindPattern (PatUnit)                       =   []
+desugarFlowFindPattern (PatWild)                       =   []
+desugarFlowFindPattern (PatName QualEmpty _)           =   []
+desugarFlowFindPattern (PatName QualFlow (LIdent s1))  =   [s1]
+desugarFlowFindPattern (PatPair p1 p2)                 =   desugarFlowFindPattern p1 ++ desugarFlowFindPattern p2
 \end{code}
 
 \begin{code}
-desugarFlowForgetPattern                                       ::  Pattern -> Pattern
-desugarFlowForgetPattern (pat@(PatWild))                       =   pat
-desugarFlowForgetPattern (pat@(PatName PatNameQualEmpty li1))  =   pat
-desugarFlowForgetPattern (pat@(PatName PatNameQualFlow  li1))  =   pat
-desugarFlowForgetPattern (pat@(PatTuple pats))                 =   PatTuple [ desugarFlowForgetPattern p | p <- pats ]
+desugarFlowForgetPattern                                ::  Pattern -> Pattern
+desugarFlowForgetPattern (pat@(PatUnit))                =   pat
+desugarFlowForgetPattern (pat@(PatWild))                =   pat
+desugarFlowForgetPattern (pat@(PatName QualEmpty li1))  =   pat
+desugarFlowForgetPattern (pat@(PatName QualFlow  li1))  =   pat
+desugarFlowForgetPattern (pat@(PatTuple pats))          =   PatTuple [ desugarFlowForgetPattern p | p <- pats ]
 \end{code}
 
 \begin{code}
@@ -324,23 +314,23 @@ desugarFlowEquations (s  ,  eq@(EquLocal (LIdent s1) []) : eqs)  =   if s1 == s 
 \end{code}
 
 \begin{code}
-desugarFlowExpr                              ::  (String,Expr) -> Expr
-desugarFlowExpr (s,e@(ExpVar (LIdent s1)))   =   if s1 == s then ExpNeg e else e
-desugarFlowExpr (s,ExpAdd e1 e2)             =   ExpAdd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpSub e1 e2)             =   ExpSub     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpDiv e1 e2)             =   ExpDiv     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpMul e1 e2)             =   ExpMul     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpPow e1 e2)             =   ExpPow     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpOr  e1 e2)             =   ExpOr      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpAnd e1 e2)             =   ExpAnd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpLt  e1 e2)             =   ExpLt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpLte e1 e2)             =   ExpLte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpGt  e1 e2)             =   ExpGt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpGte e1 e2)             =   ExpGte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpApp e1 e2)             =   ExpApp     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExpNeg e1)                =   ExpNeg     (desugarFlowExpr (s,e1))
-desugarFlowExpr (s,ExpTuple es1)             =   ExpTuple   [ desugarFlowExpr (s,e) | e <- es1 ]
-desugarFlowExpr (_,e)                        =   e
+desugarFlowExpr                               ::  (String,Expr) -> Expr
+desugarFlowExpr (s,e@(ExpVar (LIdent s1)))    =   if s1 == s then ExpNeg e else e
+desugarFlowExpr (s,ExpAdd  e1 e2)             =   ExpAdd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpSub  e1 e2)             =   ExpSub     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpDiv  e1 e2)             =   ExpDiv     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpMul  e1 e2)             =   ExpMul     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpPow  e1 e2)             =   ExpPow     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpOr   e1 e2)             =   ExpOr      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpAnd  e1 e2)             =   ExpAnd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpLt   e1 e2)             =   ExpLt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpLte  e1 e2)             =   ExpLte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpGt   e1 e2)             =   ExpGt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpGte  e1 e2)             =   ExpGte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpApp  e1 e2)             =   ExpApp     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpPair e1 e2)             =   ExpPair    (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
+desugarFlowExpr (s,ExpNeg  e1)                =   ExpNeg     (desugarFlowExpr (s,e1))
+desugarFlowExpr (_,e)                         =   e
 \end{code}
 
 \section{Typed Intermediate Representation}
@@ -363,63 +353,80 @@ data Equation where
   App   :: SR a -> Signal a -> Equation
 
 data Signal a where
-  Unit  :: Signal ()
-  Time  :: Signal Double
-  Const :: Double -> Signal Double
-  Der   :: Signal Double -> Signal Double
-  App1  :: Func1 -> Signal Double -> Signal Double
-  App2  :: Func2 -> Signal Double -> Signal Double -> Signal Double
-  Or    :: Signal Bool -> Signal Bool -> Signal Bool
-  And   :: Signal Bool -> Signal Bool -> Signal Bool
-  Xor   :: Signal Bool -> Signal Bool -> Signal Bool
-  Comp  :: CompFun -> Signal Double -> Signal Bool
-  Pair  :: Signal a -> Signal b -> Signal (a,b)
+  Unit     ::  Signal ()
+  Time     ::  Signal Double
+  Const    ::  a -> Signal a
+  Pair     ::  Signal a -> Signal b -> Signal (a,b)
+  PrimApp  ::  PrimSF a b -> Signal a -> Signal b
 
-data Func1 =
-  Exp   |  Sqrt  |  Log  |  Sin   |  Tan    |  Cos    |  Asin   |  Atan  |
-  Acos  |  Sinh  |  Tanh |  Cosh  |  Asinh  |  Atanh  |  Acosh  |  Abs   |  Sgn
-
-data Func2 = Add | Mul | Div | Pow
-
-data CompFun = Lt | Lte | Gt | Gte
+data PrimSF a b where
+  Der    ::  PrimSF Double Double
+  Or     ::  PrimSF (Bool,Bool) Bool
+  And    ::  PrimSF (Bool,Bool) Bool
+  Not    ::  PrimSF Bool Bool
+  Lt     ::  PrimSF Double Bool
+  Lte    ::  PrimSF Double Bool
+  Gt     ::  PrimSF Double Bool
+  Gte    ::  PrimSF Double Bool
+  Exp    ::  PrimSF Double Double
+  Sqrt   ::  PrimSF Double Double
+  Log    ::  PrimSF Double Double
+  Sin    ::  PrimSF Double Double
+  Tan    ::  PrimSF Double Double
+  Cos    ::  PrimSF Double Double
+  Asin   ::  PrimSF Double Double
+  Atan   ::  PrimSF Double Double
+  Acos   ::  PrimSF Double Double
+  Sinh   ::  PrimSF Double Double
+  Tanh   ::  PrimSF Double Double
+  Cosh   ::  PrimSF Double Double
+  Asinh  ::  PrimSF Double Double
+  Atanh  ::  PrimSF Double Double
+  Acosh  ::  PrimSF Double Double
+  Abs    ::  PrimSF Double Double
+  Sgn    ::  PrimSF Double Double
+  Add    ::  PrimSF (Double,Double) Double
+  Mul    ::  PrimSF (Double,Double) Double
+  Div    ::  PrimSF (Double,Double) Double
+  Pow    ::  PrimSF (Double,Double) Double
 \end{code}
 
 \begin{code}
 instance Num (Signal Double) where
-  (+) e1 e2     = App2 Add e1 e2
-  (*) e1 e2     = App2 Mul e1 e2
-  (-) e1 e2     = App2 Add e1 ((Const (-1)) * e2)
+  (+) e1 e2     = PrimApp Add (Pair e1 e2)
+  (*) e1 e2     = PrimApp Mul (Pair e1 e2)
+  (-) e1 e2     = PrimApp Add (Pair e1 ((Const (-1)) * e2))
   negate e1     = (Const (-1)) * e1
-  abs e1        = App1 Abs e1
-  signum e1     = App1 Sgn e1
+  abs e1        = PrimApp Abs e1
+  signum e1     = PrimApp Sgn e1
   fromInteger i = Const (fromIntegral i)
 
 instance Fractional (Signal Double) where
-  (/) e1 e2 = App2 Div e1 e2
+  (/) e1 e2 = PrimApp Div (Pair e1 e2)
   recip e1 = 1 / e1
   fromRational r = Const (fromRational r)
 
 instance Floating (Signal Double) where
   pi          = Const pi
-  exp   e1    = App1 Exp   e1
-  log   e1    = App1 Log   e1
-  sqrt  e1    = App1 Sqrt  e1
-  sin   e1    = App1 Sin   e1
-  cos   e1    = App1 Cos   e1
-  tan   e1    = App1 Tan   e1
-  asin  e1    = App1 Asin  e1
-  acos  e1    = App1 Acos  e1
-  atan  e1    = App1 Atan  e1
-  sinh  e1    = App1 Sinh  e1
-  cosh  e1    = App1 Cosh  e1
-  tanh  e1    = App1 Tanh  e1
-  asinh e1    = App1 Asinh e1
-  acosh e1    = App1 Acosh e1
-  atanh e1    = App1 Atanh e1
-  (**) e1 e2  = App2 Pow e1 e2
+  exp   e1    = PrimApp Exp   e1
+  log   e1    = PrimApp Log   e1
+  sqrt  e1    = PrimApp Sqrt  e1
+  sin   e1    = PrimApp Sin   e1
+  cos   e1    = PrimApp Cos   e1
+  tan   e1    = PrimApp Tan   e1
+  asin  e1    = PrimApp Asin  e1
+  acos  e1    = PrimApp Acos  e1
+  atan  e1    = PrimApp Atan  e1
+  sinh  e1    = PrimApp Sinh  e1
+  cosh  e1    = PrimApp Cosh  e1
+  tanh  e1    = PrimApp Tanh  e1
+  asinh e1    = PrimApp Asinh e1
+  acosh e1    = PrimApp Acosh e1
+  atanh e1    = PrimApp Atanh e1
+  (**) e1 e2  = PrimApp Pow   (Pair e1 e2)
 \end{code}
 
-\section{From Untyped to Type Representation}
+\section{From Untyped to Typed Representation}
 
 In this section we present translation rules transforming a model in the
 untyped representation into the corresponding model in the typed
@@ -433,9 +440,8 @@ translateSF (SigFun  pattern  expression)  =  SF  (\ translatePat (pattern)  -> 
 \begin{code}
 translatePat (PatWild)                =  _
 translatePat (PatName _ (LIdent s1))  =  translateHs (s1)
-translatePat (PatTuple [])            =  Unit
-translatePat (PatTuple [pat1])        =  translatePat (pat1)
-translatePat (PatTuple [pat1,pat2])   =  Pair (translatePat pat1) (translatePat pat2)
+translatePat (PatUnit)                =  Unit
+translatePat (PatPair pat1 pat2)      =  Pair (translatePat pat1) (translatePat pat2)
 \end{code}
 
 \begin{code}
@@ -444,15 +450,14 @@ translateEqs ((EquSigRelApp (HsExpr s1) e1) : eqs)  =  (App    (translateHs s1) 
 translateEqs ((EquEqual  e1 e2) : eqs)              =  (Equal  (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
 translateEqs ((EquInit   e1 e2) : eqs)              =  (Init   (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
 translateEqs ((EquLocal (LIdent s1) _) : eqs)       =  [Local  (\ (translateHs s1) -> (translateEqs eqs))]
-translateEqs ((EquConnect _ _ _) : _)               =  undefined
-translateEqs ((EquConnectFlow _ _ _) : _)           =  undefined
 \end{code}
 
 \begin{code}
 translateExp (ExpAnti (HsExpr s1))      =  translateHs (s1)
 translateExp (ExpVar (LIdent "time"))   =  Time
-translateExp (ExpVar (LIdent "true"))   =  Comp Gt (Const 1)
-translateExp (ExpVar (LIdent "false"))  =  Comp Lt (Const 1)
+translateExp (ExpVar (LIdent "true"))   =  Const True
+translateExp (ExpVar (LIdent "false"))  =  Const False
+translateExp (ExpVar (LIdent "not"))    =  PrimApp Not
 translateExp (ExpVar (LIdent s1))       =  translateHs (s1)
 translateExp (ExpAdd e1 e2)             =  (translateExp e1)  +   (translateExp e2)
 translateExp (ExpSub e1 e2)             =  (translateExp e1)  -   (translateExp e2)
@@ -463,15 +468,14 @@ translateExp (ExpNeg e1)                =  negate (translateExp e1)
 translateExp (ExpApp e1 e2)             =  (translateExp e1) (translateExp e2)
 translateExp (ExpInt i1)                =  Const (fromIntegral i1)
 translateExp (ExpReal d1)               =  Const d1
-translateExp (ExpTuple [])              =  Unit
-translateExp (ExpTuple [e1])            =  translateExp e1
-translateExp (ExpTuple (e1 : e2 : _))   =  Pair  (translateExp e1) (translateExp e2)
-translateExp (ExpOr  e1 e2)             =  Or    (translateExp e1) (translateExp e2)
-translateExp (ExpAnd e1 e2)             =  And   (translateExp e1) (translateExp e2)
-translateExp (ExpLt  e1  e2)            =  Comp  Lt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExpLte e1  e2)            =  Comp  Lte  ((translateExp e1)  -  (translateExp e2))
-translateExp (ExpGt  e1  e2)            =  Comp  Gt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExpGte e1  e2)            =  Comp  Gte  ((translateExp e1)  -  (translateExp e2))
+translateExp (ExpUnit [])               =  Unit
+translateExp (ExpPair e1 e2)            =  Pair  (translateExp e1) (translateExp e2)
+translateExp (ExpOr  e1 e2)             =  PrimApp Or   (translateExp e1, translateExp e2)
+translateExp (ExpAnd e1 e2)             =  PrimApp And  (translateExp e1, translateExp e2)
+translateExp (ExpLt  e1  e2)            =  PrimApp Lt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExpLte e1  e2)            =  PrimApp Lte  ((translateExp e1)  -  (translateExp e2))
+translateExp (ExpGt  e1  e2)            =  PrimApp Gt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExpGte e1  e2)            =  PrimApp Gte  ((translateExp e1)  -  (translateExp e2))
 \end{code}
 
 \section{Ideal Semantics of Hydra}
@@ -505,41 +509,40 @@ semEqs  (i  ,  t0  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t0 s)           
 
 
 \begin{code}
-semSig (Unit)            =   \_  ->  ()
-semSig (Time)            =   \t  ->  t
-semSig (Const d)         =   \_  ->  d
-semSig (Der s)           =   \t  ->  {-" \displaystyle\lim_{\Delta t \to 0} \frac{ "-} (semSig s) {-" (t + \Delta t) - "-} (semSig s) {-" (t)}{\Delta t} "-}
-semSig (App1 Exp s)      =   \t  ->  exp      ((semSig s)  t)
-semSig (App1 Sqrt s)     =   \t  ->  sqrt     ((semSig s)  t)
-semSig (App1 Log s)      =   \t  ->  log      ((semSig s)  t)
-semSig (App1 Sin s)      =   \t  ->  sin      ((semSig s)  t)
-semSig (App1 Tan s)      =   \t  ->  tan      ((semSig s)  t)
-semSig (App1 Cos s)      =   \t  ->  cos      ((semSig s)  t)
-semSig (App1 Asin s)     =   \t  ->  asin     ((semSig s)  t)
-semSig (App1 Atan s)     =   \t  ->  atan     ((semSig s)  t)
-semSig (App1 Acos s)     =   \t  ->  acos     ((semSig s)  t)
-semSig (App1 Sinh s)     =   \t  ->  sinh     ((semSig s)  t)
-semSig (App1 Tanh s)     =   \t  ->  tanh     ((semSig s)  t)
-semSig (App1 Cosh s)     =   \t  ->  cosh     ((semSig s)  t)
-semSig (App1 Asinh s)    =   \t  ->  asinh    ((semSig s)  t)
-semSig (App1 Atanh s)    =   \t  ->  atanh    ((semSig s)  t)
-semSig (App1 Acosh s)    =   \t  ->  acosh    ((semSig s)  t)
-semSig (App1 Abs s)      =   \t  ->  abs      ((semSig s)  t)
-semSig (App1 Sgn s)      =   \t  ->  signum   ((semSig s)  t)
-semSig (App2 Add s1 s2)  =   \t  ->  ((semSig s1)  t)  +             ((semSig s2) t)
-semSig (App2 Mul s1 s2)  =   \t  ->  ((semSig s1)  t)  *             ((semSig s2) t)
-semSig (App2 Div s1 s2)  =   \t  ->  ((semSig s1)  t)  /             ((semSig s2) t)
-semSig (App2 Pow s1 s2)  =   \t  ->  ((semSig s1)  t)  ^             ((semSig s2) t)
-semSig (Or s1 s2)        =   \t  ->  ((semSig s1)  t)  ||            ((semSig s2) t)
-semSig (And s1 s2)       =   \t  ->  ((semSig s1)  t)  &&            (semSig s2) t
-semSig (Xor s1 s2)       =   \t  ->  ((semSig s1)  t)  {-"\oplus"-}  (semSig s2) t
-semSig (Comp Lt s)       =   \t  ->  ((semSig s)   t)  <   0
-semSig (Comp Lte s)      =   \t  ->  ((semSig s)   t)  <=  0
-semSig (Comp Gt s)       =   \t  ->  ((semSig s)   t)  >   0
-semSig (Comp Gte s)      =   \t  ->  ((semSig s)   t)  >=  0
-semSig (Pair s1 s2)      =   \t  ->  ((semSig s1) t,(semSig s2) t)
+semSig (Unit)                       =   \_  ->  ()
+semSig (Time)                       =   \t  ->  t
+semSig (Const d)                    =   \_  ->  d
+semSig (Pair s1 s2)                 =   \t  ->  ((semSig s1) t,(semSig s2) t)
+semSig (PrimApp Der s)              =   \t  ->  {-" \displaystyle\lim_{\Delta t \to 0} \frac{ "-} (semSig s) {-" (t + \Delta t) - "-} (semSig s) {-" (t)}{\Delta t} "-}
+semSig (PrimApp Exp s)              =   \t  ->  exp      ((semSig s)  t)
+semSig (PrimApp Sqrt s)             =   \t  ->  sqrt     ((semSig s)  t)
+semSig (PrimApp Log s)              =   \t  ->  log      ((semSig s)  t)
+semSig (PrimApp Sin s)              =   \t  ->  sin      ((semSig s)  t)
+semSig (PrimApp Tan s)              =   \t  ->  tan      ((semSig s)  t)
+semSig (PrimApp Cos s)              =   \t  ->  cos      ((semSig s)  t)
+semSig (PrimApp Asin s)             =   \t  ->  asin     ((semSig s)  t)
+semSig (PrimApp Atan s)             =   \t  ->  atan     ((semSig s)  t)
+semSig (PrimApp Acos s)             =   \t  ->  acos     ((semSig s)  t)
+semSig (PrimApp Sinh s)             =   \t  ->  sinh     ((semSig s)  t)
+semSig (PrimApp Tanh s)             =   \t  ->  tanh     ((semSig s)  t)
+semSig (PrimApp Cosh s)             =   \t  ->  cosh     ((semSig s)  t)
+semSig (PrimApp Asinh s)            =   \t  ->  asinh    ((semSig s)  t)
+semSig (PrimApp Atanh s)            =   \t  ->  atanh    ((semSig s)  t)
+semSig (PrimApp Acosh s)            =   \t  ->  acosh    ((semSig s)  t)
+semSig (PrimApp Abs s)              =   \t  ->  abs      ((semSig s)  t)
+semSig (PrimApp Sgn s)              =   \t  ->  signum   ((semSig s)  t)
+semSig (PrimApp Add  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  +             ((semSig s2) t)
+semSig (PrimApp Mul  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  *             ((semSig s2) t)
+semSig (PrimApp Div  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  /             ((semSig s2) t)
+semSig (PrimApp Pow  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  ^             ((semSig s2) t)
+semSig (PrimApp Or   (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  ||            ((semSig s2) t)
+semSig (PrimApp And  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  &&            (semSig s2) t
+semSig (PrimApp Not s1)             =   \t  ->  not ((semSig s1)  t)
+semSig (PrimApp Lt s)               =   \t  ->  ((semSig s)   t)  <   0
+semSig (PrimApp Lte s)              =   \t  ->  ((semSig s)   t)  <=  0
+semSig (PrimApp Gt s)               =   \t  ->  ((semSig s)   t)  >   0
+semSig (PrimApp Gte s)              =   \t  ->  ((semSig s)   t)  >=  0
+
 \end{code}
-
-
 
 %}
