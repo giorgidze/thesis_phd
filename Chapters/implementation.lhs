@@ -1,202 +1,218 @@
-% September
 \chapter{Implementation of Hydra}
 \label{chapImplementation}
 
 \section{Embedding}
 \label{sec:embedding}
 
-In this section, we describe the Haskell embedding of Hydra in further detail.
-First, we introduce a Haskell data type that represents an embedded signal
-relation. This representation is untyped. We then introduce typed combinators
-that ensures that only well-typed signal relations can be constructed.
+Hydra is implemented as a Haskell embedded DSL. We use quasiquoting, a recent
+Haskell extension implemented in Glasgow Haskell Compiler (GHC), to provide a
+convenient surface (i.e., concrete) syntax for Hydra. The implementation uses
+quasiquoting to generate the typed representation of Hydra models from strings
+in the concrete syntax. Functions performing the aforementioned
+transformation, so called quasiquoters, are specified in the opening
+quasiquotes. In GHC, a quasiquoter generates Haskell code using using Template
+Haskell \cite{Sheard2002}.
 
-The following data type is the central, untyped representation of signal
-relations. There are two ways to form a signal relation: either from a set of
-defining equations, or by composing signal relations temporally:
+GHC executes quasiquoters before type checking, at Haskell compile time. As
+the typed intermediate representation fully embodies the type system of Hydra,
+we effectively delegate the task of type checking to the host language type
+checker. This approach reduces the language specification and implementation
+effort by reusing the host language type system and the host language type
+checker. However, the disadvantage of this approach is the fact that typing
+errors are not domain specific.
+
+The implementation of Hydra provides two quasiquoters: the |rel| quasiquoter
+for generating typed signal relations, and the |fun| quasiquoter for
+generating typed signal functions. The implementation of the quasiquoters is
+broken down into three stages: pasring, desugaring and translation into the
+typed representation.
+
+Firstly, the string in the concrete syntax of Hydra is parsed and the
+corresponding untyped representation is generated as an abstract syntax tree
+(AST). The BNF Converter (BNFC), a compiler front-end generator from a
+Labelled BNF grammar \cite{BNFC2004}, is used to generate the parser and the
+AST data type. The syntax and the AST data type is exactly the same as given
+in the language definition in Chapter \ref{chapDefinition}. In addition, we
+use BNFC to generate a layout resolver allowing for list of equations in |rel|
+quasiquotes to be constructed without curly braces and semicolons. The layout
+rules are the same as for Haskell.
+
+Secondly, the untyped representation is desugarred exactly as it is presented
+in the language definition (see Chapter \ref{chapDefinition}).
+
+Thirdly, the desugared untyped representation is translated into the typed
+representation. This step involves generation of Haskell code using Template
+Haskell \cite{Sheard2002}.
+
+We illustrate the quasiquoting process using the following signal relation
+modelling the parametrised van der Pol oscillator:
+
 \begin{code}
-data SigRel =
-     SigRel        Pattern  [Equation]
-  |  SigRelSwitch  SigRel   (Expr -> SigRel)
+vanDerPol :: Double -> SR ()
+vanDerPol mu = [rel| () ->
+    local x y
+    init (x,y) = (1,1)
+    der x = y 
+    der y =  - x + $mu$ * (1 - x * x) * y
+|]
 \end{code}
 
-The constructor |SigRel| forms a signal relation from equations. Such a
-relation is represented by a pattern and the list of defining equations. The
-pattern serves the dual purpose of describing the \emph{interface} of the
-signal relation in terms of the types of values carried by the signals it
-relates and their time domains (continuous time or discrete time/events), and
-of introducing names for these signals for use in the equations. Patterns are
-just nested tuples of signal variable names along with indications of which
-are event signals: we omit the details. The list of equations constitute
-a system of Differential Algebraic Equations (DAEs)%
-\footnote{
-Although not necessarily a \emph{fixed} such system as these equations
-may refer to signal relations that contain switches.
-}
-that defines the signal relation by expressing constraints on the (signal)
-variables introduced by the pattern and any additional local signal variables.
-The various kinds of equations are discussed below.
+After the parsing stage the quasiquoted signal relation turns into the
+following AST:
 
-The |switch|-combinator forms a signal relation by temporal composition of two
-signal relations. Internally, such a temporal composition is represented by a
-signal relation constructed by |SigRelSwitch|. The first argument is the
-signal relation that is initially active. The second argument is the function
-that, in the case of an event occurrence from the initially active signal
-relation, is used to compute a new signal relation from the value of that
-occurrence. Here, the value subset of the type |Expr| is used to represent the
-value. This new signal relation then becomes the active one, replacing
-the initial signal relation.
+\begin{code}
+SigRel  PatUnit
+        [  EquLocal   (Ident "x") [Ident "y"]
+        ,  EquInit    (ExprPair (ExprVar (Ident "x")) (ExprVar (Ident "y")))
+                      (ExprPair (ExprInteger 1) (ExprInteger 1))
+        ,  EquEqual   (ExprApp (ExprVar (Ident "der")) (ExprVar (Ident "x")))
+                      (ExprVar (Ident "y"))
+        ,  EquEqual   (ExprApp (ExprVar (Ident "der")) (ExprVar (Ident "y")))
+                      (ExprAdd  (ExprNeg (ExprVar (Ident "x")))
+                                (ExprMul  (ExprMul  (ExprAnti (HsExpr "$mu$"))
+                                                    (ExprSub  (ExprInteger 1)
+                                                              (ExprMul  (ExprVar (Ident "x"))
+                                                                        (ExprVar (Ident "x")))))
+                                          (ExprVar (Ident "x"))))
+        ]
+\end{code}
+
+After the desugaring stage we get the following AST:
+
+\begin{code}
+SigRel  PatUnit
+        [  EquLocal   (Ident "x") []
+        ,  EquLocal   (Ident "y") []
+        ,  EquInit    (ExprVar (Ident "x")) (ExprInteger 1)
+        ,  EquInit    (ExprVar (Ident "y")) (ExprInteger 1)
+        ,  EquEqual   (ExprApp (ExprVar (Ident "der")) (ExprVar (Ident "x")))
+                      (ExprVar (Ident "y"))
+        ,  EquEqual   (ExprApp (ExprVar (Ident "der")) (ExprVar (Ident "y")))
+                      (ExprAdd  (ExprNeg (ExprVar (Ident "x")))
+                                (ExprMul  (ExprMul  (ExprAnti (HsExpr "$mu$"))
+                                                    (ExprSub  (ExprInteger 1)
+                                                              (ExprMul  (ExprVar (Ident "x"))
+                                                                        (ExprVar (Ident "x")))))
+                                          (ExprVar (Ident "x"))))
+
+        ]
+\end{code}
+
+After translation into the typed representation we get the following typed
+representation:
+
+\begin{code}
+SR  (\() ->  [Local (\x -> [Local (\y ->  [  Init x (Const 1.0)
+                                          ,  Init y (Const 1.0)
+                                          ,  Equal (PrimApp Der x) y
+                                          ,  Equal  (PrimApp Der y)
+                                                    ((-x) + (Const mu) * ((Const 1.0) - x * x) * y)
+                                          ])])])
+\end{code}
+
+Let me overview the typed representation once again, to define the |switch|
+combinator in terms of the corresponding constructor of the typed
+representation, to illustrate a minor change in the typed representation for
+the implementation purposes, and to draw your attention on the mixed-level
+embedding techniques used in the implementation.
+
+There are two ways to form a signal relation: either from equations that
+constrain the given signal, or by composing signal relations temporally:
+
+\begin{code}
+data SR a where
+  SR      ::  (Signal a -> [Equation]) -> SR a
+  Switch  ::  SR a -> SF a Bool -> (a -> SR a) -> SR a
+\end{code}
+
+The constructor |SigRel| forms a signal relation from a function that takes a
+signal and returns a list of equations constraining the given signal. This
+list of equations constitute a system of Differential Algebraic Equations
+(DAEs) that defines the signal relation by expressing constraints on the
+signal. Having said that, the system is not necessarily a static one as the
+equations may refer to signal relations that contain switches.
+
+The |switch|-combinator, which is used in \label{chapHydra}, forms a signal
+relation by temporal composition of two signal relations. Internally, such a
+temporal composition is represented by a signal relation constructed by the
+|Switch| constructor:
+
+\begin{code}
+switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
+switch = Switch
+\end{code}
+
+There are four kinds of equations:
+\begin{code}
+data Equation where
+  Local :: (Signal Double -> [Equation]) -> Equation
+  Equal :: Signal Double -> Signal Double -> Equation
+  Init  :: Signal Double -> Signal Double -> Equation
+  App   :: SR a -> Signal a -> Equation
+\end{code}
+
+The |Local| constructor constructs equations that merely introduce local
+signals. As it is evident from the language definition, such signals can be
+constrained only by the equations that are returned by the function that is
+the first argument of the |Local| constructor. This is also enforced by the
+language implementation, as we will see later in this chapter. Note that
+equation generator functions in the |SigRel| constructor are allowed to be
+passed a signal that is constrained elsewhere using the signal relation
+application.
+
+Initialisation equations, constructed by |Init|, provide initial conditions.
+They are only in force when a signal relation instance first becomes active
+(for example, equations like |init (x,y) = (1,1)|).
+
+Equations constructed by |Equal| are basic equations imposing the constraint
+that the valuations of the two signals have to be equal for as long as the
+containing signal relation instance is active (for example, equations like
+|der x = y|).
+
+The fourth kind of equation is signal relation application, |App|, i.e.
+equations like |sr <> (x, y + 2)|. This brings all equations of a signal
+relation into scope by instantiating them for the expressions to which the
+relation is applied.
+
+The typed representation of signals is a standard first-order representation
+making it easy to manipulate signal expressions symbolically and compiling
+signal expressions to simulation code:
+
+\begin{code}
+data Signal a where
+  Unit     ::  Signal ()
+  Time     ::  Signal Double
+  Const    ::  a -> Signal a
+  Pair     ::  Signal a -> Signal b -> Signal (a,b)
+  PrimApp  ::  PrimSF a b -> Signal a -> Signal b
+  Var      ::  Integer -> Signal Double
+\end{code}
+
+As you can see, this data type definition contains one more constructor,
+namely the |Var| constructor. This constructor is not used at the stage of
+quasiquoting. Instead, the constructor is used later on at the stage of
+flattening to instantiate each local signal variable to unique signal variable
+by using the constructor's |Integer| field.
+
+The implementation of Hydra supports the same set of primitive functions as
+defined in the language definition. Hence, in the implementation we use the
+same |PrimSF| data type as given in the language definition.
 
 Note the use of a mixture of shallow and deep techniques of embedding. The
-embedded function in a signal relation constructed by |SigRelSwitch|
-corresponds to the shallow part of the embedding. The rest of the data types
-constitute a deep embedding, providing an explicit representation of language
-terms for further symbolic processing and ultimately compilation, as we will
-see in more detail below.
-
-The following data type represents equations. There are four different kinds:
-\begin{code}
-data Equation  = 
-  EquationInit   Expr    Expr        |  EquationEq         Expr    Expr |
-  EquationEvent  String  Expr  Expr  |  EquationSigRelApp  SigRel  Expr
-\end{code}
-
-Initialisation equations, constructed by |EquationInit|, provide initial
-conditions. They are only in force when a signal relation instance first
-becomes active.
-
-Equations constructed by |EquationEq| are basic equations imposing the
-constraint that the valuations of the two expressions have to be equal for as
-long as the containing signal relation instance is active (for example,
-equations like |der (der x) = 0|).
-
-Equations constructed by |EquationEvent| define event
-signals; i.e., they represent equations like |event e = (x,y) when time =
-3|. These equations are directed. The string is the name of the defined event
-signal. The first expression gives the value of the event signal at event
-occurrences. The second expression defines these occurrences. An event occurs
-whenever the signal represented by this expression \emph{crosses} 0.  For the
-above example, the expression defining the event occurrences would thus be
-|time - 3|. Notation like |when x = y|, as in the example here, is standard
-practice but can be misleading in that if interpreted literally, it does not
-necessarily define a set of only countably many points in time. For example,
-|0 = 0| is always true, implying uncountably many occurrences, which would be
-flawed.  However, as the signal |0 - 0| never \emph{crosses} 0, the actual
-semantics is that this does not define any event occurrences at all.
-
-The fourth kind of equation is signal relation application,
-|EquationSigRelApp|, i.e. equations like |sr <> (x, y + 2)|. This brings all
-equations of a signal relation into scope by instantiating them for the
-expressions to which the relation is applied.
-
-Finally, the representation of expressions is a standard first-order term
-representation making it easy to manipulate expressions symbolically
-(e.g. computing symbolic derivatives) and compiling expressions to
-simulation code:
-\begin{code}
-data Expr =  ExprUnit  |  ExprReal Double  |  ExprVar String  |  ExprTime |
-             ExprTuple Expr Expr [Expr]    |  ExprApp Function [Expr]
-
-data Function = FuncDer |  FuncNeg |  FuncAdd  |  FuncnSub  |  FuncMul  |  ...
-\end{code}
-
-We use quasiquoting, a recent Haskell extension implemented in Glasgow Haskell
-Compiler (GHC), to provide a convenient surface syntax for signal
-relations. We have implemented a quasiquoter that takes a string in the
-concrete syntax of Hydra and generates Haskell code that builds the signal
-relation in the mixed-level representation described above. GHC executes the
-quasiquoter for each string between the quasiquotes before type checking.
-
-While the internal representation of a signal relation is untyped, Hydra
-itself is typed, and we thus have to make sure that only type-correct Hydra
-programs are accepted. As Hydra fragments are generated dynamically, during
-simulation, we cannot postpone the type checking to after program
-generation. Nor can we do it early, at quasiquoting time, at least not
-completely, as no type information from the context around quasiquoted program
-fragments are available (e.g., types of antiquoted Haskell expressions). In
-the current version of Hydra, only domain specific scoping rules (e.g., all
-constrained signal variables must be declared) are checked at the stage of
-quasiquoting. Fortunately, the type system of the present version of Hydra is
-fairly simple; in particular, Hydra is simply typed, so by using the standard
-technique of phantom types, the part of the type checking that requires type
-information outside the quasiquotes is delegated to the host language type
-checker \cite{Rhiger2003a}.
-
-A phantom type is a type whose type constructor has a parameter that is not
-used in its definition. We define phantom type wrappers for the untyped
-representation as follows:
-\begin{code}
-data SR a        =  SR        SigRel
-data PatternT a  =  PatternT  Pattern
-data ExprT a     =  ExprT     Expr
-data E a
-\end{code}
-
-Phantom types can be used to restrict a function to building only type-correct
-domain-specific terms. For example, a typed combinator |SIGREL| can be defined
-in the following way:
-\begin{code}
-SIGREL :: PatternT a -> [Equation] -> SR a
-SIGREL (PatternT p) eqs = SR (SigRel p eqs)
-\end{code}
-As can be seen, the type of the pattern that defines the interface of the
-signal relation is what determines its type. Similarly, we define a typed combinator |switch|:
-\begin{code}
-switch :: (Eval b) => SR (a,E b) -> (b -> SR a) -> SR a
-switch sr f = SigRelSwitch (forget sr) (forget . f . eval)
-\end{code}
-|E| is a type constructor with no constituent data constructors. It is used to
-type patterns that introduce event signals. The data for the event signals are
-constructed using event equations. Typed signal relations are translated into
-their untyped counterparts using the following function:
-\begin{code}
-forget :: SR a -> SigRel
-forget (SR sr) = sr
-\end{code}
-The |Eval| class method |eval| is used to translate a value carried by an
-event occurrence (represented by an element of the value subset of
-the type |Expr|) into the corresponding Haskell value:
-\begin{code}
-class Eval a where
-	eval :: Expr -> a
-\end{code}
-Instances of the |Eval| type class are at present provided for |Double| and
-arbitrarily nested tuples with fields of type |Double|.
-
-A signal relation that is defined using the |switch| combinator is
-structurally dynamic. However, the type of the |switch| combinator statically
-guarantees that its type (i.e., its interface) remains unchanged. Thus, a
-structurally dynamic signal relation can be used in a signal relation
-application just like any other signal relation.
-
-Well-typed equations are constructed using combinators in a similar way:
-\begin{code}
-equationEq :: ExprT a -> ExprT a -> Equation
-
-equationSigRelApp :: SR a -> ExprT a -> Equation
-\end{code}
-Typed combinators for the remaining parts of the language, including |Pattern|
-and |Expr|, are defined using the same technique.
-
-Under the hood the representation is still untyped. However, if only the typed
-combinators are exposed for building of signal relations, it is guaranteed
-that only well-typed terms can be constructed. The quasiquoter of Hydra has
-only access to typed combinators for building signal relations.
-
-Symbolic transformations (e.g., symbolic differentiation and flattening) on
-embedded language terms work with the untyped representation. These
-transformations need to be programmed with care as the Haskell type checker
-cannot verify that the transformations are type preserving.
-
-Several type system extensions of Haskell (e.g., generalised algebraic data
-types, existential types, and type families) make alternative techniques for
-typing EDSLs possible. One alternative would be to directly construct signal
-relations in a typed representation and implement the symbolic transformations
-on the typed representation. While this approach requires more work from the
-EDSL implementer, it provides additional correctness guarantees (e.g., the
-Haskell type checker could be used to verify that transformations are type
-preserving). We have not yet evaluated the suitability of the Haskell type
-system for such an undertaking, opting for the simpler, untyped representation
-for now.
+embedded functions in the |SR|, |Switch|, |Local| and |App| constructors
+correspond to the shallow part of the embedding. The rest of the data
+constructors, namely, |Equal|, |Init|, and all constructors of the |Signal|
+data type correspond to the deep part of the embedding, providing an explicit
+representation of language terms for further symbolic processing and
+ultimately compilation. As we will see in more detail below, each mode of
+operation can be described as a flat list of equations where each equation is
+constructed, either, by the |Init| constructor or by the |Equal| constructor.
+It is this representation that allows for generation of efficient simulation
+code. This combination of the two embedding techniques allowed us to leverage
+shallow embedding for high-level aspects of the embedded language, such as
+equation generation and temporal composition, and deep embedding for low-level
+aspects of the embedded language, such as simulation code generation for
+efficiency.
 
 \section{Simulation}
 \label{sec:simulation}

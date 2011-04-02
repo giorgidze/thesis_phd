@@ -4,6 +4,7 @@
 %format theta0  = "\theta_0"
 %format omega   = "\omega"
 %format delta   = "\delta"
+%format mu      = "\mu"
 %format pi      = "\pi"
 %format l0_x    = "l_{0x}"
 %format l0_y    = "l_{0y}"
