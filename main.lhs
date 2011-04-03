@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{report}
+\documentclass[11pt,a4paper]{report}
 
 %include polycode.fmt
 %include Format/variables.lhs
@@ -6,11 +6,10 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{amsmath}
+\usepackage{setspace}
 \usepackage[left=3.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm, includefoot, headheight=13.6pt]{geometry}
 
-% \parindent 0pt
-% \parskip 1ex
-% \renewcommand{\baselinestretch}{1.33}
+\onehalfspacing
 
 \begin{document}
 
@@ -30,8 +29,10 @@
 \chapter*{}
 \vspace*{8cm}
 
-\begin{flushleft} 
-\large \emph{``Unprovided with original learning, unformed in the habits of thinking, unskilled in the arts of composition, I resolved to write a book.''}
+\begin{flushleft}
+\large
+\emph{``Unprovided with original learning, unformed in the habits of thinking,
+unskilled in the arts of composition, I resolved to write a book.''}
 \end{flushleft}
 \begin{flushright} 
 \large
@@ -47,7 +48,6 @@ Edward Gibbon
 %include Chapters/definition.lhs
 %include Chapters/implementation.lhs
 
-% October
 \chapter{Evaluation}
 \label{chapEvaluation}
 

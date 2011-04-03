@@ -8,7 +8,6 @@ all: clean
 	$(BIBTEX)
 	$(LATEX)
 	$(LATEX)
-	make clean
 
 clean:
 	rm -f *.aux *.blg *.log *.ptb *.toc *.out main.tex main.bbl
