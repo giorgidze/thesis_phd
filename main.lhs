@@ -1,7 +1,6 @@
 \documentclass[11pt,a4paper]{report}
 
 %include polycode.fmt
-%include Format/variables.lhs
 %include Format/haskell.lhs
 
 \usepackage{graphicx}

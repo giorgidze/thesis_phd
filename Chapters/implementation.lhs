@@ -217,6 +217,18 @@ efficiency.
 \section{Simulation}
 \label{sec:simulation}
 
+In this section we describe how an iteratively staged Hydra program is
+run. The process is illustrated in Fig. \ref{fig:simulation} and is
+conceptually divided into four stages. In the first stage, a signal relation
+is flattened and subsequently transformed into a mathematical representation
+suitable for numerical simulation. In the second stage, this representation is
+JIT compiled into efficient machine code. In the third stage, the compiled
+code is passed to a numerical solver that simulates the system until the end
+of simulation or an event occurrence. In the fourth stage, in the case of an
+event occurrence, the event is analysed, a corresponding new signal relation
+is computed and the process is repeated from the first stage. In the
+following, each stage is described in more detail.
+
 \begin{code}
 data Experiment = Experiment {
      timeStart             :: Double
@@ -242,116 +254,6 @@ defaultExperiment = Experiment {
   }
 \end{code}
 
-\begin{code}
-data SymTab = SymTab {
-     model         :: [Equation]
-  ,  equations     :: [Equation]
-  ,  events        :: [(Signal Bool)]
-  ,  time          :: Double
-  ,  instants      :: Array Int (Double,Double)
-  }
-\end{code}
-
-\begin{code}
-handleEvs :: SymTab -> [Signal Bool] -> [Equation] -> [Equation]
-handleEvs _ _ [] = []
-handleEvs st evs (eq : eqs) = case eq of
-  Local f1 -> Local (\s -> handleEvs st evs (f1 s)) : handleEvs st evs eqs
-
-  App (SR f1) s1 -> App (SR (\s -> handleEvs st evs (f1 s))) s1 : handleEvs st evs eqs
-
-  App (Switch sr1 (SF sf1) f2) s1 ->
-     if elem (sf1 s1) evs
-        then App (f2 (eval st s1)) s1 : handleEvs st evs eqs
-        else App (Switch (SR (\_ -> handleEvs st evs [App sr1 s1])) (SF sf1) f2) s1 : handleEvs st evs eqs
-
-  Equal  _ _  ->            eq : handleEvs st evs eqs
-  Init   _ _  ->                 handleEvs st evs eqs
-\end{code}
-
-\begin{code}
-buildEvs :: Int -> SymTab -> [Equation] -> SymTab
-buildEvs _ acc []         = acc
-buildEvs i acc (eq : eqs) = case eq of
-  App (SR f1) s1 -> buildEvs i acc (f1 s1 ++ eqs)
-
-  App (Switch sr1 (SF sf1) _) s1 ->
-      let acc1 = acc {events = (sf1 s1) : (events acc)}
-      in  buildEvs i acc1 ((App sr1 s1) : eqs)
-
-  Local f1   -> buildEvs (i + 1) acc (f1 (Var i) ++ eqs)
-  Equal  _ _ -> buildEvs i acc eqs
-  Init   _ _ -> buildEvs i acc eqs
-\end{code}
-
-\begin{code}
-flattenEqs :: Int -> [Equation] -> [Equation]
-flattenEqs _ []         = []
-flattenEqs i (eq : eqs) = case eq of
-  App (SR f1) s1          -> flattenEqs i (f1 s1 ++ eqs)
-  App (Switch sr1 _ _) s1 -> flattenEqs i ((App sr1 s1) : eqs)
-
-  Local f1     -> flattenEqs (i + 1) (f1 (Var i) ++ eqs)
-  Equal   _  _ -> eq : flattenEqs i eqs
-  Init    _  _ -> eq : flattenEqs i eqs
-\end{code}
-
-\begin{code}
-eval :: Array Int (Double,Double) -> Signal a -> a
-eval vars e = case e of
-  Unit                  -> ()
-  Time                  -> timeCurrent st
-  Const c               -> c
-  Var   i               -> fst (vars ! i)
-  Pair a1 a2            -> (eval st a1,eval st a2)
-  PrimApp Der (Var i1)  -> snd (vars ! i)
-  PrimApp sf1 e1        -> (evalPrimSF sf1) (eval st e1)
-\end{code}
-
-\begin{code}
-evalPrimSF :: PrimSF a b -> (a -> b)
-evalPrimSF sf = case sf of
-  Exp   -> exp
-  Sqrt  -> sqrt
-  Log   -> log
-  Sin   -> sin
-  Tan   -> tan
-  Cos   -> cos
-  Asin  -> asin
-  Atan  -> atan
-  Acos  -> acos
-  Sinh  -> sinh
-  Tanh  -> tanh
-  Cosh  -> cosh
-  Asinh -> asinh
-  Atanh -> atanh
-  Acosh -> acosh
-  Abs   -> abs
-  Sgn   -> signum
-  Add   -> uncurry (+)
-  Mul   -> uncurry (*)
-  Div   -> uncurry (/)
-  Pow   -> uncurry (**)
-  Lt    -> \d -> (d <  0)
-  Lte   -> \d -> (d <= 0)
-  Gt    -> \d -> (d >  0) 
-  Gte   -> \d -> (d >= 0)
-  Or    -> uncurry (||)
-  And   -> uncurry (&&)
-  Not   -> not
-\end{code}
-
-In this section we describe how an iteratively staged Hydra program is
-run. The process is illustrated in Fig. \ref{fig:simulation} and is
-conceptually divided into four stages. In the first stage, a signal relation
-is flattened and subsequently transformed into a mathematical representation
-suitable for numerical simulation. In the second stage, this representation is
-JIT compiled into efficient machine code. In the third stage, the compiled
-code is passed to a numerical solver that simulates the system until the end
-of simulation or an event occurrence. In the fourth stage, in the case of an
-event occurrence, the event is analysed, a corresponding new signal relation
-is computed and the process is repeated from the first stage. In the
-following, each stage is described in more detail.
 
 \begin{figure}[t]
 \begin{center}
@@ -399,6 +301,117 @@ starting time for the current set of equations. Equation (\ref{main-eq}) is
 the main DAE of the system that is integrated in time starting from the
 initial conditions. Equation (\ref{event-eq}) specifies the event conditions
 (signals crossing 0).
+
+\begin{code}
+data SymTab = SymTab {
+     model         :: [Equation]
+  ,  equations     :: [Equation]
+  ,  events        :: [(Signal Bool)]
+  ,  time          :: Double
+  ,  instants      :: Array Int (Double,Double)
+  }
+\end{code}
+
+\begin{code}
+defaultSymbolicProcessor  ::  SymTab -> SymTab
+defaultSymbolicProcessor  =   flattenEquations . flattenEvents . handleEvents
+\end{code}
+
+\begin{code}
+handleEvents     ::  SymTab -> SymTab
+handleEvents st  =   st {model = handleEvs (symtab, events st, model st)}
+\end{code}
+
+\begin{code}
+handleEvs :: (SymTab,[Signal Bool],[Equation]) -> [Equation]
+handleEvs (_,_,[])                                          =  []
+handleEvs (st,evs,(Equal  _ _) : eqs)                       =  eq : handleEvs (st,evs,eqs)
+handleEvs (st,evs,(Init   _ _) : eqs)                       =  handleEvs (st,evs,eqs)
+handleEvs (st,evs,(Local f) : eqs)                          =
+  Local (\s -> handleEvs (st,evs,f s)) : handleEvs (st,evs,eqs)
+handleEvs (st,evs,(App (SR sr) s1 f) : eqs)                 =
+  App (SR (\s2 -> handleEvs (st,evs,f s2))) s1 : handleEvs (st,evs,eqs)
+handleEvs (st,evs,(App (Switch sr (SF sf) f) s) : eqs)      =
+  if  elem   (sf s) evs
+      then      App (f (eval (time st,instants st,s))) s : handleEvs (st,evs,eqs)
+      else      App (Switch (SR (\ _ -> handleEvs (st,evs,[App sr s]))) (SF sf) f) s
+             :  handleEvs (st,evs,eqs)
+\end{code}
+
+\begin{code}
+flattenEvents :: SymTab -> SymTab
+flattenEvents st = st {events = buildEvs (0,st{events = []},model st)} 
+\end{code}
+
+\begin{code}
+buildEvs :: (Int,SymTab,[Equation]) -> SymTab
+buildEvs (_,st,[])                                       = st
+buildEvs (i,st,(Local f) : eqs)                          = buildEvs (i + 1,st,f (Var i) ++ eqs)
+buildEvs (i,st,(Equal  _ _) : eqs)                       = buildEvs (i,st,eqs)
+buildEvs (i,st,(Init   _ _) : eqs)                       = buildEvs (i,st,eqs)
+buildEvs (i,st,(App (SR sr) s) : eqs)                    = buildEvs (i,st,sr s ++ eqs)
+buildEvs (i,st,(App (Switch sr (SF sf) _) s) : eqs)      =
+  buildEvs (i,st {events = (sf s) : (events st)},(App sr s) : eqs)
+\end{code}
+
+\begin{code}
+flattenEquations :: SymTab -> SymTab
+flattenEquations st = st {equations = flattenEqs (0,model st)}
+\end{code}
+
+\begin{code}
+flattenEqs                                        ::  (Int,[Equation]) -> [Equation]
+flattenEqs (_,[])                                 =   []
+flattenEqs (i, (App (SR sr) s) : eqs)             =   flattenEqs (i,sr s ++ eqs)
+flattenEqs (i, (App (Switch sr _ _) s) : eqs)     =   flattenEqs (i,(App sr s) : eqs)
+flattenEqs (i, (Local f) : eqs)                   =   flattenEqs (i + 1,f (Var i) ++ eqs)
+flattenEqs (i, (Equal _ _) : eqs)                 =   eq : flattenEqs (i,eqs)
+flattenEqs (i, (Init _ _) : eqs)                  =   eq : flattenEqs (i,eqs)
+\end{code}
+
+\begin{code}
+eval :: (Double,Array Int (Double,Double),Signal a) -> a
+eval (_,_,Unit)                 = ()
+eval (t,_,Time)                 = t
+eval (_,_,Const c)              = c
+eval (_,v,Var i)                = fst (v ! i)
+eval (t,v,Pair e1 e2)           = (eval (t,v,e1),eval (t,v,e2))
+eval (_,v,PrimApp Der (Var i))  = snd (v ! i)
+eval (t,v,PrimApp sf e)         = (evalPrimSF sf) (eval (t,v,e))
+\end{code}
+
+\begin{code}
+evalPrimSF :: PrimSF a b -> (a -> b)
+evalPrimSF  Exp    = exp
+evalPrimSF  Sqrt   = sqrt
+evalPrimSF  Log    = log
+evalPrimSF  Sin    = sin
+evalPrimSF  Tan    = tan
+evalPrimSF  Cos    = cos
+evalPrimSF  Asin   = asin
+evalPrimSF  Atan   = atan
+evalPrimSF  Acos   = acos
+evalPrimSF  Sinh   = sinh
+evalPrimSF  Tanh   = tanh
+evalPrimSF  Cosh   = cosh
+evalPrimSF  Asinh  = asinh
+evalPrimSF  Atanh  = atanh
+evalPrimSF  Acosh  = acosh
+evalPrimSF  Abs    = abs
+evalPrimSF  Sgn    = signum
+evalPrimSF  Add    = uncurry (+)
+evalPrimSF  Mul    = uncurry (*)
+evalPrimSF  Div    = uncurry (/)
+evalPrimSF  Pow    = uncurry (**)
+evalPrimSF  Lt     = \ d -> (d <  0)
+evalPrimSF  Lte    = \ d -> (d <= 0)
+evalPrimSF  Gt     = \ d -> (d >  0) 
+evalPrimSF  Gte    = \ d -> (d >= 0)
+evalPrimSF  Or     = uncurry (||)
+evalPrimSF  And    =  uncurry (&&)
+evalPrimSF  Not    = not
+\end{code}
+
 
 \subsection{Just-in-time Compilation}
 
