@@ -217,6 +217,130 @@ efficiency.
 \section{Simulation}
 \label{sec:simulation}
 
+\begin{code}
+data Experiment = Experiment {
+     timeStart             :: Double
+  ,  timeStop              :: Double
+  ,  timeStep              :: Double
+  ,  jitCompile            :: Bool
+  ,  symbolicProcessor     :: SymTab -> SymTab
+  ,  numericalSolver       :: NumericalSolver
+  ,  trajectoryVisualiser  :: CDouble -> CInt -> Ptr CDouble -> IO ()
+  }
+\end{code}
+
+\begin{code}
+defaultExperiment :: Experiment
+defaultExperiment = Experiment {
+     timeStart              = 0
+  ,  timeStop               = 10
+  ,  timeStep               = 0.001
+  ,  jitCompile             = True
+  ,  symbolicProcessor      = defaultSymbolicProcessor
+  ,  numericalSolver        = defaultNumericalSolver
+  ,  trajectoryVisualiser   = defaultTrajectoryVisualiser
+  }
+\end{code}
+
+\begin{code}
+data SymTab = SymTab {
+     model         :: [Equation]
+  ,  equations     :: [Equation]
+  ,  events        :: [(Signal Bool)]
+  ,  time          :: Double
+  ,  instants      :: Array Int (Double,Double)
+  }
+\end{code}
+
+\begin{code}
+handleEvs :: SymTab -> [Signal Bool] -> [Equation] -> [Equation]
+handleEvs _ _ [] = []
+handleEvs st evs (eq : eqs) = case eq of
+  Local f1 -> Local (\s -> handleEvs st evs (f1 s)) : handleEvs st evs eqs
+
+  App (SR f1) s1 -> App (SR (\s -> handleEvs st evs (f1 s))) s1 : handleEvs st evs eqs
+
+  App (Switch sr1 (SF sf1) f2) s1 ->
+     if elem (sf1 s1) evs
+        then App (f2 (eval st s1)) s1 : handleEvs st evs eqs
+        else App (Switch (SR (\_ -> handleEvs st evs [App sr1 s1])) (SF sf1) f2) s1 : handleEvs st evs eqs
+
+  Equal  _ _  ->            eq : handleEvs st evs eqs
+  Init   _ _  ->                 handleEvs st evs eqs
+\end{code}
+
+\begin{code}
+buildEvs :: Int -> SymTab -> [Equation] -> SymTab
+buildEvs _ acc []         = acc
+buildEvs i acc (eq : eqs) = case eq of
+  App (SR f1) s1 -> buildEvs i acc (f1 s1 ++ eqs)
+
+  App (Switch sr1 (SF sf1) _) s1 ->
+      let acc1 = acc {events = (sf1 s1) : (events acc)}
+      in  buildEvs i acc1 ((App sr1 s1) : eqs)
+
+  Local f1   -> buildEvs (i + 1) acc (f1 (Var i) ++ eqs)
+  Equal  _ _ -> buildEvs i acc eqs
+  Init   _ _ -> buildEvs i acc eqs
+\end{code}
+
+\begin{code}
+flattenEqs :: Int -> [Equation] -> [Equation]
+flattenEqs _ []         = []
+flattenEqs i (eq : eqs) = case eq of
+  App (SR f1) s1          -> flattenEqs i (f1 s1 ++ eqs)
+  App (Switch sr1 _ _) s1 -> flattenEqs i ((App sr1 s1) : eqs)
+
+  Local f1     -> flattenEqs (i + 1) (f1 (Var i) ++ eqs)
+  Equal   _  _ -> eq : flattenEqs i eqs
+  Init    _  _ -> eq : flattenEqs i eqs
+\end{code}
+
+\begin{code}
+eval :: Array Int (Double,Double) -> Signal a -> a
+eval vars e = case e of
+  Unit                  -> ()
+  Time                  -> timeCurrent st
+  Const c               -> c
+  Var   i               -> fst (vars ! i)
+  Pair a1 a2            -> (eval st a1,eval st a2)
+  PrimApp Der (Var i1)  -> snd (vars ! i)
+  PrimApp sf1 e1        -> (evalPrimSF sf1) (eval st e1)
+\end{code}
+
+\begin{code}
+evalPrimSF :: PrimSF a b -> (a -> b)
+evalPrimSF sf = case sf of
+  Exp   -> exp
+  Sqrt  -> sqrt
+  Log   -> log
+  Sin   -> sin
+  Tan   -> tan
+  Cos   -> cos
+  Asin  -> asin
+  Atan  -> atan
+  Acos  -> acos
+  Sinh  -> sinh
+  Tanh  -> tanh
+  Cosh  -> cosh
+  Asinh -> asinh
+  Atanh -> atanh
+  Acosh -> acosh
+  Abs   -> abs
+  Sgn   -> signum
+  Add   -> uncurry (+)
+  Mul   -> uncurry (*)
+  Div   -> uncurry (/)
+  Pow   -> uncurry (**)
+  Lt    -> \d -> (d <  0)
+  Lte   -> \d -> (d <= 0)
+  Gt    -> \d -> (d >  0) 
+  Gte   -> \d -> (d >= 0)
+  Or    -> uncurry (||)
+  And   -> uncurry (&&)
+  Not   -> not
+\end{code}
+
 In this section we describe how an iteratively staged Hydra program is
 run. The process is illustrated in Fig. \ref{fig:simulation} and is
 conceptually divided into four stages. In the first stage, a signal relation

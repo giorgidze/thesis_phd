@@ -2,6 +2,7 @@
 
 %include polycode.fmt
 %include Format/variables.lhs
+%include Format/haskell.lhs
 
 \usepackage{graphicx}
 \usepackage{subfigure}

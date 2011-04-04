@@ -1,6 +1,3 @@
-%{
-%include ../Format/hydra.lhs
-
 \chapter{Modelling and Simulation in Hydra}
 \label{chapHydra}
 
@@ -531,5 +528,3 @@ parameter in arbitrarily complex ways), there is no way to generate all code
 prior to simulation. However, the pendulum example is simple and suffice for
 illustrative purposes. Moreover, despite its simplicity, it is already an
 example with which present non-causal languages struggle, as mentioned above.
-
-%}

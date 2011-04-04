@@ -1,6 +1,3 @@
-%{
-%include ../Format/hydra.lhs
-
 \chapter{Definition of Hydra}
 \label{chapDefinition}
 
@@ -544,5 +541,3 @@ semSig (PrimApp Gt s)               =   \t  ->  ((semSig s)   t)  >   0
 semSig (PrimApp Gte s)              =   \t  ->  ((semSig s)   t)  >=  0
 
 \end{code}
-
-%}
