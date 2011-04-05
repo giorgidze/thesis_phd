@@ -441,6 +441,48 @@ $i$, $f$ and $e$ are compiled into LLVM instructions that in turn are compiled
 by the LLVM JIT compiler into native machine code. Function pointers to the
 generated machine code are then passed to the numerical solver.
 
+\begin{verbatim}
+define void @hydra_residual_main(double, double*, double*, double*) {
+entry:
+  %4 = getelementptr double* %2, i32 1
+  %5 = load double* %4
+  %6 = getelementptr double* %1, i32 0
+  %7 = load double* %6
+  %8 = fmul double -1.000000e+00, %7
+  %9 = getelementptr double* %1, i32 0
+  %10 = load double* %9
+  %11 = getelementptr double* %1, i32 0
+  %12 = load double* %11
+  %13 = fmul double %10, %12
+  %14 = fmul double -1.000000e+00, %13
+  %15 = fadd double 1.000000e+00, %14
+  %16 = fmul double 3.000000e+00, %15
+  %17 = getelementptr double* %1, i32 1
+  %18 = load double* %17
+  %19 = fmul double %16, %18
+  %20 = fadd double %8, %19
+  %21 = fmul double -1.000000e+00, %20
+  %22 = fadd double %5, %21
+  %23 = getelementptr double* %3, i32 0
+  store double %22, double* %23
+  br label %BB_0
+
+BB_0:                                             ; preds = %entry
+  %24 = getelementptr double* %1, i32 1
+  %25 = load double* %24
+  %26 = getelementptr double* %2, i32 0
+  %27 = load double* %26
+  %28 = fmul double -1.000000e+00, %27
+  %29 = fadd double %25, %28
+  %30 = getelementptr double* %3, i32 1
+  store double %29, double* %30
+  br label %BB_1
+
+BB_1:                                             ; preds = %BB_0
+  ret void
+}
+\end{verbatim}
+
 \subsection{Numerical Simulation}
 
 The numerical suite used in the current implementation of Hydra is called
