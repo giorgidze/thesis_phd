@@ -488,8 +488,206 @@ entire system at every event using a \emph{top level} switch, like in the
 breaking pendulum example. We hope to address these issues in the future: see
 Section \ref{sec:futurework}.
 
-\subsection{Performance}
-\label{sec:simulation-performance}
+\section{Performance}
+\label{secPerformance}
+
+In this section we provide an initial performance evaluation of the current
+prototype implementation of Hydra. We are mainly concerned with the overheads
+of mode switching (computing new structural configurations at events, symbolic
+processing of the equations, and JIT compilation) and how this scales when the
+size of the models grow in order to establish the feasibility of our approach.
+The time spent on numerical simulation is of less interest at this point: as
+we are using standard numerical solvers, and as our model equations are
+compiled down to native code with efficiency on par with statically generated
+code (see section \ref{sec:background-llvm}), this aspect of the overall
+performance should be roughly similar to what can be obtained from other
+compilation-based modelling and simulation language implementations. For this
+reason, and because other compilation-based, non-causal modelling and
+simulation language implementations do not carry out dynamic reconfiguration,
+we do not compare the performance to other simulation software. The results
+would not be very meaningful.
+
+The evaluation setup is as follows. The numerical simulator integrates the
+system using variable-step, variable-order BDF (Backward Differentiation
+Formula) solver \cite{Brenan1996a}. Absolute and relative tolerances for
+numerical solution are set to $10^{-6}$ and trajectories are printed out at
+every point where $t = 10^{-3} * k, k \ \epsilon \ \mathbb{N}$. For static
+compilation and JIT compilation we use GHC 6.10.4 and LLVM 2.5
+respectively. Simulations are performed on a 2.0\,GHz x86-64
+Intel{\textregistered} Core{\texttrademark}2 CPU. However, presently, we do
+not exploit any parallelism, running everything on a single core.
+
+Let us first consider the model of the breaking pendulum from Section
+\ref{sec:background-hydrabyexample}. We simulate it over the time interval
+$t \ \epsilon \ [0,20]$, letting the pendulum break at $t = 10$. Table
+\ref{table:breaking-pendulum} shows the amount of time spent simulating each
+mode of the system, and within that how much time that is spent on
+each of the four conceptual simulation process stages (see Section
+\ref{sec:simulation}). As can be seen, most time (80--90\,\%) is
+spent on numerical simulation, meaning the overheads of our dynamic
+code generation approach was small in this case. Also, in absolute terms,
+it can be seen that the amount of time spent on symbolic processing, JIT
+compilation, and event handling was small, just fractions of a second.
+
+\begin{table}[h]
+\centering
+\scriptsize
+\begin{tabular}{|| p{1.1cm} || r || r || r || r ||}
+  \hline
+
+  & \multicolumn{2}{c||}{Pendulum}
+  & \multicolumn{2}{c||}{Free Fall} \\
+
+  & \multicolumn{2}{c||}{$t \  \epsilon \ [0, 10) $}
+  & \multicolumn{2}{c||}{$t \  \epsilon \ [10, 20]$} \\ \hline
+
+  & \multicolumn{2}{c||}{CPU Time}
+  & \multicolumn{2}{c||}{CPU Time} \\ \hline
+
+  & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}}
+  & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}} \\ \hline
+
+  Symbolic \mbox{Processing}  &  0.0001  &   0.2  &  0.0000  &  0.0   \\ \hline
+  JIT \mbox{Compilation}      &  0.0110  &  18.0  &  0.0077  &  9.1   \\ \hline
+  Numerical \mbox{Simulation} &  0.0500  &  81.8  &  0.0767  &  90.9  \\ \hline
+  Event \mbox{Handling}       &  0.0000  &   0.0  &  -       &  -     \\ \hline \hline
+  Total                       &  0.0611  &  100.0 &  0.0844  &  100.0 \\ \hline
+\end{tabular}
+\caption{
+    \label{table:breaking-pendulum}
+    Time profile of the breaking pendulum simulation
+}
+\end{table}
+
+However, the breaking pendulum example is obviously very small (just a handful
+of equations), and it only needs to be translated to simulation code twice: at
+simulation start and when the pendulum breaks. To get an idea of how the
+performance of the prototype implementation scales with an increasing number
+of equations, we constructed a hybrid model of an RLC circuit (i.e., a circuit
+consisting of resistors, inductors and capacitors) with dynamic structure. In
+the first mode the circuit contains 200 components, described by 1000
+equations in total (5 equations for each component). Every time $t = 10
+* k$, where $k \ \epsilon \ \mathbb{N}$, the number of circuit components is
+increased by 200 (and thus the number of equations by 1000) by switching the
+additional components into the circuit.
+
+\begin{table}[h]
+\centering
+\scriptsize
+
+\begin{tabular}{|| p{1.1cm}
+                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}}
+                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}}
+                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}} ||}
+  \hline
+
+  & \multicolumn{2}{c||}{200  Components}
+  & \multicolumn{2}{c||}{400  Components}
+  & \multicolumn{2}{c||}{600  Components} \\
+
+  & \multicolumn{2}{c||}{1000 Equations}
+  & \multicolumn{2}{c||}{2000 Equations}
+  & \multicolumn{2}{c||}{3000 Equations} \\
+
+  & \multicolumn{2}{c||}{$t \ \epsilon \ [ 0,10) $}
+  & \multicolumn{2}{c||}{$t \ \epsilon \ [10,20)$}
+  & \multicolumn{2}{c||}{$t \ \epsilon \ [20,30)$} \\ \hline
+
+  & \multicolumn{2}{c||}{CPU Time}
+  & \multicolumn{2}{c||}{CPU Time}
+  & \multicolumn{2}{c||}{CPU Time} \\ \hline
+
+  & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}}
+  & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}}
+  & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}} \\ \hline
+
+  Symbolic \mbox{Processing}  &  \ 0.063  \ &  \ 0.6   \  &  \ 0.147  \  & \ 0.6   \  &  \ 0.236  \  &  \ 0.5   \  \\ \hline
+  JIT \mbox{Compilation}      &  \ 1.057  \ &  \ 10.2  \  &  \ 2.120  \  & \ 8.3   \  &  \ 3.213  \  &  \ 6.6   \  \\ \hline
+  Numerical \mbox{Simulation} &  \ 9.273  \ &  \ 89.2  \  &  \ 23.228 \  & \ 91.1  \  &  \ 45.140 \  &  \ 92.9  \  \\ \hline
+  Event \mbox{Handling}       &  \ 0.004  \ &  \ 0.0   \  &  \ 0.006  \  & \ 0.0   \  &  \ 0.008  \  &  \ 0.0   \  \\ \hline \hline
+  Total                       &  \ 10.397 \ &  \ 100.0 \  &  \ 25.501 \  & \ 100.0 \  &  \ 48.598 \  &  \ 100.0 \  \\ \hline
+\end{tabular}
+\caption{
+    \label{table:larger-system-1}
+    Time profile of structurally dynamic RLC circuit simulation, part I
+}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+
+\begin{tabular}{|| p{1.1cm}
+                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}}
+                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}}
+                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}} ||}
+  \hline
+
+  & \multicolumn{2}{c||}{800  Components}
+  & \multicolumn{2}{c||}{1000 Components}
+  & \multicolumn{2}{c||}{1200 Components} \\
+
+  & \multicolumn{2}{c||}{4000 Equations}
+  & \multicolumn{2}{c||}{5000 Equations}
+  & \multicolumn{2}{c||}{6000 Equations} \\
+
+  & \multicolumn{2}{c||}{$t \ \epsilon \ [30,40) $}
+  & \multicolumn{2}{c||}{$t \ \epsilon \ [40,50)$}
+  & \multicolumn{2}{c||}{$t \ \epsilon \ [50,60]$} \\ \hline
+
+  & \multicolumn{2}{c||}{CPU Time}
+  & \multicolumn{2}{c||}{CPU Time}
+  & \multicolumn{2}{c||}{CPU Time} \\ \hline
+
+  & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}}
+  & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}}
+  & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}} \\ \hline
+
+  Symbolic \mbox{Processing}  &  \ 0.328  \ &  \ 0.4    \ &  \ 0.439   \ &  \ 0.4    \ &  \ 0.534   \ &  \ 0.3    \ \\ \hline
+  JIT \mbox{Compilation}      &  \ 4.506  \ &  \ 4.9    \ &  \ 5.660   \ &  \ 5.1    \ &  \ 6.840   \ &  \ 4.3    \ \\ \hline
+  Numerical \mbox{Simulation} &  \ 86.471 \ &  \ 94.7   \ &  \ 105.066 \ &  \ 94.5   \ &  \ 152.250 \ &  \ 95.4   \ \\ \hline
+  Event \mbox{Handling}       &  \ 0.011  \ &  \ 0.0    \ &  \ 0.015   \ &  \ 0.0    \ &  \ -       \ &  \ -      \ \\ \hline \hline
+  Total                       &  \ 91.317 \ &  \ 100.0  \ &  \ 111.179 \ &  \ 100.0  \ &  \ 159.624 \ &  \ 100.0  \ \\ \hline
+\end{tabular}
+\caption{
+    \label{table:larger-system-2}
+    Time profile of structurally dynamic RLC circuit simulation, part II
+}
+\end{table}
+
+Tables \ref{table:larger-system-1} and \ref{table:larger-system-2} show the
+amount of time spent in each mode of the system and in each conceptual stage
+of simulation of the structurally dynamic RLC circuit. In absolute terms, it
+is evident that the extra time spent on the mode switches becomes significant
+as the system grows. However, in relative terms, the overheads of our dynamic
+code generation approach remains low at about 10\,\% or less of the
+overall simulation time.
+
+While JIT compilation remains the dominating part of the time spent at mode
+switches, Figure \ref{fig:benchmark} demonstrates that the performance of the
+JIT compiler scales well. In particular, compilation time increases roughly
+linearly in the number of equations. In addition, it should be noted that the
+time spent on symbolic processing and event handling remains encouragingly
+modest (both in relative and absolute terms) and grows slowly as model
+complexity increases. There are also many opportunities for further
+performance improvements: see Section \ref{sec:futurework} for
+some possibilities.
+
+\begin{figure}
+\begin{center}
+%include ../Graphics/benchmark.tex
+\end{center}
+\caption{
+    \label{fig:benchmark}
+    Plot demonstrating how CPU time spent on mode switches grows as number of
+    equations increase in structurally dynamic RLC circuit simulation}
+\end{figure}
+
+Our approach offers new functionality in that it allows non-causal modelling
+and simulation of structurally dynamic systems that simply cannot be handled
+by static approaches. Thus, when evaluating the feasibility of our approach,
+one should weigh the overheads against the limitation and inconvenience of not
+being able to model such systems non-causally.
 
 In previous work \cite{Giorgidze2009b}, we conducted benchmarks to evaluate
 the performance of the proposed execution model. The initial results are
