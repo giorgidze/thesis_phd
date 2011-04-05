@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{report}
+\documentclass[10pt,a4paper]{report}
 
 %include polycode.fmt
 %include Format/haskell.lhs
@@ -9,7 +9,7 @@
 \usepackage{setspace}
 \usepackage[left=3.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm, includefoot, headheight=13.6pt]{geometry}
 
-\onehalfspacing
+\doublespacing
 
 \begin{document}
 
@@ -47,10 +47,6 @@ Edward Gibbon
 %include Chapters/hydra.lhs
 %include Chapters/definition.lhs
 %include Chapters/implementation.lhs
-
-\chapter{Evaluation}
-\label{chapEvaluation}
-
 %include Chapters/relatedWork.lhs
 
 \chapter{Conclusions}

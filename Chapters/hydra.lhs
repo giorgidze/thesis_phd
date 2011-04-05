@@ -411,6 +411,95 @@ is used to determine which flow variables go with a plus sign and which go
 with a minus sign. Hydra obviates the need for the rule of signs using |flow|
 qualifiers, which also is a syntactic sugar.
 
+
+\section{Higher-order Modelling in Hydra}
+
+\begin{code}
+serial :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
+serial sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
+    $sr1$  <>  ((p_i, p_v), (n1_i, n1_v))
+    $sr2$  <>  ((p2_i, p2_v), (n_i, n_v))
+    connect flow  n1_i p2_i
+    connect       n1_v p2_v
+|]
+\end{code}
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{Graphics/serial}
+\end{figure}
+
+
+\begin{code}
+wire :: SR (Pin,Pin)
+wire = [rel| ((p_i,p_v),(n_i,n_v)) ->
+    $twoPin$ <> ((p_i,p_v),(n_i,n_v),u)
+    u = 0
+|]
+\end{code}
+
+\begin{code}
+wire `serial` sr = sr `serial` wire = sr
+\end{code}
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{Graphics/serialWire}
+\end{figure}
+
+\begin{code}
+serialise :: [SR (Pin,Pin)] -> SR (Pin,Pin)
+serialise = foldr serial wire
+\end{code}
+
+\begin{code}
+foldr :: (a -> b -> b) -> b -> [a] -> b
+foldr serial wire [sr1, sr2, ..., srn] =
+  sr1 `serial` (sr2 `serial` ... (srn `serial` wire))
+\end{code}
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{Graphics/serialise}
+\end{figure}
+
+
+\begin{code}
+parallel :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
+parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
+    $sr1$  <>  ((p1_i, p1_v), (n1_i, n1_v))
+    $sr2$  <>  ((p2_i, p2_v), (n2_i, n2_v))
+    connect flow  p_i p1_i p2_i
+    connect       p_v p1_v p2_v
+    connect flow  n_i n1_i n2_i
+    connect       n_v n1_v n2_v
+|]
+\end{code}
+
+\begin{figure}[h]
+\includegraphics[width=0.5\textwidth]{Graphics/parallel}
+\end{figure}
+
+\begin{code}
+noWire :: SR (Pin,Pin)
+noWire = [rel| ((p_i,p_v),(n_i,n_v)) ->
+    $twoPin$ <>((p_i,p_v),(n_i,n_v),u)
+    p_i = 0
+|]
+\end{code}
+
+\begin{code}
+noWire `parallel` sr = sr `parallel` noWire = sr
+\end{code}
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{Graphics/parallelNoWire}
+\end{figure}
+
+\begin{code}
+parallelise :: [SR (Pin,Pin)] -> SR (Pin,Pin)
+parallelise = foldr parallel noWire
+\end{code}
+
+
+
 \section{Structural Dynamism}
 \subsection{Breaking Pendulum}
 
@@ -528,3 +617,5 @@ parameter in arbitrarily complex ways), there is no way to generate all code
 prior to simulation. However, the pendulum example is simple and suffice for
 illustrative purposes. Moreover, despite its simplicity, it is already an
 example with which present non-causal languages struggle, as mentioned above.
+
+
