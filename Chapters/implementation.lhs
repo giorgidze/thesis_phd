@@ -441,15 +441,18 @@ $i$, $f$ and $e$ are compiled into LLVM instructions that in turn are compiled
 by the LLVM JIT compiler into native machine code. Function pointers to the
 generated machine code are then passed to the numerical solver.
 
+\begin{figure}
+\singlespacing
+\small
 \begin{verbatim}
 define void @hydra_residual_main(double, double*, double*, double*) {
 entry:
-  %4 = getelementptr double* %2, i32 1
-  %5 = load double* %4
-  %6 = getelementptr double* %1, i32 0
-  %7 = load double* %6
-  %8 = fmul double -1.000000e+00, %7
-  %9 = getelementptr double* %1, i32 0
+  %4  = getelementptr double* %2, i32 1
+  %5  = load double* %4
+  %6  = getelementptr double* %1, i32 0
+  %7  = load double* %6
+  %8  = fmul double -1.000000e+00, %7
+  %9  = getelementptr double* %1, i32 0
   %10 = load double* %9
   %11 = getelementptr double* %1, i32 0
   %12 = load double* %11
@@ -482,6 +485,9 @@ BB_1:                                             ; preds = %BB_0
   ret void
 }
 \end{verbatim}
+\doublespacing
+\caption{LLVM code for the parametrised van der Pol oscillator}
+\end{figure}
 
 \subsection{Numerical Simulation}
 
