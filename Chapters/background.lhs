@@ -261,8 +261,9 @@ compute the voltage from the current, we should use the block that corresponds
 to the second equation.
 
 We demonstrate the aforementioned problem, by causally modelling a modified
-circuit where one more resistor is added to the simple circuit as show on
-Figure \ref{figSimpleCircuitResistor}. The causal model is given on Figure \ref{}
+circuit where one more resistor is added to the simple electrical circuit as
+show in Figure \ref{figSimpleCircuitResistor}. The causal model is given in
+Figure \ref{figSimpleCircuitResistorBlockDiagram}.
 
 \begin{figure}
 \begin{center}
@@ -405,15 +406,15 @@ model SimpleCircuit
   Resistor   R;
   Capacitor  C;
   Inductor   L;
-  VSourceAC AC;
+  VSourceAC  AC;
   Ground     G;
 equation
-  connect(AC.p, R.p);
-  connect(AC.p, L.p);
-  connect(R.n,  C.p);
-  connect(AC.n, C.n);
-  connect(AC.n, L.n);
-  connect(AC.n, G.p);
+  connect(AC.p,  R.p);
+  connect(AC.p,  L.p);
+  connect(R.n,   C.p);
+  connect(AC.n,  C.n);
+  connect(AC.n,  L.n);
+  connect(AC.n,  G.p);
 end SimpleCircuit;
 \end{code}
 
@@ -455,8 +456,27 @@ As we have seen, non-causal languages, and in this particular case Modelica,
 allow us to model physical systems at a high level of abstraction. The
 structure of the models resemble the modelled systems. Consequently, it is
 easy to reuse or modify existing models. For example, it is now trivial to add
-one more resistor as described in Section \ref{secSimulink} to the Modelica
-model. We leave this as an exercise for the reader.
+one more resistor to the Modelica model as shown in the following modified
+model.
+
+\begin{code}
+model SimpleCircuit
+  Resistor    R1;
+  Resistor    R2;
+  Capacitor   C;
+  Inductor    L;
+  VSourceAC   AC;
+  Ground      G;
+equation
+  connect(AC.p,  R1.p);
+  connect(AC.p,  R2.p);
+  connect(R1.n,  C.p);
+  connect(R2.n,  L.p);
+  connect(AC.n,  C.n);
+  connect(AC.n,  L.n);
+  connect(AC.n,  G.p);
+end SimpleCircuit;
+\end{code}
 
 \section{Non-causal Hybrid Modelling}
 \label{secHybridModelling}
