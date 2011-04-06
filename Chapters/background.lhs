@@ -15,7 +15,7 @@ define the concepts generally.
 Let us introduce a simple electrical circuit that is depicted in Figure
 \ref{figSimpleCircuit}.
 
-\begin{figure}[h]
+\begin{figure}
 \begin{center}
 \includegraphics[width = 0.5\textwidth]{Graphics/simpleCircuit}
 \end{center}
@@ -249,7 +249,7 @@ system.
 
 Structurally, the block diagram in Figure \ref{figSimpleCircuitBlockDiagram}
 is quite far removed from the circuit it models. Because of this, construction
-of block diagrams is generally regarded as a difficult and somewhat invloved
+of block diagrams is generally regarded as a difficult and somewhat involved
 task \cite{Nilsson2007}. Moreover, a slight change in a system might require
 drastic changes in the corresponding block diagram. This is because causal
 models limit reuse \cite{Cellier1996}. For example, a resistor behaviour is
@@ -258,10 +258,19 @@ or $u = R \cdot i$. Unfortunately, no single causal block can capture the
 resistor behaviour. If we need to compute the current from the voltage, we
 should use the block that corresponds to the first equation. If we need to
 compute the voltage from the current, we should use the block that corresponds
-to the second equation. As an exercise, the interested reader might want to
-try to modify the block diagram in order to model a modified circuit where one
-more resistor is added by connecting its positive pin with the capacitor's
-positive pin and its negative pin with the inductors negative pin.
+to the second equation.
+
+We demonstrate the aforementioned problem, by causally modelling a modified
+circuit where one more resistor is added to the simple circuit as show on
+Figure \ref{figSimpleCircuitResistor}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = 0.5\textwidth]{Graphics/simpleCircuitResistor}
+\end{center}
+\caption{A simple electrical circuit with two resistors}
+\label{figSimpleCircuitResistor}
+\end{figure}
 
 Simulink can be used to model some hybrid systems, special blocks are used two
 \emph{switch} between block diagrams as a response to discrete events. This
