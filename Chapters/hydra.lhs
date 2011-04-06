@@ -591,7 +591,17 @@ breakingPendulum t l phi0 =
 In our example, an event is simply generated at an \emph{a priori} specified
 point in time, but the condition could be an arbitrary time-varying entity.
 Not how succeeding model (i.e., |freeFall|) is initialised so as to ensure the
-continuity of the position and velocity as discussed above.
+continuity of the position and velocity as discussed above. The simulation
+results can be seen in Figure \ref{figPendulumPlot}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = \textwidth]{Graphics/pendulumPlot.pdf}
+\end{center}
+\caption{Plot shows how |x| and |y| coordinates of the body on the breaking pendulum change over time.}
+\label{figPendulumPlot}
+\end{figure}
+
 
 In our particular example, the pendulum is only going to break once. In other
 words, there is not much iteration going on, and it would in principle (with a
