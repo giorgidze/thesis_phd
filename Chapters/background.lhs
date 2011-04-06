@@ -227,9 +227,9 @@ modelling and simulation. The block diagram in Figure
 \ref{figSimpleCircuitBlockDiagram} is a model of the circuit from Figure
 \ref{figSimpleCircuit}.
 
-\begin{figure}[h]
+\begin{figure}
 \begin{center}
-\includegraphics[width = 0.75\textwidth]{Graphics/simpleCircuitBlockDiagram}
+\includegraphics[width = \textwidth]{Graphics/simpleCircuitBlockDiagram}
 \end{center}
 \caption{Block diagram modelling electrical circuit in Figure \ref{figSimpleCircuit}}
 \label{figSimpleCircuitBlockDiagram}
@@ -262,7 +262,7 @@ to the second equation.
 
 We demonstrate the aforementioned problem, by causally modelling a modified
 circuit where one more resistor is added to the simple circuit as show on
-Figure \ref{figSimpleCircuitResistor}.
+Figure \ref{figSimpleCircuitResistor}. The causal model is given on Figure \ref{}
 
 \begin{figure}
 \begin{center}
@@ -271,6 +271,15 @@ Figure \ref{figSimpleCircuitResistor}.
 \caption{A simple electrical circuit with two resistors}
 \label{figSimpleCircuitResistor}
 \end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = \textwidth]{Graphics/simpleCircuitResistorBlockDiagram}
+\end{center}
+\caption{Block diagram modelling electrical circuit on Figure \ref{figSimpleCircuitResistor}}
+\label{figSimpleCircuitResistorBlockDiagram}
+\end{figure}
+
 
 Simulink can be used to model some hybrid systems, special blocks are used two
 \emph{switch} between block diagrams as a response to discrete events. This
