@@ -628,4 +628,22 @@ prior to simulation. However, the pendulum example is simple and suffice for
 illustrative purposes. Moreover, despite its simplicity, it is already an
 example with which present non-causal languages struggle, as mentioned above.
 
+\subsection{Half-wave Rectifier}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = \textwidth]{Graphics/rectifierCapVol.pdf}
+\end{center}
+\caption{Voltage across the capacitor in the half-wave rectifier circuit with in-line inductor.}
+\label{figPendulumPlot}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = \textwidth]{Graphics/rectifierIndCur.pdf}
+\end{center}
+\caption{Current through the inductor in the half-wave rectifier circuit with in-line inductor.}
+\label{figPendulumPlot}
+\end{figure}
+
 
