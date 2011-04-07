@@ -13,14 +13,14 @@ define the concepts generally.
 \subsection{Mathematical Modelling}
 
 Let us introduce a simple electrical circuit that is depicted in Figure
-\ref{figSimpleCircuit}.
+\ref{figCircuit1}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = 0.5\textwidth]{Graphics/simpleCircuit}
+\includegraphics[width = 0.5\textwidth]{Graphics/circuit1}
 \end{center}
 \caption{A simple electrical circuit}
-\label{figSimpleCircuit}
+\label{figCircuit1}
 \end{figure}
 
 The following system of equations is a mathematical model of the circuit.
@@ -187,13 +187,13 @@ integrateSimpleCircuit dt r c l = go 0 0 0
                   i1   =  (sin (2 * pi * t) - uc) / r
 \end{code}
 
-Figure \ref{figSimpleCircuitPlot} shows the simulation result obtained by
+Figure \ref{figCircuitPlot1} shows the simulation result obtained by
 evaluating $integrateSimpleCircuit$ function.
 
 \begin{figure}[h]
-\includegraphics[width=\textwidth]{Graphics/simpleCircuitPlot}
+\includegraphics[width=\textwidth]{Graphics/circuitPlot1}
 \caption{The plot shows how variables $i_1$ and $i_2$ change over time}
-\label{figSimpleCircuitPlot}
+\label{figCircuitPlot1}
 \end{figure}
 
 \subsection{Modelling and Simulation Process Summarised}
@@ -224,15 +224,15 @@ models without assuming a particular domain of physics.
 
 Simulink \cite{Simulink2008} is a graphical block diagramming tool for causal
 modelling and simulation. The block diagram in Figure
-\ref{figSimpleCircuitBlockDiagram} is a model of the circuit from Figure
-\ref{figSimpleCircuit}.
+\ref{figCircuitBlockDiagram1} is a model of the circuit from Figure
+\ref{figCircuit1}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = \textwidth]{Graphics/simpleCircuitBlockDiagram}
+\includegraphics[width = \textwidth]{Graphics/circuitBlockDiagram1}
 \end{center}
-\caption{Block diagram modelling electrical circuit in Figure \ref{figSimpleCircuit}}
-\label{figSimpleCircuitBlockDiagram}
+\caption{Block diagram modelling electrical circuit in Figure \ref{figCircuit1}}
+\label{figCircuitBlockDiagram1}
 \end{figure}
 
 Block-diagrams in causal languages correspond to systems of ordinary
@@ -247,7 +247,7 @@ is done much in the same way as in Section \ref{secModelling}, but using more
 sophisticated numerical methods. This is done automatically by the Simulink
 system.
 
-Structurally, the block diagram in Figure \ref{figSimpleCircuitBlockDiagram}
+Structurally, the block diagram in Figure \ref{figCircuitBlockDiagram1}
 is quite far removed from the circuit it models. Because of this, construction
 of block diagrams is generally regarded as a difficult and somewhat involved
 task \cite{Nilsson2007}. Moreover, a slight change in a system might require
@@ -262,23 +262,23 @@ to the second equation.
 
 We demonstrate the aforementioned problem, by causally modelling a modified
 circuit where one more resistor is added to the simple electrical circuit as
-show in Figure \ref{figSimpleCircuitResistor}. The causal model is given in
-Figure \ref{figSimpleCircuitResistorBlockDiagram}.
+show in Figure \ref{figCircuit2}. The causal model is given in
+Figure \ref{figCircuitBlockDiagram2}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = 0.5\textwidth]{Graphics/simpleCircuitResistor}
+\includegraphics[width = 0.5\textwidth]{Graphics/circuit2}
 \end{center}
 \caption{A simple electrical circuit with two resistors}
-\label{figSimpleCircuitResistor}
+\label{figCircuitResistor2}
 \end{figure}
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = \textwidth]{Graphics/simpleCircuitResistorBlockDiagram}
+\includegraphics[width = \textwidth]{Graphics/circuitBlockDiagram2}
 \end{center}
-\caption{Block diagram modelling electrical circuit on Figure \ref{figSimpleCircuitResistor}}
-\label{figSimpleCircuitResistorBlockDiagram}
+\caption{Block diagram modelling electrical circuit on Figure \ref{figCircuit2}}
+\label{figCircuitBlockDiagram2}
 \end{figure}
 
 
@@ -304,7 +304,7 @@ non-causal DAEs. A class system known from object-oriented programming
 paradigm is used to structure the equations and support reuse of models.
 
 To illustrate basic features of Modelica we model the circuit that is given in
-Figure \ref{figSimpleCircuit} again, this time in Modelica.
+Figure \ref{figCircuit1} again, this time in Modelica.
 
 Firstly, we define a \emph{connector} record representing an electrical
 connector.
@@ -396,8 +396,8 @@ end Ground;
 \end{code}
 
 We can now use models of the circuit components to define a model representing
-the circuit in Figure \ref{figSimpleCircuit} by ``connecting'' appropriate
-pins according to the figure. Note that the parameters of resistor, capacitor,
+the circuit in Figure \ref{figCircuit1} by ``connecting'' appropriate pins
+according to the figure. Note that the parameters of resistor, capacitor,
 inductor and voltage source are not specified. This means that the default
 values are used.
 

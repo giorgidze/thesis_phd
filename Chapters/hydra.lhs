@@ -216,7 +216,7 @@ relation application of structurally dynamic signal relation.
 \section{Models with Static Structure}
 
 Let us introduce the Haskell embedding of Hydra by modelling the circuit that
-is depicted in Figure \ref{figSimpleCircuit}. We first define the |twoPin|
+is depicted in Figure \ref{figCircuit1}. We first define the |twoPin|
 signal relation that captures the common behaviour of electrical components
 with two connectors (see Figure \ref{figTwoPin}):
 
@@ -353,7 +353,7 @@ ground = [rel| (flow p_i,p_v) where
 
 To facilitate composition of signal relations, Hydra provides a
 Modelica-inspired |connect| construct. Using this, a complete model for the
-circuit of Figure~\ref{figSimpleCircuit} can be defined as follows:
+circuit of Figure~\ref{figCircuit1} can be defined as follows:
 
 \begin{code}
 simpleCircuit :: SR ()
