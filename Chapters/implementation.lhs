@@ -237,7 +237,7 @@ data Experiment = Experiment {
   ,  jitCompile            :: Bool
   ,  symbolicProcessor     :: SymTab -> SymTab
   ,  numericalSolver       :: NumericalSolver
-  ,  trajectoryVisualiser  :: CDouble -> CInt -> Ptr CDouble -> IO ()
+  ,  trajectoryVisualiser  :: TrajectoryVisualiser
   }
 \end{code}
 
@@ -501,6 +501,43 @@ code for the functions $f$ and $e$ are passed to IDA that proceeds to solve
 the DAE by numerical integration. This continues until either the simulation
 is complete or until one of the events defined by the function $e$ occurs.
 Event detection facilities are provided by IDA.
+
+\begin{code}
+data Void
+type SolverHandle = Ptr Void
+type Residual = FunPtr  (       CDouble
+                            ->  Ptr CDouble
+                            ->  Ptr CDouble
+                            ->  Ptr CDouble
+                            ->  IO Void)
+\end{code}
+
+\begin{code}
+data NumericalSolver = NumericalSolver {
+      createSolver    :: CDouble      -- Start time
+                      -> CDouble      -- Stop time
+                      -> Ptr CDouble  -- Current time
+                      -> CInt         -- Number of variables
+                      -> Ptr CDouble  -- Variables
+                      -> Ptr CDouble  -- Differentials
+                      -> Ptr CInt     -- Constrained differentials
+                      -> CInt         -- Number of events
+                      -> Ptr CInt     -- Events
+                      -> Residual     -- Initialisation equations
+                      -> Residual     -- Main equations
+                      -> Residual     -- Event Equations
+                      -> IO SolverHandle
+  ,   destroySolver   :: SolverHandle -> IO ()
+  ,   solve           :: SolverHandle -> IO CInt
+      -- Return value  0: soulution has been obtained succesfully
+      -- Return value  1: event occurence
+      -- Return value  2: stop time has been reached
+  }
+\end{code}
+
+\begin{code}
+type TrajectoryVisualiser = CDouble -> CInt -> Ptr CDouble -> IO ()
+\end{code}
 
 \subsection{Event Handling}
 \label{sec:simulation-eventhandling}
