@@ -577,7 +577,7 @@ code generation approach was small in this case. Also, in absolute terms,
 it can be seen that the amount of time spent on symbolic processing, JIT
 compilation, and event handling was small, just fractions of a second.
 
-\begin{table}[h]
+\begin{table}
 \centering
 \scriptsize
 \begin{tabular}{|| p{1.1cm} || r || r || r || r ||}
@@ -619,7 +619,7 @@ equations in total (5 equations for each component). Every time $t = 10
 increased by 200 (and thus the number of equations by 1000) by switching the
 additional components into the circuit.
 
-\begin{table}[h]
+\begin{table}
 \centering
 \scriptsize
 
@@ -661,7 +661,7 @@ additional components into the circuit.
 }
 \end{table}
 
-\begin{table}[h]
+\begin{table}
 \centering
 \scriptsize
 

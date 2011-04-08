@@ -424,7 +424,7 @@ serial sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
 |]
 \end{code}
 
-\begin{figure}[h]
+\begin{figure}
 \includegraphics[width=\textwidth]{Graphics/serial}
 \end{figure}
 
@@ -441,7 +441,7 @@ wire = [rel| ((p_i,p_v),(n_i,n_v)) ->
 wire `serial` sr = sr `serial` wire = sr
 \end{code}
 
-\begin{figure}[h]
+\begin{figure}
 \includegraphics[width=\textwidth]{Graphics/serialWire}
 \end{figure}
 
@@ -456,7 +456,7 @@ foldr serial wire [sr1, sr2, ..., srn] =
   sr1 `serial` (sr2 `serial` ... (srn `serial` wire))
 \end{code}
 
-\begin{figure}[h]
+\begin{figure}
 \includegraphics[width=\textwidth]{Graphics/serialise}
 \end{figure}
 
@@ -473,7 +473,7 @@ parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
 |]
 \end{code}
 
-\begin{figure}[h]
+\begin{figure}
 \includegraphics[width=0.5\textwidth]{Graphics/parallel}
 \end{figure}
 
@@ -489,7 +489,7 @@ noWire = [rel| ((p_i,p_v),(n_i,n_v)) ->
 noWire `parallel` sr = sr `parallel` noWire = sr
 \end{code}
 
-\begin{figure}[h]
+\begin{figure}
 \includegraphics[width=\textwidth]{Graphics/parallelNoWire}
 \end{figure}
 
@@ -629,6 +629,14 @@ illustrative purposes. Moreover, despite its simplicity, it is already an
 example with which present non-causal languages struggle, as mentioned above.
 
 \subsection{Half-wave Rectifier}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = \textwidth]{Graphics/rectifier.pdf}
+\end{center}
+\caption{Half-wave rectifier circuit with in-line inductor.}
+\label{figPendulumPlot}
+\end{figure}
 
 \begin{figure}
 \begin{center}

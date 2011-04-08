@@ -14,4 +14,4 @@ all: clean
 	$(LATEX)
 
 clean:
-	rm -f *.aux *.blg *.log *.ptb *.toc *.out main.tex main.bbl
+	rm -f *.aux *.blg *.log *.ptb *.toc *.out *.lof main.tex main.bbl

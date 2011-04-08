@@ -17,7 +17,7 @@ Let us introduce a simple electrical circuit that is depicted in Figure
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = 0.5\textwidth]{Graphics/circuit1}
+\includegraphics[width = \textwidth]{Graphics/circuit1}
 \end{center}
 \caption{A simple electrical circuit}
 \label{figCircuit1}
@@ -190,7 +190,7 @@ integrateSimpleCircuit dt r c l = go 0 0 0
 Figure \ref{figCircuitPlot1} shows the simulation result obtained by
 evaluating $integrateSimpleCircuit$ function.
 
-\begin{figure}[h]
+\begin{figure}
 \includegraphics[width=\textwidth]{Graphics/circuitPlot1}
 \caption{The plot shows how variables $i_1$ and $i_2$ change over time}
 \label{figCircuitPlot1}
@@ -267,7 +267,7 @@ Figure \ref{figCircuitBlockDiagram2}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = 0.5\textwidth]{Graphics/circuit2}
+\includegraphics[width = \textwidth]{Graphics/circuit2}
 \end{center}
 \caption{A simple electrical circuit with two resistors}
 \label{figCircuitResistor2}
