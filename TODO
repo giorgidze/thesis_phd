@@ -1,25 +1,23 @@
-* Rewrite the implementation section
+* Abstract (correction/rephrasing)
 
-* In the evaluation section consider more challenging examples
-  - Higher-or modelling example (away day talk, transmission line, etc.)
-  - Half/Full way rectifier
-  - Highly dynamic bouncing balls example (i.e., with splitting balls)
+* Introduction (correction/rephrasing)
 
-* Demonstrate changes in causal models when adding components
-  into physical models
+* Background (correction/rephrasing)
 
-* Add pretty figures and simulation results to dry text dominated sections
+* Hydra: A Functional Hybrid Modelling Language (correction/rephrasing and addition)
 
-* Update declaration with with publisher information
+* Definition of Hydra (correction/rephrasing and addition)
 
-* Carefully review, edit, carefully review, edit, ..., carefully review edit.
+* Implementation of Hydra (correction/rephrasing and addition)
 
-* Rewrite related work
+* Related Work (correction/rephrasing and addition)
 
-* Write conclusions
+* Conclusions (addition)
 
-* Ask Henrik to review
+* Ask for reviews
 
-* Carefully review, edit, carefully review, edit, ..., carefully review, edit.
+* Address feedback
+
+* Carefully review and edit
 
 * Submit
