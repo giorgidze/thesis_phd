@@ -475,7 +475,7 @@ translateExp (ExprGt  e1  e2)            =  PrimApp Gt   ((translateExp e1)  -  
 translateExp (ExprGte e1  e2)            =  PrimApp Gte  ((translateExp e1)  -  (translateExp e2))
 \end{code}
 
-\section{Ideal Semantics of Hydra}
+\section{Ideal Denotational Semantics}
 
 Note that the domains of the following denotational semantics of Hydra are the
 same as the conceptual definitions of signals, signal functions, and signal

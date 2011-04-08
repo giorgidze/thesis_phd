@@ -257,9 +257,9 @@ defaultExperiment = Experiment {
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[scale=1.0]{Graphics/simulation}
-\caption{\label{fig:simulation} Execution model of Hydra}
+\includegraphics[width = \textwidth]{Graphics/simulation}
 \end{center}
+\caption{\label{fig:simulation} Execution model of Hydra.}
 \end{figure}
 
 
@@ -486,7 +486,7 @@ BB_1:                                             ; preds = %BB_0
 }
 \end{verbatim}
 \doublespacing
-\caption{LLVM code for the parametrised van der Pol oscillator}
+\caption{Unoptimised LLVM code for the parametrised van der Pol oscillator.}
 \end{figure}
 
 \subsection{Numerical Simulation}
@@ -638,9 +638,7 @@ compilation, and event handling was small, just fractions of a second.
   Event \mbox{Handling}       &  0.0000  &   0.0  &  -       &  -     \\ \hline \hline
   Total                       &  0.0611  &  100.0 &  0.0844  &  100.0 \\ \hline
 \end{tabular}
-\caption{
-    \label{table:breaking-pendulum}
-    Time profile of the breaking pendulum simulation
+\caption{\label{table:breaking-pendulum} Time profile of the breaking pendulum simulation.
 }
 \end{table}
 
@@ -692,9 +690,7 @@ additional components into the circuit.
   Event \mbox{Handling}       &  \ 0.004  \ &  \ 0.0   \  &  \ 0.006  \  & \ 0.0   \  &  \ 0.008  \  &  \ 0.0   \  \\ \hline \hline
   Total                       &  \ 10.397 \ &  \ 100.0 \  &  \ 25.501 \  & \ 100.0 \  &  \ 48.598 \  &  \ 100.0 \  \\ \hline
 \end{tabular}
-\caption{
-    \label{table:larger-system-1}
-    Time profile of structurally dynamic RLC circuit simulation, part I
+\caption{\label{table:larger-system-1} Time profile of structurally dynamic RLC circuit simulation (part I).
 }
 \end{table}
 
@@ -734,9 +730,7 @@ additional components into the circuit.
   Event \mbox{Handling}       &  \ 0.011  \ &  \ 0.0    \ &  \ 0.015   \ &  \ 0.0    \ &  \ -       \ &  \ -      \ \\ \hline \hline
   Total                       &  \ 91.317 \ &  \ 100.0  \ &  \ 111.179 \ &  \ 100.0  \ &  \ 159.624 \ &  \ 100.0  \ \\ \hline
 \end{tabular}
-\caption{
-    \label{table:larger-system-2}
-    Time profile of structurally dynamic RLC circuit simulation, part II
+\caption{\label{table:larger-system-2} Time profile of structurally dynamic RLC circuit simulation (part II).
 }
 \end{table}
 
@@ -762,10 +756,9 @@ some possibilities.
 \begin{center}
 %include ../Graphics/benchmark.tex
 \end{center}
-\caption{
-    \label{fig:benchmark}
-    Plot demonstrating how CPU time spent on mode switches grows as number of
-    equations increase in structurally dynamic RLC circuit simulation}
+\caption{\label{fig:benchmark} Plot demonstrating how CPU time spent on mode
+switches grows as number of equations increase in structurally dynamic RLC
+circuit simulation.}
 \end{figure}
 
 Our approach offers new functionality in that it allows non-causal modelling

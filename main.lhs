@@ -43,6 +43,7 @@ Edward Gibbon
 %include Chapters/acknowledgements.lhs
 \tableofcontents
 \listoffigures
+\listoftables
 %include Chapters/introduction.lhs
 %include Chapters/background.lhs
 %include Chapters/hydra.lhs

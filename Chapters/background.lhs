@@ -17,10 +17,9 @@ Let us introduce a simple electrical circuit that is depicted in Figure
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = \textwidth]{Graphics/circuit1}
+\includegraphics[width = 0.5\textwidth]{Graphics/circuit1}
 \end{center}
-\caption{A simple electrical circuit}
-\label{figCircuit1}
+\caption{\label{figCircuit1} Simple electrical circuit.}
 \end{figure}
 
 The following system of equations is a mathematical model of the circuit.
@@ -191,9 +190,10 @@ Figure \ref{figCircuitPlot1} shows the simulation result obtained by
 evaluating $integrateSimpleCircuit$ function.
 
 \begin{figure}
+\begin{center}
 \includegraphics[width=\textwidth]{Graphics/circuitPlot1}
-\caption{The plot shows how variables $i_1$ and $i_2$ change over time}
-\label{figCircuitPlot1}
+\end{center}
+\caption{\label{figCircuitPlot1} Plot showing how variables $i_1$ and $i_2$ change over time.}
 \end{figure}
 
 \subsection{Modelling and Simulation Process Summarised}
@@ -231,8 +231,7 @@ modelling and simulation. The block diagram in Figure
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/circuitBlockDiagram1}
 \end{center}
-\caption{Block diagram modelling electrical circuit in Figure \ref{figCircuit1}}
-\label{figCircuitBlockDiagram1}
+\caption{\label{figCircuitBlockDiagram1} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit1}.}
 \end{figure}
 
 Block-diagrams in causal languages correspond to systems of ordinary
@@ -267,18 +266,16 @@ Figure \ref{figCircuitBlockDiagram2}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width = \textwidth]{Graphics/circuit2}
+\includegraphics[width = 0.5\textwidth]{Graphics/circuit2}
 \end{center}
-\caption{A simple electrical circuit with two resistors}
-\label{figCircuitResistor2}
+\caption{\label{figCircuit2} Simple electrical circuit with two resistors.}
 \end{figure}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/circuitBlockDiagram2}
 \end{center}
-\caption{Block diagram modelling electrical circuit on Figure \ref{figCircuit2}}
-\label{figCircuitBlockDiagram2}
+\caption{\label{figCircuitBlockDiagram2} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit2}.}
 \end{figure}
 
 
@@ -478,7 +475,7 @@ equation
 end SimpleCircuit;
 \end{code}
 
-\section{Non-causal Hybrid Modelling}
+\section{Non-causal Modelling of Structurally-dynamic Systems}
 \label{secHybridModelling}
 
 A physical system can be hybrid. That is, it may exhibit both continuous-time
@@ -509,7 +506,7 @@ language when it comes to dynamic addition and removal of time varying
 variables and continuous equations to the model, and lack of dynamic
 recausalisation and code generation facilities in Modelica implementations.
 
-\subsection{Modelling Hybrid Systems in Modelica}
+\subsection{Modelling Structurally-dynamic Systems in Modelica}
 
 Let us model a physical system whose structural configuration changes abruptly
 during simulation: a simple pendulum that can break at a specified point in
@@ -519,9 +516,9 @@ to gravity $m \vec{g}$. If the rod breaks, the body will fall freely.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=1.0]{Graphics/pendulum}
-\caption{\label{figPendulum}A pendulum subject to gravity.}
+\includegraphics[width = 0.5\textwidth]{Graphics/pendulum}
 \end{center}
+\caption{\label{figPendulum} Pendulum subject to gravity.}
 \end{figure}
 
 Here is an attempt to model this system in Modelica that on the surface

@@ -1,4 +1,4 @@
-\chapter{Modelling and Simulation in Hydra}
+\chapter{Hydra: A Functional Hybrid Modelling Language}
 \label{chapHydra}
 
 In this chapter we introduce the three central concepts Hydra is based on:
@@ -179,7 +179,7 @@ Signal function applications are required to be well typed. In this example,
 if |sf| has the type |SF alpha beta| then |s| must have the type |Signal
 alpha|. The type of resulting signal is |Signal beta|.
 
-\section{Structurally Dynamic Signal Relations}
+\section{The |switch| combinator}
 
 The built-in equality signal relation (i.e., |=|) is capable of describing
 flat systems of equations and the signal relation application operator (i.e.,
@@ -241,8 +241,7 @@ electrical component.
 \begin{center}
 \includegraphics{Graphics/twoPin}
 \end{center}
-\caption{An electrical component with two connectors}
-\label{figTwoPin}
+\caption{\label{figTwoPin} Electrical component with two connectors.}
 \end{figure}
 
 Signal variables in the |rel| pattern qualified as |flow| are called
@@ -500,13 +499,13 @@ parallelise = foldr parallel noWire
 
 
 
-\section{Structural Dynamism}
+\section{Structurally-dynamic Modelling}
 \subsection{Breaking Pendulum}
 
 To introduce structurally dynamic modelling in Hydra, let us model a physical
 system whose structural configuration changes abruptly during simulation: a
 simple pendulum that can break at a specified point in time; see Figure
-\ref{fig:pendulum}. The pendulum is modelled as a body represented by a point
+\ref{figPendulum}. The pendulum is modelled as a body represented by a point
 mass $m$ at the end of a rigid, mass-less rod, subject to gravity $m \vec{g}$.
 If the rod breaks, the body will fall freely. This makes the differences
 between the two configurations sufficiently large that, for example, Modelica
@@ -515,23 +514,7 @@ across the breaking point is desired, the modeller is forced to model the
 system in a causal, less declarative way \cite[pp.
 31--33]{ModelicaTutorial2000}.
 
-\begin{figure}[t]
-\begin{center}
-\includegraphics[scale=1.00]{Graphics/pendulum}
-\caption{\label{fig:pendulum}A pendulum subject to gravity.}
-\end{center}
-\end{figure}
-
-Figure \ref{fig:pendulum-model} shows how to model the two modes of the
-pendulum in Hydra. The type |Body| denotes the state of the pendulum body;
-that is, its position and velocity, where position and velocity both are
-2-dimensional vectors represented by pairs of doubles. Each model is
-represented by a function that maps the \emph{parameters} of the model to a
-relation on signals; that is, an instance of the defining system of DAEs for
-specific values of the parameters. In the unbroken mode, the parameters are
-the length of the rod |l| and the initial angle of deviation |phi0|. In the
-broken mode, the signal relation is parametrised on the initial state of the
-body.
+The following code shows how to model the two modes of the pendulum in Hydra.
 
 \begin{code}
 type Pos   =  (Double,Double)
@@ -564,6 +547,15 @@ pendulum l phi0 = [rel| ((x,y),(vx,vy)) ->
     der (der phi) + ($ g / l $) * sin phi = 0
 |]
 \end{code}
+
+The type |Body| denotes the state of the pendulum body; that is, its position
+and velocity, where position and velocity both are 2-dimensional vectors
+represented by pairs of doubles. Each model is represented by a function that
+maps the \emph{parameters} of the model to a relation on signals; that is, an
+instance of the defining system of DAEs for specific values of the parameters.
+In the unbroken mode, the parameters are the length of the rod |l| and the
+initial angle of deviation |phi0|. In the broken mode, the signal relation is
+parametrised on the initial state of the body.
 
 Equations marked by the keyword |init| are initialisation equations used to
 specify initial conditions.
@@ -598,8 +590,7 @@ results can be seen in Figure \ref{figPendulumPlot}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/pendulumPlot.pdf}
 \end{center}
-\caption{Plot shows how |x| and |y| coordinates of the body on the breaking pendulum change over time.}
-\label{figPendulumPlot}
+\caption{\label{figPendulumPlot} Plot showing how |x| and |y| coordinates of the body on the breaking pendulum change over time.}
 \end{figure}
 
 
@@ -634,8 +625,7 @@ example with which present non-causal languages struggle, as mentioned above.
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/rectifier.pdf}
 \end{center}
-\caption{Half-wave rectifier circuit with in-line inductor.}
-\label{figPendulumPlot}
+\caption{\label{figPendulumPlot} Half-wave rectifier circuit with in-line inductor.}
 \end{figure}
 
 \begin{code}
@@ -694,22 +684,20 @@ halfWaveRectifier = [rel| () ->
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/rectifierCapVol.pdf}
 \end{center}
-\caption{Voltage across the capacitor in the half-wave rectifier circuit with in-line inductor.}
-\label{figPendulumPlot}
+\caption{\label{figPendulumPlot} Voltage across the capacitor in the half-wave rectifier circuit with in-line inductor.}
 \end{figure}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/rectifierIndCur.pdf}
 \end{center}
-\caption{Current through the inductor in the half-wave rectifier circuit with in-line inductor.}
-\label{figPendulumPlot}
+\caption{\label{figPendulumPlot} Current through the inductor in the half-wave rectifier circuit with in-line inductor.}
 \end{figure}
 
 
 \section{Highly Structurally-dynamic Modelling}
 
-Bouncing Ball:
+\subsection{Bouncing Ball}
 
 \begin{code}
 bouncingBall :: Body -> SR Body
@@ -718,7 +706,7 @@ bouncingBall b = switch   (freeFall b)
                           (\(p,(vx,vy)) -> bouncingBall (p,(vx, - vy))
 \end{code}
 
-Highly Structurally-dynamic Bouncing Ball:
+\subsection{Highly Structurally-dynamic Bouncing Ball}
 
 \begin{code}
 bouncingBall :: Body -> SR Body
