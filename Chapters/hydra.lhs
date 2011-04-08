@@ -638,6 +638,58 @@ example with which present non-causal languages struggle, as mentioned above.
 \label{figPendulumPlot}
 \end{figure}
 
+\begin{code}
+ioDiode :: SR (Pin,Pin)
+ioDiode = switch nowire  [fun| ((_,p_v),(_,n_v)) -> p_v - n_v > 0 |]  (\_ -> icDiode)
+\end{code}
+
+\begin{code}
+icDiode :: SR (Pin,Pin)
+icDiode = switch wire    [fun| ((p_i,_),(_,_))   -> p_i < 0 |]        (\_ -> ioDiode)
+\end{code}
+
+
+\begin{code}
+halfWaveRectifier :: SR ()
+halfWaveRectifier = [rel| () ->
+    local lp_i lp_v ln_i ln_v
+    $iInductor 0 1$ <> ((lp_i,  lp_v), (ln_i, ln_v))
+
+    local r1p_i r1p_v r1n_i r1n_v
+    $resistor  1$ <> ((r1p_i, r1p_v), (r1n_i, r1n_v))
+
+    local r2p_i r2p_v r2n_i r2n_v
+    $resistor  1$ <> ((r2p_i, r2p_v), (r2n_i, r2n_v))
+
+    local dp_i  dp_v  dn_i dn_v
+    $icDiode$ <> ((dp_i, dp_v), (dn_i, dn_v))
+
+    local cp_i cp_v cn_i cn_v
+    $iCapacitor 0 1$ <> ((cp_i, cp_v), (cn_i, cn_v))
+
+    local acp_i acp_v acn_i acn_v
+    $vSourceAC 1 1$ <> ((acp_i, acp_v), (acn_i, acn_v))
+
+    local g_i g_v
+    $ground$ <> (g_i,g_v)
+
+    connect  flow  acp_i lp_i
+    connect        acp_v lp_v
+
+    connect  flow  ln_i  r1p_i
+    connect        ln_v  r1n_v
+
+    connect  flow  r1n_i dp_i
+    connect        r1n_v dp_v
+
+    connect  flow  dn_i cp_i r2p_i
+    connect        dn_v cp_v r2p_v
+
+    connect  flow  acn_i cn_i r2n_i g_i
+    connect        acn_v cn_v r2n_v g_v
+|]
+\end{code}
+
 \begin{figure}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/rectifierCapVol.pdf}
