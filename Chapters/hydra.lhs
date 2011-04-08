@@ -534,9 +534,9 @@ broken mode, the signal relation is parametrised on the initial state of the
 body.
 
 \begin{code}
-type Coordinate = (Double,Double)
-type Velocity = (Double,Double)
-type Body = (Coordinate,Velocity)
+type Pos   =  (Double,Double)
+type Vel   =  (Double,Double)
+type Body  =  (Pos,Vel)
 
 g :: Double
 g = 9.81
@@ -706,4 +706,31 @@ halfWaveRectifier = [rel| () ->
 \label{figPendulumPlot}
 \end{figure}
 
+
+\section{Highly Structurally-dynamic Modelling}
+
+Bouncing Ball:
+
+\begin{code}
+bouncingBall :: Body -> SR Body
+bouncingBall b = switch   (freeFall b)
+                          [fun| ((_,y),_) -> y < 0 |]
+                          (\(p,(vx,vy)) -> bouncingBall (p,(vx, - vy))
+\end{code}
+
+Highly Structurally-dynamic Bouncing Ball:
+
+\begin{code}
+bouncingBall :: Body -> SR Body
+bouncingBall b = switch   (freeFall b)
+                          [fun| ((_,y),_) -> y < 0 |]
+                          (\(p,v) -> divide (p,v))
+
+divide :: Body -> SR Body
+divide ((x0,y0),(vx0,vy0)) = [rel| ((x,y),(vx,vy)) ->
+    $bouncingBall  ((x0,y0),(   vx0 / 2,  -  vy0 / 2))$   <>  ((x,y),(vx,vy))
+    local x' y' vx' vy'
+    $bouncingBall  ((x0,y0),(-  vx0 / 2,  -  vy0 / 2))$   <>  ((x',y'),(vx',vy'))
+|]
+\end{code}
 
