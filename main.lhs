@@ -7,6 +7,7 @@
 \usepackage{subfigure}
 \usepackage{amsmath}
 \usepackage{setspace}
+\usepackage{natbib}
 \usepackage[left=2in, right=1in, top=1in, bottom=1in, includefoot]{geometry}
 
 \doublespacing
@@ -54,7 +55,7 @@ Edward Gibbon
 \chapter{Conclusions}
 \label{chapConclusions}
 
-\bibliographystyle{plain}
+\bibliographystyle{plainnat}
 \bibliography{main}
 
 \end{document}

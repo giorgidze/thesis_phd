@@ -11,7 +11,7 @@ quasiquoting to generate the typed representation of Hydra models from strings
 in the concrete syntax. Functions performing the aforementioned
 transformation, so called quasiquoters, are specified in the opening
 quasiquotes. In GHC, a quasiquoter generates Haskell code using using Template
-Haskell \cite{Sheard2002}.
+Haskell \citep{Sheard2002}.
 
 GHC executes quasiquoters before type checking, at Haskell compile time. As
 the typed intermediate representation fully embodies the type system of Hydra,
@@ -30,7 +30,7 @@ typed representation.
 Firstly, the string in the concrete syntax of Hydra is parsed and the
 corresponding untyped representation is generated as an abstract syntax tree
 (AST). The BNF Converter (BNFC), a compiler front-end generator from a
-Labelled BNF grammar \cite{BNFC2004}, is used to generate the parser and the
+Labelled BNF grammar \citep{BNFC2004}, is used to generate the parser and the
 AST data type. The syntax and the AST data type is exactly the same as given
 in the language definition in Chapter \ref{chapDefinition}. In addition, we
 use BNFC to generate a layout resolver allowing for list of equations in |rel|
@@ -42,7 +42,7 @@ in the language definition (see Chapter \ref{chapDefinition}).
 
 Thirdly, the desugared untyped representation is translated into the typed
 representation. This step involves generation of Haskell code using Template
-Haskell \cite{Sheard2002}.
+Haskell \citep{Sheard2002}.
 
 We illustrate the quasiquoting process using the following signal relation
 modelling the parametrised van der Pol oscillator:
@@ -282,7 +282,7 @@ system are first order.
 
 While the numerical solver used in the current implementation handles
 higher-index systems of equations, it is desirable to perform index reduction
-symbolically at this stage as well \cite{Brenan1996a,Zimmer2009a}. Hydra does
+symbolically at this stage as well \citep{Brenan1996a,Zimmer2009a}. Hydra does
 not yet do this, but we intend to implement symbolic index reduction in the
 future.
 
@@ -418,7 +418,7 @@ evalPrimSF  Not    = not
 The generated equations are implicitly formulated ones: the mathematical
 representation of non-causal signal relations. In general, it is not possible
 to transform these implicit equations into explicit ones; i.e., to completely
-causalise them \cite{Brenan1996a}. Consequently, a system of implicit
+causalise them \citep{Brenan1996a}. Consequently, a system of implicit
 equations needs to be solved at the start of the simulation of each structural
 configuration mode and at every integration step. For example, a numerical
 solution of an implicitly formulated DAE (Equation \ref{eqMain}) involves
@@ -492,7 +492,7 @@ BB_1:                                             ; preds = %BB_0
 \subsection{Numerical Simulation}
 
 The numerical suite used in the current implementation of Hydra is called
-SUNDIALS \cite{Sundials2005}. The components we use are KINSOL, a nonlinear
+SUNDIALS \citep{Sundials2005}. The components we use are KINSOL, a nonlinear
 algebraic equation systems solver, and IDA, a differential algebraic equation
 systems solver. The code for the function $i$ is passed to KINSOL that
 numerically solves the system and returns initial values (at time $t_{0}$) of
@@ -594,7 +594,7 @@ would not be very meaningful.
 
 The evaluation setup is as follows. The numerical simulator integrates the
 system using variable-step, variable-order BDF (Backward Differentiation
-Formula) solver \cite{Brenan1996a}. Absolute and relative tolerances for
+Formula) solver \citep{Brenan1996a}. Absolute and relative tolerances for
 numerical solution are set to $10^{-6}$ and trajectories are printed out at
 every point where $t = 10^{-3} * k, k \ \epsilon \ \mathbb{N}$. For static
 compilation and JIT compilation we use GHC 6.10.4 and LLVM 2.5
@@ -767,7 +767,7 @@ by static approaches. Thus, when evaluating the feasibility of our approach,
 one should weigh the overheads against the limitation and inconvenience of not
 being able to model such systems non-causally.
 
-In previous work \cite{Giorgidze2009b}, we conducted benchmarks to evaluate
+In previous work \citep{Giorgidze2009b}, we conducted benchmarks to evaluate
 the performance of the proposed execution model. The initial results are
 encouraging. For a small system with handful of equations (e.g., the breaking
 pendulum) the total time spent on run-time symbolic processing and code

@@ -6,14 +6,14 @@
 The deep embedding techniques used in the Hydra implementation for
 domain-specific optimisations and efficient code generation draws from the
 extensive work on compiling staged domain-specific embedded languages. 
-Examples include Elliott et al. \cite{Elliott2000} and Mainland et al.
-\cite{Mainland2008}. However, these works are concerned with compiling
+Examples include Elliott et al. \citep{Elliott2000} and Mainland et al.
+\citep{Mainland2008}. However, these works are concerned with compiling
 programs all at once, meaning the host language is used only for
 meta-programming, not for running the actual programs.
 
 The use of quasiquoting in the implementation of Hydra was inspired by
 Flask, a domain-specific embedded language for programming sensor networks
-\cite{Mainland2008}. However, we had to use a different approach to type
+\citep{Mainland2008}. However, we had to use a different approach to type
 checking. A Flask program is type checked by a domain-specific type checker
 \emph{after} being generated, just before the subsequent compilation into the
 code to be deployed on the sensor network nodes. This happens at \emph{host
@@ -25,7 +25,7 @@ type checker with checking the embedded terms. This ensures only well-typed
 programs are generated at run-time.
 
 Lee et al. are developing a DSL embedded in Haskell for data-parallel array
-computations on a graphics processing unit (GPU) \cite{Lee2009a}. GPU programs
+computations on a graphics processing unit (GPU) \citep{Lee2009a}. GPU programs
 are first-class entities. The embedded language is being designed for run-time
 code generation, compilation and execution, with results being fed back for
 use in further host language computations. Thus, this is another example of
@@ -34,7 +34,7 @@ interpreted. However, a JIT compiler for a GPU architecture is currently being
 developed.
 
 The FHM design was originally inspired by Functional Reactive Programming
-(FRP) \cite{Elliott1997}, particularly Yampa \cite{Nilsson2002a}. A key
+(FRP) \citep{Elliott1997}, particularly Yampa \citep{Nilsson2002a}. A key
 difference is that FRP provides \emph{functions} on signals whereas FHM
 generalises this to \emph{relations} on signals. FRP can thus be seen as a
 framework for \emph{causal} simulation, while FHM supports non-causal
@@ -46,13 +46,13 @@ of iteratively staged languages. However, as all FRP versions supporting
 highly dynamic system structure so far have been interpreted, the program
 generation aspect is much less pronounced than what is the case for FHM.  That
 said, in Yampa, program fragments are generated and then optimised dynamically
-\cite{Nilsson2005a}. It would be interesting to try to apply an implementation
+\citep{Nilsson2005a}. It would be interesting to try to apply an implementation
 approach like the one we have described here to a version of FRP.
 
 \section{Non-causal Modelling and Simulation Languages}
 \subsection{Sol}
 
-Sol is a Modelica-like language \cite{Zimmer2007,Zimmer2008a}. It introduces
+Sol is a Modelica-like language \citep{Zimmer2007,Zimmer2008a}. It introduces
 language constructs that enable the description of systems where objects are
 dynamically created and deleted, thus aiming at supporting modelling of
 highly structurally dynamic systems. So far, the research emphasis has been on
@@ -69,7 +69,7 @@ changes (see Section \ref{sec:futurework}).
 
 MOSILAB is an extension of the Modelica language that supports the description
 of structural changes using object-oriented statecharts
-\cite{Nytsch-Geusen2005a}. This enables modelling of structurally dynamic
+\citep{Nytsch-Geusen2005a}. This enables modelling of structurally dynamic
 systems. It is a compiled implementation. However, the statechart approach
 implies that all structural modes must be explicitly specified in advance,
 meaning that MOSILAB does not support \emph{highly} structurally dynamic
@@ -79,10 +79,10 @@ investigated here might be of interest also in the implementation of MOSILAB.
 
 \subsection{Modelling Kernel Language}
 
-Broman \cite{Broman2007a,Broman2008a} is developing the Modelling Kernel
+Broman \citep{Broman2007a,Broman2008a} is developing the Modelling Kernel
 Language (MKL) that is intended to be a core language for non-causal modelling
 languages such as Modelica. Broman takes a functional approach to non-causal
-modelling, similar to the FHM approach \cite{Nilsson2003a,Nilsson2007}. One of
+modelling, similar to the FHM approach \citep{Nilsson2003a,Nilsson2007}. One of
 the main goals of MKL is to provide a formal semantics of the core language.
 Currently, this semantics is based on an untyped, effectful
 $\lambda$-calculus.
@@ -106,5 +106,5 @@ discussed in this paper should be of interest in such a setting.
 
 \subsection{Acumen}
 
-\cite{Taha2010a}.
+\citep{Taha2010a}.
 

@@ -40,7 +40,7 @@ The first four equations describe the behaviour of the components. The last
 three equations describe the topology of the circuit. The system of equations
 consists of implicitly defined algebraic and differential equations. This
 mathematical representation is called system of implicit \emph{differential
-algebraic equations (DAEs)} \cite{Cellier2006}. More generally, system of
+algebraic equations (DAEs)} \citep{Cellier2006}. More generally, system of
 implicit DAEs can be written in the following way:
 
 \begin{equation}
@@ -127,7 +127,7 @@ derivatives with the following approximation:
 \end{equation}
 
 where $h$ is a \emph{sufficiently small} positive scalar and is called a
-\emph{step size} of the numerical integration \cite{Cellier2006}.
+\emph{step size} of the numerical integration \citep{Cellier2006}.
 
 We make us of Equation \ref{eqExplODE} and substitute the derivative .
 
@@ -149,7 +149,7 @@ where $\vec{x}_n$ is a numerical approximation of $\vec{x}(t_n)$.
 More accurate and efficient numerical integration methods are available based
 on different approximations and integration algorithms. More comprehensive
 presentation of this and other more sophisticated methods can be found in
-\cite{Cellier2006}.
+\citep{Cellier2006}.
 
 \subsection{Simulation}
 
@@ -222,7 +222,7 @@ models without assuming a particular domain of physics.
 \section{Causal Modelling in Simulink}
 \label{secSimulink}
 
-Simulink \cite{Simulink2008} is a graphical block diagramming tool for causal
+Simulink \citep{Simulink2008} is a graphical block diagramming tool for causal
 modelling and simulation. The block diagram in Figure
 \ref{figCircuitBlockDiagram1} is a model of the circuit from Figure
 \ref{figCircuit1}.
@@ -249,9 +249,9 @@ system.
 Structurally, the block diagram in Figure \ref{figCircuitBlockDiagram1}
 is quite far removed from the circuit it models. Because of this, construction
 of block diagrams is generally regarded as a difficult and somewhat involved
-task \cite{Nilsson2007}. Moreover, a slight change in a system might require
+task \citep{Nilsson2007}. Moreover, a slight change in a system might require
 drastic changes in the corresponding block diagram. This is because causal
-models limit reuse \cite{Cellier1996}. For example, a resistor behaviour is
+models limit reuse \citep{Cellier1996}. For example, a resistor behaviour is
 usually modelled using the Ohm's law which can be written as $i = \frac{u}{R}$
 or $u = R \cdot i$. Unfortunately, no single causal block can capture the
 resistor behaviour. If we need to compute the current from the voltage, we
@@ -296,7 +296,7 @@ support higher-order causal modelling.
 %include ../Format/modelica.lhs
 
 Modelica is a declarative language for non-causal modelling and simulation of
-physical systems \cite{Modelica2007}. Modelica models are given using
+physical systems \citep{Modelica2007}. Modelica models are given using
 non-causal DAEs. A class system known from object-oriented programming
 paradigm is used to structure the equations and support reuse of models.
 
@@ -484,8 +484,8 @@ combination of continuous equations and switching statements that specify
 discontinuous changes in the system.
 
 The simulation of continuous systems is relatively well understood
-\cite{Cellier2006}. However, hybrid systems introduce a number of unique
-challenges \cite{Barton2002a,Mosterman1999a} (e.g., handling a large or
+\citep{Cellier2006}. However, hybrid systems introduce a number of unique
+challenges \citep{Barton2002a,Mosterman1999a} (e.g., handling a large or
 possibly unbounded number of continuous modes, accurate event detection, and
 consistent initialisation of state variables during mode switches). The
 integration of hybrid modelling with non-causal modelling raises further
@@ -497,7 +497,7 @@ their ability to model and simulate hybrid systems. Many of the limitations
 are related to the symbolic and numerical methods that must be used in the
 non-causal approach. But more fundamental reason is that most such systems
 perform all symbolic manipulations and the simulation code generation before
-simulation begins \cite{Mosterman1999a}.
+simulation begins \citep{Mosterman1999a}.
 
 In this section, we discuss hybrid modelling in non-causal languages. The
 current limitations are illustrated using the Modelica model of a hybrid
@@ -544,7 +544,7 @@ end BreakingPendulum;
 \end{code}
 
 However the model fails to compile. The latest version of the Modelica
-standard \cite{Modelica2007} asserts that number of equations in both branches
+standard \citep{Modelica2007} asserts that number of equations in both branches
 of an if statement must be equal when the conditional expression contains a
 time-varying variable. If considered separately, the equations in both
 branches do solve the publicly available variables successfully. In an attempt
@@ -552,15 +552,15 @@ to fix the model, the modeller might try to add a dummy equation for the
 variable not needed in the second mode (i.e., the variable |phi|, which
 represents the angle of deviation of the pendulum before it is broken). This
 version compiles, but the generated code fails to simulate the system. This
-example was tried using OpenModelica \cite{OpenModelica2006} and Dymola
-\cite{Dymola2008} compilers.
+example was tried using OpenModelica \citep{OpenModelica2006} and Dymola
+\citep{Dymola2008} compilers.
 
 One of the difficulties of this example is that causality changes during the
 switch between the two modes. In the first mode position is calculated from
 state variable |phi|, which is not the case after the switch. This makes the
 job of the simulation code generator a lot harder and as it turns out Modelica
 tools are not able to handle it. This and related issues are covered in
-greater detail in \cite{ModelicaTutorial2000}. The suggested solution is more
+greater detail in \citep{ModelicaTutorial2000}. The suggested solution is more
 involved and requires reformulation of the model by making it causal. The need
 of manual reformulation to conform to certain causality eliminates the
 advantages of working in non-causal a modelling language.

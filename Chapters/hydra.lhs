@@ -120,7 +120,7 @@ notions that exist at the functional level are the \emph{time-invariant}
 signal relation and the signal function.
 
 Hydra is implemented as an embedding in Haskell using \emph{quasiquoting}
-\cite{Mainland2007,Mainland2008}. This means Haskell provides the functional
+\citep{Mainland2007,Mainland2008}. This means Haskell provides the functional
 level almost for free through shallow embedding. In contrast, the signal level
 is realised through deep embedding: signal relations expressed in terms of
 Hydra-specific syntax are, through the quasiquoting machinery, turned into an
@@ -405,7 +405,7 @@ acn_v  =  cn_v  =  ln_v  =  gp_v
 In Hydra, the expansion of connect constructs into the sum-to-zero and
 equality constraints is straightforward. In particular, note that all signal
 variables are counted positively in the sum to zero equations. This is
-different from Modelica \cite{Modelica2007} where a special ``rule of signs''
+different from Modelica \citep{Modelica2007} where a special ``rule of signs''
 is used to determine which flow variables go with a plus sign and which go
 with a minus sign. Hydra obviates the need for the rule of signs using |flow|
 qualifiers, which also is a syntactic sugar.
@@ -511,7 +511,7 @@ If the rod breaks, the body will fall freely. This makes the differences
 between the two configurations sufficiently large that, for example, Modelica
 does not support non-causal modelling of this system. Instead, if simulation
 across the breaking point is desired, the modeller is forced to model the
-system in a causal, less declarative way \cite[pp.
+system in a causal, less declarative way \citep[pp.
 31--33]{ModelicaTutorial2000}.
 
 The following code shows how to model the two modes of the pendulum in Hydra.

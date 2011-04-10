@@ -5,7 +5,7 @@ The field of modelling and simulation of physical systems plays an important
 role in design, implementation and analysis of systems in numerous areas of
 science and engineering (e.g., electronics, mechanics, thermodynamics,
 chemical reaction kinetics, population dynamics and neural networks)
-\cite{Cellier1991}. To cope with ever increasing size and complexity of
+\citep{Cellier1991}. To cope with ever increasing size and complexity of
 real-world systems, a number modelling and simulation languages have been
 developed. The modelling and simulation languages can be divided in two broad
 categories: \emph{causal} and \emph{non-causal}.
@@ -13,24 +13,24 @@ categories: \emph{causal} and \emph{non-causal}.
 A causal model is formulated in terms of explicit equations, for example,
 \emph{ordinary differential equations} (ODEs) in explicit form. That is, the
 cause-effect relationship must be explicitly specified by the modeller
-\cite{Cellier2006}. In other words, the equations are directed: only
+\citep{Cellier2006}. In other words, the equations are directed: only
 \emph{unknown} variables can appear on the left hand side of the equal sign,
 and only \emph{known} variables on the other side. Since the equations are
 directed, it is relatively straight forward to translate causal models into a
 low level simulation code, for example, into a sequence of assignment
 statements and simulate it. Simulink is a prominent representative of causal
-modelling languages \cite{Simulink2008}.
+modelling languages \citep{Simulink2008}.
 
 A non-causal model is formulated in terms of implicit equations, for example,
 \emph{differential algebraic equations} (DAEs) in implicit form. In other
 words, the equations are undirected: both known and unknown variables may
-appear on both sides of equal sign \cite{Cellier2006}. The translation of
+appear on both sides of equal sign \citep{Cellier2006}. The translation of
 non-causal models into simulation code involves additional symbolic processing
 and numerical simulation methods that are not required for causal modelling
 and simulation, for example, symbolic transformations that try to causalise
 non-causal models and if this is not possible numerical solvers for
 (non-linear) implicit equations. Modelica is a prominent, state-of-the-art
-representative of non-causal modelling languages \cite{Modelica2007}.
+representative of non-causal modelling languages \citep{Modelica2007}.
 
 Non-causal modelling has a number of advantages over causal modelling:
 \begin{itemize}
@@ -52,7 +52,7 @@ number of different ways)
 \section{First-class Models}
 
 Current non-causal languages are not treating models as \emph{first-class}
-values \cite{Nilsson2003a}. We say that models are first class values in the
+values \citep{Nilsson2003a}. We say that models are first class values in the
 language if they:
 
 \begin{itemize}
@@ -69,7 +69,7 @@ capabilities in two crucial application areas of modelling languages:
 \subsection{Higher-order Modelling}
 
 Higher-order modelling is a style of modelling were models are being
-parametrised on other models \cite{Nilsson2003a,Broman2008a}. For example, a
+parametrised on other models \citep{Nilsson2003a,Broman2008a}. For example, a
 car model can be parametrised on the list of tires it is using or an
 electronic transmission line model can be parametrised on the list of
 electronic components on the line.
@@ -93,26 +93,26 @@ model major changes in system behaviour by changing the equations that
 describe the dynamics of the system. These major changes can be due to the
 modelled system itself exhibiting structural changes, due to a need to change
 to simplified models of parts of a system for periods of time, and so on
-\cite{Mosterman1997}. Models whose equational description change over time are
+\citep{Mosterman1997}. Models whose equational description change over time are
 called structurally dynamic, and each structural configuration is known as a
 \emph{mode} of operation. Structurally dynamic systems are an example of the
 more general notion of \emph{hybrid} systems, systems that exhibit both
 continuous and discrete behaviour.
 
 \emph{Cyber-physical} systems where digital computers interact with continuous
-physical systems \cite{Lee2008a} can also be seen as instances of hybrid
+physical systems \citep{Lee2008a} can also be seen as instances of hybrid
 systems. Recently, the US National Science Foundation (NSF) identified
 Cyber-physical systems as one of its key research areas.
 
 Unfortunately, the support offered by current modelling languages for
 expressing structurally-dynamic systems (as well as hybrid systems in general)
-is somewhat limited \cite{Mosterman1997, Mosterman1999a, Zauner2007,
+is somewhat limited \citep{Mosterman1997, Mosterman1999a, Zauner2007,
 Zimmer2008a}. This is true in particular for non-causal modelling languages.
 There are a number of reasons for this limited support. In this thesis we
 concentrate on one reason related to the design and implementation of
 modelling and simulation languages, namely the common assumption that most or
 all processing to put a model into a form suitable for simulation will take
-place \emph{prior} to simulation \cite{Nilsson2007,Zimmer2007}. By enforcing
+place \emph{prior} to simulation \citep{Nilsson2007,Zimmer2007}. By enforcing
 this assumption in the design of a modelling language, its implementation can
 be simplified as there is no need for simulation-time support for handling
 structural changes. For instance, a compiler can typically generate static
@@ -126,8 +126,8 @@ feasible, or even a priori unbounded.
 
 There are a number of efforts to design and implement modelling and simulation
 languages with improved support for structural dynamics. Examples include
-HYBRSIM \cite{Mosterman1998}, MOSILAB \cite{Nytsch-Geusen2005a}, and Sol
-\cite{Zimmer2008a}. However, thus far, implementations have either been
+HYBRSIM \citep{Mosterman1998}, MOSILAB \citep{Nytsch-Geusen2005a}, and Sol
+\citep{Zimmer2008a}. However, thus far, implementations have either been
 interpreted (HYBRSIM and Sol) and thus sacrificing the efficiency, or the
 language has been restricted so as to limit the number of modes to make it
 feasible to compile code for all modes prior to simulation (MOSILAB).
@@ -170,13 +170,13 @@ communities.
 
 \section{Embedding}
 
-Hydra is a Haskell \cite{Haskell98} embedded \emph{domain-specific language}
+Hydra is a Haskell \citep{Haskell98} embedded \emph{domain-specific language}
 (DSL). Here, the domain is non-causal modelling and simulation using
 implicitly formulated DAEs. Haskell is a purely functional, higher-order
 programming language that is widely used for embedded DSL development
-\cite{Stewart2009a}.
+\citep{Stewart2009a}.
 
-Embedding is a powerful and popular way to implement DSLs \cite{Hudak1998}.
+Embedding is a powerful and popular way to implement DSLs \citep{Hudak1998}.
 Compared with implementing a language from scratch, extending a suitable
 general-purpose programming language, the \emph{host language}, with notions
 and vocabulary addressing a particular application or problem domain tends to
@@ -216,13 +216,13 @@ Because performance is a primary concern in the domain, the simulation code
 for each mode of the model has to be compiled. As this code is determined
 \emph{dynamically}, this necessitates JIT compilation. We use a deep embedding
 for this part of the language along with the Low Level Virtual Machine (LLVM)
-\cite{Lattner2002a}, a language-independent, portable, optimising, compiler
+\citep{Lattner2002a}, a language-independent, portable, optimising, compiler
 back-end with JIT support. In contrast, we retain a shallow embedding for the
 parts of the embedded language concerned with high-level, symbolic
 computations to get maximum leverage from the host language.
 
 An alternative might have been to use a \emph{multi-staged} host language like
-MetaOCaml \cite{Taha2004}. The built-in runtime code generation capabilities
+MetaOCaml \citep{Taha2004}. The built-in runtime code generation capabilities
 of the host language then would have been used instead of relying on an
 external code generation framework. We did not pursue this approach because we
 wanted to have tight control over the generated code. Also, not predicating
@@ -234,7 +234,7 @@ languages.
 Compilation of embedded DSLs is today a standard tool in the DSL-implementer's
 tool box. The seminal example is the work by Elliott et al. on compiling
 embedded languages, specifically the image synthesis and manipulation language
-Pan \cite{Elliott2000}. Pan, like our language, provides for program
+Pan \citep{Elliott2000}. Pan, like our language, provides for program
 generation by leveraging the host language combined with compilation to speed
 up the resulting performance-critical computations. However, the program to be
 compiled is generated once and for all, meaning the host language acts as a
