@@ -4,6 +4,7 @@
 %include Format/haskell.lhs
 
 \usepackage{graphicx}
+\usepackage{url}
 \usepackage{subfigure}
 \usepackage{amsmath}
 \usepackage{setspace}
@@ -40,7 +41,6 @@ unskilled in the arts of composition, I resolved to write a book.''}
 Edward Gibbon
 \end{flushright}
 
-%include Chapters/declaration.lhs
 %include Chapters/acknowledgements.lhs
 \tableofcontents
 \listoffigures

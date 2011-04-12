@@ -132,7 +132,7 @@ list of equations constitute a system of Differential Algebraic Equations
 signal. Having said that, the system is not necessarily a static one as the
 equations may refer to signal relations that contain switches.
 
-The |switch|-combinator, which is used in \label{chapHydra}, forms a signal
+The |switch|-combinator, which is used in \ref{chapHydra}, forms a signal
 relation by temporal composition of two signal relations. Internally, such a
 temporal composition is represented by a signal relation constructed by the
 |Switch| constructor:

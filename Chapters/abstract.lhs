@@ -19,7 +19,7 @@ expressiveness and applicability of non-causal languages.
 
 This thesis is about a novel approach to the design and implementation of
 non-causal languages with first-class models supporting higher-order and
-structurally dynamic modelling. In particular, the thesis presents a language
+structurally-dynamic modelling. In particular, the thesis presents a language
 that enables: (1) higher-order modelling capabilities by embedding non-causal
 models as first-class entities into a functional programming language and (2)
 efficient simulation of non-causal models that are generated at simulation
