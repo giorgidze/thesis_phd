@@ -10,9 +10,9 @@ models, a number modelling and simulation languages have been developed. The
 modelling and simulation languages can be divided in two broad categories:
 \emph{causal} and \emph{non-causal}.
 
-A causal model is formulated in terms of explicit equations, for example,
-\emph{ordinary differential equations} (ODEs) in explicit form. That is, the
-cause-effect relationship must be explicitly specified by the modeller
+A causal model is formulated in terms of \emph{explicit} equations, for
+example, \emph{ordinary differential equations} (ODEs) in explicit form. That
+is, the cause-effect relationship is explicitly specified by the modeller
 \citep{Cellier2006}. In other words, the equations are directed; only
 \emph{unknown} variables can appear on the left hand side of the equal sign,
 and only \emph{known} variables on the other side. Since the equations are
@@ -21,10 +21,10 @@ low level simulation code (e.g., into a sequence of assignment statements) and
 simulate it. \citet{Simulink} is a prominent representative of causal
 modelling languages.
 
-A non-causal model is formulated in terms of implicit equations, for example,
-\emph{differential algebraic equations} (DAEs) in implicit form. In other
-words, the equations are undirected: both known and unknown variables may
-appear on both sides of equal sign \citep{Cellier2006}. The translation of
+A non-causal model is formulated in terms of \emph{implicit} equations, for
+example, \emph{differential algebraic equations} (DAEs) in implicit form. In
+other words, the equations are undirected: both known and unknown variables
+may appear on both sides of equal sign \citep{Cellier2006}. The translation of
 non-causal models into simulation code involves additional symbolic processing
 and numerical simulation methods that are not required for causal modelling
 and simulation. Examples include: symbolic transformations that try to
@@ -65,9 +65,9 @@ to functions, (2) returned as a result from functions, (3) constructed at
 runtime and (4) placed in data structures \citep{Scott2009a}. Current,
 main-stream non-causal languages are not treating models as first-class values
 \citep{Nilsson2003a}. This limits their expressiveness and applicability,
-resulting in a very limited capabilities in two crucial application areas of
-modelling languages: \emph{higher-order} and \emph{structurally-dynamic}
-modelling.
+resulting in a very limited capabilities in the following crucial application
+areas of modelling languages: \emph{higher-order} and
+\emph{structurally-dynamic} modelling.
 
 \subsection{Higher-order Modelling}
 
@@ -117,34 +117,32 @@ hybrid systems \citep{Nilsson2003a}. The term structurally-dynamic emphasises
 only one discrete aspect, that is, the change of equations at discrete points
 in time.
 
-\emph{Cyber-physical} systems \citep{Lee2008a} -- where digital computers
-interact with continuous physical systems -- can also be seen as instances of
-hybrid systems. In this context, structurally-dynamic modelling is relevant,
-as digital systems influence on a continuous system, to a certain level of
-abstraction, can be modelled by changing the equations describing the
-continuous part of the cyber-physical system. Recently, the US National
-Science Foundation identified Cyber-physical systems as one of its key
-research areas.
+\emph{Cyber-physical} systems \citep{Lee2008a}, where digital computers
+interact with continuous physical systems, can also be seen as instances of
+hybrid systems. In this context, structurally-dynamic modelling is relevant;
+as modelling of a cyber-physical system where the digital part's influence
+causes major changes in the physical part may require changing of the
+equations describing the dynamics of the continuous part. Recently,
+the US National Science Foundation identified Cyber-physical systems as one of
+its key research areas \citep{NSF2008a}.
 
-Unfortunately, the support offered by current modelling languages for
-expressing structurally-dynamic systems (as well as hybrid systems in general)
-is somewhat limited \citep{Mosterman1997, Mosterman1999a, Zauner2007,
-Zimmer2008a}. This is true in particular for non-causal modelling languages.
-There are a number of reasons for this limited support. In this thesis we
-concentrate on one reason related to the design and implementation of
-modelling and simulation languages, namely the common assumption that most or
-all processing to put a model into a form suitable for simulation will take
-place \emph{prior} to simulation \citep{Nilsson2007,Zimmer2007}. By enforcing
-this assumption in the design of a modelling language, its implementation can
-be simplified as there is no need for simulation-time support for handling
-structural changes. For instance, a compiler can typically generate static
-simulation code (often just a sequence of assignment statements) with little
-or no need for dynamic memory and code management. This results in a good
-performance. But the limitations are also obvious: for example, the number of
-modes must be modest as, in general, separate code must be generated for each
-mode. This rules out supporting \emph{highly} structurally-dynamic systems:
-systems where the number of modes is too large to make explicit enumeration
-feasible, or even a priori unbounded.
+Current non-causal languages offer a quite limited support for modelling
+structurally-dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
+Zimmer2008a}. There are a number of reasons for this limited support. This
+thesis concentrates on one particular reason related to the design and
+implementation of modelling and simulation languages, specifically the
+prevalent assumption that most or all processing to put a model into a form
+suitable for simulation will take place \emph{prior} to simulation
+\citep{Nilsson2007,Zimmer2007}. By enforcing this assumption in the design of
+a modelling language, its implementation can be simplified as there is no need
+for simulation-time support for handling structural changes. For instance, a
+compiler can typically generate static simulation code (often just a sequence
+of assignment statements) with little or no need for dynamic memory or code
+management. This results in a good performance, but such language design and
+implementation approach restricts the number of modes to be modest as, in
+general, separate code must be generated for each mode. This rules out
+supporting \emph{highly} structurally-dynamic systems where the number of
+modes is too large or even a priori unbounded.
 
 There are a number of efforts to design and implement modelling and simulation
 languages with improved support for structural dynamism. Examples include:
@@ -157,42 +155,42 @@ simulation (MOSILAB and Acumen).
 
 \subsection{Contributions}
 
-In this dissertation we present a novel approach to the design and
-implementation of non-causal modelling and simulation languages with
-first-class models supporting higher-order and structurally-dynamic modelling.
-To achieve the above, the thesis defines and implements a non-causal modelling
-language called Hydra. The language provides non-causal modelling and
+This dissertation presents a novel approach to the design and implementation
+of non-causal modelling and simulation languages with first-class models
+supporting higher-order and structurally-dynamic modelling. The thesis
+formally defines a non-causal modelling language called Hydra and describes
+its implementation in great detail. Hydra provides non-causal modelling and
 simulation capabilities that go beyond the state of the art and represents a
 significant progress in the field of design and implementation of declarative
 modelling and simulation languages, in particular:
 
 \begin{itemize}
 
-\item We show how to enable higher-order modelling capabilities by embedding
-non-causal models as first-class entities into a purely functional programming
-language. To my knowledge, Hydra is the first language that faithfully treats
-non-causal models as first-class values (i.e., supports all four points
-outlined in Section \ref{secFirstClassModels}).
+\item The thesis shows how to enable higher-order modelling capabilities by
+embedding non-causal models as first-class entities into a purely functional
+programming language. To my knowledge, Hydra is the first language that
+faithfully treats non-causal models as first-class values (i.e., supports all
+four points outlined in the beginning of Section \ref{secFirstClassModels}).
 
-\item We show how to use runtime symbolic processing and \emph{just-in-time}
-(JIT) compilation to enable efficient simulation of non-causal models that are
-generated at simulation runtime. To my knowledge, Hydra is the first language
-that enables support \emph{both} for modelling and simulation of highly
-structurally-dynamic systems and for compilation of simulation code for
-efficiency.
+\item The thesis shows how to use runtime symbolic processing and
+\emph{just-in-time} (JIT) compilation to enable efficient simulation of
+non-causal models that are generated at simulation runtime. To my knowledge,
+Hydra is the first language that enables support \emph{both} for modelling and
+simulation of highly structurally-dynamic systems and for compilation of
+simulation code for efficiency.
 
 \end{itemize}
 
 In addition to presenting the language definition and implementation, the
 aforementioned claims are also backed up by illustrating a range of example
 physical systems that can not be modelled and simulated in current non-causal
-languages. The examples are chosen on purpose to show case those language
+languages. The examples are chosen, on purpose, to show case those language
 features of Hydra that are lacking in other non-causal modelling languages.
 
-The language design choices and implementation approaches can be used to
-enhance existing non-causal modelling and simulation languages, as well as, to
-design and implement new modelling languages. This thesis provides a
-self-contained reference for such undertaking by defining the language
+The language design choices and implementation approaches presented here can
+be used to enhance existing non-causal modelling and simulation languages, as
+well as, to design and implement new modelling languages. This thesis provides
+a self-contained reference for such undertaking by defining the language
 semantics formally and providing an in-depth description of the
 implementation.
 
@@ -206,28 +204,27 @@ discrete aspects that do not lead to structural reconfigurations (e.g.,
 thesis, but, in principle, can be incorporated in the Hydra language.
 
 This work can be seen as an application of successful ideas developed in
-programming languages research, in general, and in functional programming
-languages research, in particular, to declarative modelling and simulation
-languages. We hope that this work will aid to further cross-fertilisation and
-exchange of ideas between these research communities.
+functional programming languages research to declarative modelling and
+simulation languages. I hope that this work will aid to further
+cross-fertilisation and exchange of ideas between these research communities.
 
 \section{Embedding}
 
-Hydra is a Haskell \citep{Haskell98} embedded \emph{domain-specific language}
-(DSL). Here, the domain is non-causal modelling and simulation using
-implicitly formulated DAEs. Haskell is a purely functional, higher-order,
-strongly typed programming language that is widely used for embedded DSL
-development \citep{Stewart2009a}.
+Hydra is a Haskell-embedded \emph{domain-specific language} (DSL). Here, the
+domain is non-causal modelling and simulation using implicitly formulated
+DAEs. Haskell is a purely functional, higher-order, strongly typed programming
+language \citep{Haskell98}, which is widely used for embedded DSL development
+\citep{Stewart2009a}.
 
 Embedding is a powerful and popular way to implement DSLs \citep{Hudak1998}.
 Compared with implementing a language from scratch, extending a suitable
 general-purpose programming language, the \emph{host language}, with notions
-and vocabulary addressing a particular application or problem domain tends to
-save a lot of design and implementation effort. This is what motivated us to
-use the embedding approach. The embedding approach allowed us to concentrate
-our design and implementation efforts on non-causal modelling language notions
-that are \emph{domain specific} and \emph{absent} in the host language, and to
-reuse the rest from the host language.
+addressing a particular application or problem domain tends to save a lot of
+design and implementation efforts. The motivation behind using an embedding
+approach for Hydra is to concentrate the language design and implementation
+efforts on non-causal modelling notions that are domain specific and absent in
+the host language, and, at the same time, to reuse the rest from the host
+language.
 
 Having said that, the concept of first-class models, and runtime symbolic
 processing and JIT compilation approaches implemented in Hydra are not
@@ -237,82 +234,85 @@ embedded or otherwise.
 
 There are two basic approaches to language embeddings: \emph{shallow} and
 \emph{deep}. In a shallow embedding, domain-specific notions are expressed
-directly in host-language terms, typically through a higher-order combinator
-library. This is a light-weight approach that makes it easy to leverage the
-facilities of the host language. In contrast, a deep embedding is centred
-around a \emph{representation} of embedded language terms as data that then
-are given meaning by interpretation or compilation. This is a more
-heavy-weight approach, but also more flexible. In particular, for optimisation
-or compilation, it is often necessary to inspect terms, suggesting a deep
-embedding. The two approaches can be combined to draw on the advantages of
-each. This leads to \emph{mixed-level} embedding.
+directly in host-language terms. A shallow embedding is commonly realised as a
+higher-order combinator library. This is a light-weight approach for
+leveraging the facilities of the host language \citep{Hudak1998}. In contrast,
+a deep embedding is about building embedded language terms as data in a
+suitable representation. These terms are given meaning by interpretation or
+compilation \citep{Hudak1998}. This is a more heavy-weight approach, but also
+more flexible one. Indeed, it is often necessary to inspect the embedded
+language terms for optimisation or compilation. To benefit from the advantages
+of, both, shallow and deep embeddings, a combined approach, called
+\emph{mixed-level} embedding, can be used \citep{Giorgidze2010a}.
 
-As mentioned above Hydra supports runtime generation and JIT compilation of
-non-causal models. Specifically, in response to \emph{events}, which occur at
-discrete points in time, the simulation is stopped and, \emph{depending} on
-results thus far, (partly) new equations are \emph{generated} describing a
-(partly) new problem to be solved. We refer to this kind of DSL as
-\emph{iteratively staged} to emphasise that the domain is characterised by
-repeated program generation, compilation and execution.
+As mentioned above (see Section \ref{secFirstClassModels}), Hydra supports
+runtime generation and JIT compilation of non-causal models. Specifically, in
+response to \emph{events} occurring at discrete points in time, the simulation
+is stopped and, depending on simulation results thus far, new equations are
+generated for further simulation \citep{Giorgidze2009a}. This kind of DSL is
+referred as \emph{iteratively staged}, emphasising that the domain is
+characterised by repeated program generation, compilation and execution
+\citep{Giorgidze2010a}.
 
 Because performance is a primary concern in the domain, the simulation code
 for each mode of the model has to be compiled. As this code is determined
-\emph{dynamically}, this necessitates JIT compilation. We use a deep embedding
-for this part of the language along with the Low Level Virtual Machine (LLVM)
-\citep{Lattner2002a}, a language-independent, portable, optimising, compiler
-back-end with JIT support. In contrast, we retain a shallow embedding for the
-parts of the embedded language concerned with high-level, symbolic
-computations to get maximum leverage from the host language.
+dynamically this necessitates JIT compilation. For this part of the language
+Hydra employs deep embedding techniques, along with the Low Level Virtual
+Machine (LLVM) compiler infrastructure \citep{Lattner2002a}, a
+language-independent, portable, optimising, compiler backend with JIT support.
+In contrast, shallow embedding techniques are used for the parts of Hydra
+concerned with high-level, symbolic computations \citep{Giorgidze2010a}.
 
 An alternative might have been to use a \emph{multi-staged} host language like
 MetaOCaml \citep{Taha2004}. The built-in runtime code generation capabilities
 of the host language then would have been used instead of relying on an
-external code generation framework. We did not pursue this approach because we
-wanted to have tight control over the generated code.
+external code generation framework such as LLVM. This approach has not been
+pursued, as the tight control over the dynamically generated code is essential
+in this application domain.
+
+\subsection{Contributions}
 
 Compilation of embedded DSLs is today a standard tool in the DSL-implementer's
 tool box. The seminal example is the work by Elliott et al. on compiling
 embedded languages, specifically the image synthesis and manipulation language
-Pan \citep{Elliott2000}. Pan, like our language, provides for program
+Pan \citep{Elliott2000}. Pan, like Hydra, provides for program
 generation by leveraging the host language combined with compilation to speed
 up the resulting performance-critical computations. However, the program to be
 compiled is generated once and for all, meaning the host language acts as a
 powerful but fundamentally conventional macro language: program generation,
 compilation, and execution is a process with a fixed number of stages.
 
-\subsection{Contributions}
-
-As Hydra is iteratively staged, the problems we are facing are in many ways
-different. Also, rather than acting merely as a powerful meta language that is
-out of the picture once the generated program is ready for execution, the host
-language is in our case part of the dynamic semantics of the embedded language
-through the shallow parts of the embedding. We thus add further tools to the
-DSL tool box for embedding a class of languages that thus far has not been
-studied much from embedding and staged programming perspective.
+Hydra is iteratively staged and, also, rather than acting merely as a powerful
+meta language that is out of the picture once the generated program is ready
+for execution, the host language is in this case part of the dynamic semantics
+of the embedded language through the shallow parts of the embedding. We thus
+add further tools to the DSL tool box for embedding a class of languages that
+thus far has not been studied much from embedding and staged programming
+perspective.
 
 While embedded DSL development methodology is not the main focus of this work,
-we nevertheless think that the thesis should be of interest to embedded DSL
-implementers as it presents an application of a new embedding technique. In
+I nevertheless think that the thesis should be of interest to embedded DSL
+implementers, as it presents an application of a new embedding technique. In
 particular:
 
 \begin{itemize}
 
-\item We present a case study of mixed-level embedding of an iteratively
-staged DSL in a host language that does not provide built-in multi-stage
-programming capabilities.
+\item The thesis presents a case study of mixed-level embedding of an
+iteratively-staged DSL in a host language that does not provide built-in
+multi-stage programming capabilities.
 
-\item We show how to use JIT compilation to implement an iteratively staged
-embedded DSL efficiently.
+\item The thesis describes how to use JIT compilation to implement an
+iteratively-staged embedded DSL efficiently.
 
 \end{itemize}
 
 \section{Published Peer-reviewed Contributions}
 
 The content of this thesis is partly based on the peer-reviewed publications
-that are listed in this section below. I wrote the papers in collaboration
-with my coauthors. This thesis was written by myself. I have implemented the
-software described in this dissertation and in the following papers. The
-software is available on my
+that are listed in this section (see below). I wrote the papers in
+collaboration with my coauthors. This thesis was written by myself. I have
+implemented the software described in this dissertation and in the following
+papers. The software is available on my
 webpage\footnote{\url{http://www.cs.nott.ac.uk/~ggg/}} under the open source
 BSD license.
 
@@ -355,8 +355,9 @@ Henrik Nilsson and George Giorgidze.
 The following two papers are about highly structurally-dynamic, causal
 modelling and simulation using Yampa, a Haskell-embedded Functional Reactive
 Programming (FRP) language \citep{Hudak2003}. The combinator that allows
-switching of equations during simulation runtime in Hydra draws inspiration
-from Yampa switching combinators \citep{Nilsson2002a,Courtney2003a}.
+switching of equations during simulation runtime in Hydra draws its
+inspiration from switching combinators featured in Yampa
+\citep{Nilsson2002a,Courtney2003a}.
 
 \begin{itemize}
 \item
@@ -403,16 +404,27 @@ able to follow the thesis in its entirety.
 
 \section{Outline}
 
-The rest of the dissertation is organised as follows. In Chapter
-\ref{chapBackground}, we overview the field of physical modelling, and the
-state-of-the-art causal and non-causal modelling languages. In Chapter
-\ref{chapHydra}, we introduce the concepts that the Hydra language is based on
-and explain how to model physical systems in Hydra by means of examples that
-were carefully chosen to show case those language features that are absent in
-other non-causal modelling languages. In Chapter \ref{chapDefinition}, we
-formally define Hydra's concrete syntax, abstract syntax, type system and
-ideal denotational semantics. In Chapter \ref{chapImplementation}, we explain
-how Hydra is implemented in great detail. In Chapter \ref{chapRelatedWork}, we
-overview the related work and, in light of it, position the contributions of
-the thesis in further detail. Finally, in Chapter \ref{chapConclusions}, we
-conclude the thesis.
+The rest of the dissertation is organised as follows:
+
+\begin{itemize}
+
+\item Chapter \ref{chapBackground} overviews the field of physical modelling,
+and the state-of-the-art causal and non-causal modelling languages.
+
+\item Chapter \ref{chapHydra} introduces the concepts that the Hydra language
+is based on and explain how to model physical systems in Hydra by means of
+examples that were carefully chosen to show case those language features that
+are absent in other non-causal modelling languages.
+
+\item Chapter \ref{chapDefinition} formally defines Hydra's concrete syntax,
+abstract syntax, type system and ideal denotational semantics.
+
+\item Chapter \ref{chapImplementation} describes how Hydra is implemented in
+great detail.
+
+\item Chapter \ref{chapRelatedWork} overviews the related work and, in light
+of it, positions the contributions of this thesis in further detail.
+
+\item Chapter \ref{chapConclusions} concludes the thesis.
+
+\end{itemize}
