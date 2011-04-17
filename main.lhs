@@ -4,12 +4,14 @@
 %include Format/haskell.lhs
 
 \usepackage{graphicx}
-\usepackage{url}
 \usepackage{subfigure}
 \usepackage{amsmath}
 \usepackage{setspace}
 \usepackage{natbib}
 \usepackage[left=2in, right=1in, top=1in, bottom=1in, includefoot]{geometry}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=black, urlcolor=black}
 
 \doublespacing
 

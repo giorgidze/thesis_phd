@@ -4,16 +4,18 @@
 \section{Modelling and Simulation of Physical Systems}
 \label{secModelling}
 
-In this section we overview the field of modelling and simulation of physical
-systems by using a simple but illustrative example. We model and simulate the
-physical system and through this process introduce basic concepts of modelling
-and simulation. When necessary, we abstract from the concrete example and
-define the concepts generally.
+This chapter overviews the field of physical modelling and simulation by using
+simple, but at the same time, illustrative examples. By modelling and
+simulating the example physical systems, basic concepts of modelling and
+simulation are introduced. When necessary, the presentation abstracts from the
+examples and defines the basic concepts generally.
 
 \subsection{Mathematical Modelling}
 
-Let us introduce a simple electrical circuit that is depicted in Figure
-\ref{figCircuit1}.
+Figure \ref{figCircuit1} depicts a simple electrical circuit. The circuit is
+grounded and has the following four two-pin electrical components: voltage
+source, resistor, inductor and capacitor. The following system of equations is
+a mathematical model of the circuit.
 
 \begin{figure}
 \begin{center}
@@ -21,8 +23,6 @@ Let us introduce a simple electrical circuit that is depicted in Figure
 \end{center}
 \caption{\label{figCircuit1} Simple electrical circuit.}
 \end{figure}
-
-The following system of equations is a mathematical model of the circuit.
 
 \begin{subequations}
 \begin{eqnarray}
@@ -36,43 +36,45 @@ u_S & = & u_L
 \end{eqnarray}
 \end{subequations}
 
-The first four equations describe the behaviour of the components. The last
-three equations describe the topology of the circuit. The system of equations
-consists of implicitly defined algebraic and differential equations. This
-mathematical representation is called system of implicit \emph{differential
-algebraic equations (DAEs)} \citep{Cellier2006}. More generally, system of
-implicit DAEs can be written in the following way:
-
+The first four equations describe the component behaviours. The last three
+equations describe the circuit topology. The system of equations consists of
+implicitly defined algebraic and differential equations. This mathematical
+representation is called system of implicit \emph{differential algebraic
+equations} (DAEs) \citep{Cellier2006}. More generally, system of implicit DAEs
+can be written in the following way:
 \begin{equation}
 f(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) = 0
 \end{equation}
-
-where $\vec{x}$ is a vector of \emph{differential variables}, also known as
+Here, $\vec{x}$ is a vector of \emph{differential variables}, also known as
 \emph{state variables}, $\vec{y}$ is a vector of algebraic variables and $t$
-is an independent scalar variable, in physical modelling it represents the
+is an independent scalar variable, in physical modelling $t$ represents
 \emph{time}.
 
 In general, it is not possible to find an exact solution of a DAE using
-analytical methods. Approximate solutions are derived by \emph{numerical
-integration}. Their are a number of methods for numerical integration of an
-implicit DAE. They can be divided into two categories. Solvers in the first
-category operate directly on the implicit DAE. Solvers in the second category
-transform the implicit representation into the explicit one and operate on the
-explicit representation. In this section we illustrate the later.
+analytical methods \citep{Brenan1996a}. Approximate solutions are derived by
+\emph{numerical integration}. Their are a number of methods for numerical
+integration of an implicit DAE. There are numerical solvers that directly
+operate on the implicit representation (e.g., the IDA solver from the SUNDIALS
+numerical suite \citep{Sundials2005}).
 
+In some cases it is possible to translate a DAE into a system of explicit
+\emph{ordinary differential equations} (ODEs), which makes it possible to
+simulate the system using an ODE solver (e.g., the CVODE solver from the
+SUNDIALS numerical suite \citep{Sundials2005}). In the following we illustrate
+this method using the simple circuit example.
 
 \subsection{Symbolic Manipulation}
 
-In order to transform this implicit DAE into an explicit one, we perform the
-following steps. Firstly, we identify \emph{known} and \emph{unknown}
-variables. Secondly, we decide which unknown variable should be solved in
-which equation. Thirdly, we sort equations in a way that no unknown variable
-is used before it is solved.
+In order to transform the implicit DAE describing the simple electrical
+circuit into an explicit one, we perform the following steps. Firstly, we
+identify \emph{known} and \emph{unknown} variables. Secondly, we decide which
+unknown variable should be solved in which equation. Thirdly, we sort
+equations in a way that no unknown variable is used before it is solved.
 
-Time $t$ and state variables ($u_c$ and $i_2$), are assumed to be known, the
+Time $t$ and the state variables $u_c$ and $i_2$ are assumed to be known, the
 rest of the variables are unknowns including the state derivatives
 ($\frac{du_c}{dt}$ and $\frac{di_2}{dt}$). Equations that contain only one
-unknown are solved for it. After that, solved variables are assumed to be
+unknown are solved for it. After that, the solved variables are assumed to be
 known and rest of the variables are solved. In this case this technique
 suffices and we get the following explicit DAE:
 
@@ -104,52 +106,47 @@ the system.
 \end{eqnarray}
 \end{subequations}
 
-This representation is called system of explicit \emph{ordinary differential
-equations (ODEs)} and can be passed to a numerical ODE solver. This
-representation is also called \emph{state-space model}. More generally, a
-system of explicit ODEs can be written in the following way:
-
+This representation is called system of explicit ODEs and can be passed to a
+numerical ODE solver. This representation is also called \emph{state-space
+model}. More generally, a system of explicit ODEs can be written in the
+following way:
 \begin{equation}
 \label{eqExplODE}
 \frac{d\vec{x}}{dt} = f(\vec{x},t)
 \end{equation}
-where $\vec{x}$ is a vector of differential variables and $t$ is the
-\emph{time}.
+Here $\vec{x}$ is a vector of differential variables and $t$ is time.
 
 \subsection{Numerical Integration}
 
-In the following we explain the simplest numerical integration method for
-ODEs, i.e. the \emph{forward Euler} method. The key idea is to replace the
-derivatives with the following approximation:
-
+In the following the \emph{forward Euler} method, which is the simplest
+numerical integration method for ODEs, is explained. The key idea is to
+replace the derivatives with the following approximation:
 \begin{equation}
 \frac{d\vec{x}}{dt} \approx \frac{\vec{x}(t + h) - \vec{x}(t)}{h}
 \end{equation}
-
-where $h$ is a \emph{sufficiently small} positive scalar and is called a
+Here, $h$ is a \emph{sufficiently small} positive scalar which is referred as
 \emph{step size} of the numerical integration \citep{Cellier2006}.
 
-We make us of Equation \ref{eqExplODE} and substitute the derivative .
+Let us make use of Equation \ref{eqExplODE} and substitute the derivative.
 
 \begin{equation}
 \vec{x}(t + h) \approx \vec{x}(t) + h \cdot f(\vec{x},t)
 \end{equation}
 
-We fix the step size $h$ and construct the following discrete sequences:
-
+Let us also fix the step size $h$ and construct the following discrete
+sequences:
 \begin{equation}
 t_0  = 0, t_1 = t_0 + h, \ t_2 = t_1 + 2h, ...,  t_n = t_{n-1} + nh, ...
 \end{equation}
 \begin{equation}
 \vec{x}_0 = \vec{x}(t_0), ..., \vec{x}_{n+1} = \vec{x}_n + h \cdot f(\vec{x}_n,t_n), \ ... \label{eqStateVectorDiscreteSeq}
 \end{equation}
-
-where $\vec{x}_n$ is a numerical approximation of $\vec{x}(t_n)$.
+Here $\vec{x}_n$ is a numerical approximation of $\vec{x}(t_n)$.
 
 More accurate and efficient numerical integration methods are available based
 on different approximations and integration algorithms. More comprehensive
-presentation of this and other more sophisticated methods can be found in
-\citep{Cellier2006}.
+presentation of this and other more sophisticated methods can be found in the
+book by \citet{Cellier2006}.
 
 \subsection{Simulation}
 
