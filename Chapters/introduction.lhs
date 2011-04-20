@@ -18,8 +18,8 @@ is, the cause-effect relationship is explicitly specified by the modeller
 and only \emph{known} variables on the other side. Since the equations are
 directed, it is relatively straight forward to translate causal models into a
 low level simulation code (e.g., into a sequence of assignment statements) and
-simulate it. \citet{Simulink} is a prominent representative of causal
-modelling languages.
+simulate it. Simulink is a prominent representative of causal modelling
+languages \citep[2008]{Simulink}.
 
 A non-causal model is formulated in terms of \emph{implicit} equations, for
 example, \emph{differential algebraic equations} (DAEs) in implicit form. In
@@ -29,8 +29,8 @@ non-causal models into simulation code involves additional symbolic processing
 and numerical simulation methods that are not required for causal modelling
 and simulation. Examples include: symbolic transformations that try to
 causalise non-causal models and if this is not possible numerical solvers for
-(non-linear) implicit equations. \citet{Modelica} is a prominent,
-state-of-the-art representative of non-causal modelling languages.
+(non-linear) implicit equations. Modelica is a prominent, state-of-the-art
+representative of non-causal modelling languages \citep[2010]{Modelica}.
 
 Non-causal modelling has a number of advantages over causal modelling. The
 most important ones are listed below:
@@ -53,8 +53,8 @@ number of different ways).
 
 Although causal modelling remains a dominant paradigm, interest in non-causal
 modelling has grown recently as evidenced by release of non-causal modelling
-and simulation tools by prominent vendors such as Maple \citep{MapleSim} and
-MathWorks \citep{Simscape}.
+and simulation tools by prominent vendors such as Maple (MapleSim) and
+MathWorks (Simscape).
 
 
 \section{First-class Models}
@@ -124,7 +124,7 @@ as modelling of a cyber-physical system where the digital part's influence
 causes major changes in the physical part may require changing of the
 equations describing the dynamics of the continuous part. Recently,
 the US National Science Foundation identified Cyber-physical systems as one of
-its key research areas \citep{NSF2008a}.
+its key research areas \citep[2008]{NSF2008a}.
 
 Current non-causal languages offer a quite limited support for modelling
 structurally-dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,

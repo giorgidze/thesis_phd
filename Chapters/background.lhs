@@ -5,10 +5,10 @@
 \label{secModelling}
 
 This chapter overviews the field of physical modelling and simulation by using
-simple, but at the same time, illustrative examples. By modelling and
+simple, and at the same time, instructive examples. By modelling and
 simulating the example physical systems, basic concepts of modelling and
 simulation are introduced. When necessary, the presentation abstracts from the
-examples and defines the basic concepts generally.
+concrete examples and defines the basic concepts generally.
 
 \subsection{Mathematical Modelling}
 
@@ -47,7 +47,7 @@ f(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) = 0
 \end{equation}
 Here, $\vec{x}$ is a vector of \emph{differential variables}, also known as
 \emph{state variables}, $\vec{y}$ is a vector of algebraic variables and $t$
-is an independent scalar variable, in physical modelling $t$ represents
+is an independent scalar variable. In physical modelling $t$ represents
 \emph{time}.
 
 In general, it is not possible to find an exact solution of a DAE using
@@ -57,11 +57,11 @@ integration of an implicit DAE. There are numerical solvers that directly
 operate on the implicit representation (e.g., the IDA solver from the SUNDIALS
 numerical suite \citep{Sundials2005}).
 
-In some cases it is possible to translate a DAE into a system of explicit
+In some cases, it is possible to translate a DAE into a system of explicit
 \emph{ordinary differential equations} (ODEs), which makes it possible to
 simulate the system using an ODE solver (e.g., the CVODE solver from the
 SUNDIALS numerical suite \citep{Sundials2005}). In the following we illustrate
-this method using the simple circuit example.
+the translation using the simple electrical circuit example.
 
 \subsection{Symbolic Manipulation}
 
@@ -72,8 +72,8 @@ unknown variable should be solved in which equation. Thirdly, we sort
 equations in a way that no unknown variable is used before it is solved.
 
 Time $t$ and the state variables $u_c$ and $i_2$ are assumed to be known, the
-rest of the variables are unknowns including the state derivatives
-($\frac{du_c}{dt}$ and $\frac{di_2}{dt}$). Equations that contain only one
+rest of the variables are unknowns, including the state derivatives
+($\frac{du_c}{dt}$ and $\frac{di_2}{dt}$). The equations that contain only one
 unknown are solved for it. After that, the solved variables are assumed to be
 known and rest of the variables are solved. In this case this technique
 suffices and we get the following explicit DAE:
@@ -114,7 +114,7 @@ following way:
 \label{eqExplODE}
 \frac{d\vec{x}}{dt} = f(\vec{x},t)
 \end{equation}
-Here $\vec{x}$ is a vector of differential variables and $t$ is time.
+Here, $\vec{x}$ is a vector of differential variables and $t$ is time.
 
 \subsection{Numerical Integration}
 
@@ -125,7 +125,7 @@ replace the derivatives with the following approximation:
 \frac{d\vec{x}}{dt} \approx \frac{\vec{x}(t + h) - \vec{x}(t)}{h}
 \end{equation}
 Here, $h$ is a \emph{sufficiently small} positive scalar which is referred as
-\emph{step size} of the numerical integration \citep{Cellier2006}.
+\emph{step size} of the numerical integration.
 
 Let us make use of Equation \ref{eqExplODE} and substitute the derivative.
 
@@ -141,7 +141,7 @@ t_0  = 0, t_1 = t_0 + h, \ t_2 = t_1 + 2h, ...,  t_n = t_{n-1} + nh, ...
 \begin{equation}
 \vec{x}_0 = \vec{x}(t_0), ..., \vec{x}_{n+1} = \vec{x}_n + h \cdot f(\vec{x}_n,t_n), \ ... \label{eqStateVectorDiscreteSeq}
 \end{equation}
-Here $\vec{x}_n$ is a numerical approximation of $\vec{x}(t_n)$.
+Here, $\vec{x}_n$ is a numerical approximation of $\vec{x}(t_n)$.
 
 More accurate and efficient numerical integration methods are available based
 on different approximations and integration algorithms. More comprehensive
@@ -151,40 +151,45 @@ book by \citet{Cellier2006}.
 \subsection{Simulation}
 
 Once an initial condition (i.e., a value of the state vector at time zero) is
-given it is possible to numerically integrate the ODE. In the following we
-give a Haskell program which performs numerical integration of the ODE, given
-in Equation \ref{eqSimpleCircuitODE}, using the forward Euler method.
+given it is possible to numerically integrate the ODE. The following Haskell
+function defines numerically integrates the ODE given in Equation
+\ref{eqSimpleCircuitODE} using the forward Euler method.
 
 \begin{code}
-integrateSimpleCircuit :: (Floating a) => a -> a -> a -> a -> [(a, a, a)]
+integrateSimpleCircuit  ::  Double -> Double -> Double -> Double
+                        ->  [(Double, Double, Double)]
 integrateSimpleCircuit dt r c l = go 0 0 0
-  where  go t uc i2 = (t, i2, uc) : go (t + dt) (uc + duc) (i2 + di2) 
-           where  di2  =  (sin(2 * pi * t) / l) * dt
-                  duc  =  ((sin(2 * pi * t) - uc) / (r * c)) * dt
+  where
+  go t uc i2 =  let  di2  =  (sin(2 * pi * t) / l) * dt
+                     duc  =  ((sin(2 * pi * t) - uc) / (r * c)) * dt
+                in   (t, i2, uc) : go (t + dt) (uc + duc) (i2 + di2) 
 \end{code}
 
-Given a time step for the integration and the circuit parameters, the function
-computes the solution by numerical integration and delivers the values of the
-state vector in the discrete points of time (see Equation
-\ref{eqStateVectorDiscreteSeq}) as a list that can be plotted latter.
+Given the numerical integration time step and the circuit parameters, this
+function computes the approximate solution and delivers the values of the
+state vector at the discrete points of time given in Equation
+\ref{eqStateVectorDiscreteSeq} as a list.
 
-The algebraic variables can also be solved by adding so called \emph{output
-equations} in the function which performs numerical integration. Output
-equations are explicit algebraic equations where the algebraic variables are
-defined in terms of the state variables. We refine the integration function by
-adding output equation which solves the algebraic variable $i_1$.
+In the case of the simple electrical circuit model, the algebraic variables
+can also be solved by adding so called \emph{output equations} in the function
+that numerical integrates the system of equations. Output equations are
+explicit algebraic equations where the algebraic variables are defined in
+terms of the differential variables. We refine the integration function by adding the
+output equation that solves the algebraic variable $i_1$.
 
 \begin{code}
-integrateSimpleCircuit :: (Floating a) => a -> a -> a -> a -> [(a, a, a, a)]
+integrateSimpleCircuit  ::  Double -> Double -> Double -> Double
+                        ->  [(Double, Double, Double, Double)]
 integrateSimpleCircuit dt r c l = go 0 0 0
-  where  go t uc i2 = (t, i2, uc, i1) : go (t + dt) (uc + duc) (i2 + di2) 
-           where  di2  =  (sin(2 * pi * t) / l) * dt
-                  duc  =  ((sin(2 * pi * t) - uc) / (r * c)) * dt
-                  i1   =  (sin (2 * pi * t) - uc) / r
+  where
+  go t uc i2 =  let   di2  =  (sin(2 * pi * t) / l) * dt
+                      duc  =  ((sin(2 * pi * t) - uc) / (r * c)) * dt
+                      i1   =  (sin (2 * pi * t) - uc) / r
+                in    (t, i2, uc, i1) : go (t + dt) (uc + duc) (i2 + di2) 
 \end{code}
 
 Figure \ref{figCircuitPlot1} shows the simulation result obtained by
-evaluating $integrateSimpleCircuit$ function.
+evaluating the $integrateSimpleCircuit$ function.
 
 \begin{figure}
 \begin{center}
@@ -193,36 +198,35 @@ evaluating $integrateSimpleCircuit$ function.
 \caption{\label{figCircuitPlot1} Plot showing how variables $i_1$ and $i_2$ change over time.}
 \end{figure}
 
-\subsection{Modelling and Simulation Process Summarised}
-
-This example highlights the three main steps involved in the process of
-modelling and simulation of physical systems:
+The simple electrical circuit example highlights the three essential steps
+involved in the process of modelling and simulation of physical systems:
 
 \begin{itemize}
-\item Modelling the behaviour of the system mathematically
-\item Translation the mathematical representation into a computer program
-\item Simulation the system by compiling and executing the computer program
+\item Mathematical modelling of the system behaviour
+\item Translation of the mathematical representation into a computer program
+\item Simulation of the system by compiling and executing the computer program
 \end{itemize}
 
 As we have already seen, for some systems, it is feasible to conduct this
 process manually. Indeed translation of systems of equations into code in
-general purpose programming languages like C, Fortran, Java or Haskell is
-still a common practise. However, manual translation becomes tedious and error
-prone with growing complexity. Imagine conducting the process presented in
-this section for a physical system described with hundreds of thousands of
+general purpose programming languages like Fortran, C, Java or Haskell is a
+common practise. However, manual translation becomes tedious and error prone
+with growing complexity. Imagine conducting the process presented in this
+section for a physical system described with hundreds of thousands of
 equations. Modelling languages and simulation tools can help with all three
-phases mentioned above. In the following sections we introduce state of the
-art representatives of causal and non-causal modelling languages. In this
-thesis we focus on modelling languages capable of simulating mathematical
+phases mentioned above. The following section overview state-of-the-art
+representatives of causal and non-causal modelling languages. Note that, in
+this thesis we focus on modelling languages capable of simulating mathematical
 models without assuming a particular domain of physics.
 
 \section{Causal Modelling in Simulink}
 \label{secSimulink}
 
-Simulink \citep{Simulink2008} is a graphical block diagramming tool for causal
-modelling and simulation. The block diagram in Figure
-\ref{figCircuitBlockDiagram1} is a model of the circuit from Figure
-\ref{figCircuit1}.
+Simulink is a graphical block diagramming tool for causal modelling and
+simulation. The block diagram depicted in Figure \ref{figCircuitBlockDiagram1}
+is a model of the simple electrical circuit from Figure \ref{figCircuit1}.
+Note the use of causal blocks (with input and outputs) for multiplication,
+summation and integration.
 
 \begin{figure}
 \begin{center}
@@ -231,35 +235,34 @@ modelling and simulation. The block diagram in Figure
 \caption{\label{figCircuitBlockDiagram1} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit1}.}
 \end{figure}
 
-Block-diagrams in causal languages correspond to systems of ordinary
-differential equations (ODEs) in explicit form; i.e., the causality is
-explicit, the input and state variables are used to define the state
-derivatives and the output variables. The construction of a block-diagram is
-closely related to the process of causalisation (see Section
-\ref{secModelling}).
+Block-diagrams in causal languages correspond to systems of ODEs in explicit
+form; that is, the causality is explicit, the input and state variables are
+used to define the state derivatives and the output variables. The
+construction of a block-diagram is closely related to the process of
+causalisation. Derivation of simulation code from a block diagram is done much
+in the same way as described in Section \ref{secModelling}, but using more
+sophisticated numerical methods.
 
-Derivation of a simulation code from a block diagram is straight forward and
-is done much in the same way as in Section \ref{secModelling}, but using more
-sophisticated numerical methods. This is done automatically by the Simulink
-system.
+Structurally, the block diagram in Figure \ref{figCircuitBlockDiagram1} is
+quite far removed from the circuit it models. Because of this, construction of
+block diagrams is generally regarded as a difficult and somewhat involved task
+\citep{Nilsson2007}. Moreover, a slight change in a modelled system might
+require drastic changes in the corresponding block diagram. This is because
+causal models limit reuse \citep{Cellier1996}. For example, a resistor
+behaviour is usually modelled using the Ohm's law which can be written as $i =
+\frac{u}{R}$ or $u = R \cdot i$. Unfortunately, no single causal block can
+capture the resistor behaviour. If we need to compute the current from the
+voltage, we should use the block that corresponds to the first equation. If we
+need to compute the voltage from the current, we should use the block that
+corresponds to the second equation.
 
-Structurally, the block diagram in Figure \ref{figCircuitBlockDiagram1}
-is quite far removed from the circuit it models. Because of this, construction
-of block diagrams is generally regarded as a difficult and somewhat involved
-task \citep{Nilsson2007}. Moreover, a slight change in a system might require
-drastic changes in the corresponding block diagram. This is because causal
-models limit reuse \citep{Cellier1996}. For example, a resistor behaviour is
-usually modelled using the Ohm's law which can be written as $i = \frac{u}{R}$
-or $u = R \cdot i$. Unfortunately, no single causal block can capture the
-resistor behaviour. If we need to compute the current from the voltage, we
-should use the block that corresponds to the first equation. If we need to
-compute the voltage from the current, we should use the block that corresponds
-to the second equation.
-
-We demonstrate the aforementioned problem, by causally modelling a modified
-circuit where one more resistor is added to the simple electrical circuit as
-show in Figure \ref{figCircuit2}. The causal model is given in
-Figure \ref{figCircuitBlockDiagram2}.
+We demonstrate the aforementioned reuse problem, by causally modelling a
+modified circuit where one more resistor is added to the simple electrical
+circuit as shows in Figure \ref{figCircuit2}. The causal model is given in
+Figure \ref{figCircuitBlockDiagram2}. Note that, we were not able to reuse the
+resistor model from the original circuit diagram. In addition, a simple
+addition to the physical system caused hardly obvious changes in the causal
+model.
 
 \begin{figure}
 \begin{center}
@@ -275,15 +278,14 @@ Figure \ref{figCircuitBlockDiagram2}.
 \caption{\label{figCircuitBlockDiagram2} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit2}.}
 \end{figure}
 
-
-Simulink can be used to model some hybrid systems, special blocks are used two
-\emph{switch} between block diagrams as a response to discrete events. This
-makes Simulink very useful indeed for hybrid simulation of structurally
-dynamic systems. However, the number of configurations or modes must be finite
-and all modes must be predetermined before the simulation. Thus Simulink does
-not enable modelling and simulation of highly structurally dynamic systems. In
-addition, Simulink block diagrams are first-order thus Simulink does not
-support higher-order causal modelling.
+Simulink can be used to model some structurally-dynamic systems, special
+blocks are used two \emph{switch} between block diagrams as a response to
+discrete events. This makes Simulink very useful indeed for modelling of
+structurally dynamic systems. However, the number of configurations or modes
+must be finite and all modes must be predetermined before simulation. Thus
+Simulink does not enable modelling and simulation of highly structurally
+dynamic systems. In addition, Simulink block diagrams are first-order thus
+Simulink does not support higher-order causal modelling.
 
 
 \section{Non-causal Modelling in Modelica}
@@ -293,15 +295,16 @@ support higher-order causal modelling.
 %include ../Format/modelica.lhs
 
 Modelica is a declarative language for non-causal modelling and simulation of
-physical systems \citep{Modelica2007}. Modelica models are given using
-non-causal DAEs. A class system known from object-oriented programming
-paradigm is used to structure the equations and support reuse of models.
+physical systems. Modelica models are given using non-causal DAEs. Modelica
+features a class system known from object-oriented programming languages for
+structuring equations and for supporting model reuse.
 
-To illustrate basic features of Modelica we model the circuit that is given in
-Figure \ref{figCircuit1} again, this time in Modelica.
+This section presents a Modelica model of the simple electrical circuit
+depicted in Figure \ref{figCircuit1} to illustrate basic features of the
+language.
 
-Firstly, we define a \emph{connector} record representing an electrical
-connector.
+The following Modelica code declares the \emph{connector} record for
+representing electrical connectors.
 
 \begin{code}
 connector Pin
@@ -310,34 +313,36 @@ connector Pin
 end Pin;
 \end{code}
 
-It has two variables, |i| and |v|, representing the current and the voltage
-respectively. A connector record does not introduce any equations for
-variables. The meaning of flow and non-flow (also called potential) variables
-are explained later when \emph{connect equations} are introduced.
+The connector record introduces the variable |i| and the variable |v|
+representing the current flowing into the connector and the voltage at the
+connector respectively. Note that the connector record does not introduce
+equations. The meaning of the flow annotation is explained later on when
+\emph{connect equations} are introduced.
 
-Secondly, we define a model which captures common properties of electrical
-components with two connectors.
+The following Modelica code defines the model that captures common properties
+of electrical components with two connectors.
 
 \begin{code}
 model TwoPin
-  Pin  p, n;
-  Real u, i;
+  Pin   p,  n;
+  Real  u,  i;
 equation
-  u = p.v - n.v;
-  0 = p.i + n.i;
-  i = p.i;
+  u  =  p.v  -  n.v;
+  0  =  p.i  +  n.i;
+  i  =  p.i;
 end TwoPin;
 \end{code}
 
-The |TwoPin| model not only defines the variables, but also the non-causal
-equations they satisfy. The variables |p| and |n| represent the positive and
-negative pins of an electrical component. The variable |u| represents the
-voltage drop across the component. The variable |i| represents the current
-flowing into the positive pin.
+The variables |p| and |n| represent the positive and negative pins of an
+electrical component. The variable |u| represents the voltage drop across the
+component. The variable |i| represents the current flowing into the positive
+pin. The |TwoPin| model defines the non-causal equations that these variables
+satisfy.
 
-By extending the |TwoPin| model and adding component-specific equations we
-define the model representing resistor, capacitor, inductor and voltage source
-models. Note the use of \emph{inheritance} to reuse the equations from the
+By \emph{extending} the |TwoPin| model with component-specific equations we
+define the models representing resistor, capacitor, inductor and voltage
+source. Note the use of the concept of \emph{inheritance} known from
+object-oriented programming languages for reusing the equations from the
 |TwoPin| model.
 
 \begin{code}
@@ -372,14 +377,14 @@ equation
 end VSourceAC;
 \end{code}
 
-Variables qualified as parameter or as constant remain unchanged during the
-simulation. All other variables represent dynamic, time-varying entities. The
-difference between constant and parameter is that the value of a constant is
-defined once and for all in the source code, while a parameter can be set when
-an object of the class is instantiated. In this example all parameters are
-provided with default values.
+Variables qualified as |parameter| or as |constant| remain unchanged during
+simulation. The value of a constant is defined once and for all in the source
+code, while a parameter can be set when an object of the class is
+instantiated. In this example all parameters are provided with default values
+allowing for instantiations with the default parameter values. All other
+variables represent dynamic, time-varying entities.
 
-In addition, we define a model representing a ground pin.
+The following code defines the model that represents the ground pin.
 
 \begin{code}
 model Ground
@@ -389,11 +394,9 @@ equation
 end Ground;
 \end{code}
 
-We can now use models of the circuit components to define a model representing
-the circuit in Figure \ref{figCircuit1} by ``connecting'' appropriate pins
-according to the figure. Note that the parameters of resistor, capacitor,
-inductor and voltage source are not specified. This means that the default
-values are used.
+We can now use the circuit component models to define the simple electrical
+circuit model by ``connecting'' appropriate pins according to Figure
+\ref{figCircuit1}.
 
 \begin{code}
 model SimpleCircuit
@@ -414,9 +417,9 @@ end SimpleCircuit;
 
 Connect statements are analysed and appropriate \emph{connection equations}
 are generated by the Modelica compiler as follows. Connected flow variables
-generate sum to zero equations. In the case of an electrical circuit it
-corresponds to Kirchhoff's current law. For the |SimpleCircuit| model a
-Modelica compiler generates the following equations:
+generate sum-to-zero equations. In this case the sum-to-zero equations
+correspond to Kirchhoff's current law. For the |SimpleCircuit| model the
+Modelica compiler generates the following sum-to-zero equations:
 
 \begin{code}
 AC.n.i + C.n.i + L.n.i + G.p.i = 0;
@@ -425,8 +428,8 @@ AC.p.i + R.p.i + L.p.i = 0;
 \end{code}
 
 Connected potential variables generate equality constraints stating that all
-connected potential variables are equal at any point in time. For
-|SimpleCircuit| model a Modelica compiler generates the following equations:
+connected potential variables are equal at any point in time. For the
+|SimpleCircuit| model the Modelica compiler generates the following equations:
 
 \begin{code}
 AC.n.v  =  C.n.v;
@@ -438,20 +441,21 @@ AC.p.v  =  R.p.v;
 R.p.v   =  L.p.v;
 \end{code}
 
-Connect-equations can be used in any physical domain where flow and potential
-variables can be identified. The Modelica standard
-library\footnote{\texttt{http://www.modelica.org/libraries}} includes examples
-of their usage in electrical, hydraulic, and mechanical domains, for example.
+Connect-equations can be used in any physical domain where flow variables
+(i.e., variables generating sum-to-zero equations at the connection points)
+and potential variables (i.e, variables generating equality constrains at the
+connection points) can be identified. The Modelica standard library includes
+examples of their usage in electrical, hydraulic, and mechanical domains.
+
 Modelica compilers generate executable simulation code from hierarchical
 systems of equations structured using object-oriented programming constructs
-by utilising state of the art symbolic and numerical integration methods.
+by utilising state-of-the-art symbolic and numerical methods.
 
-As we have seen, non-causal languages, and in this particular case Modelica,
-allow us to model physical systems at a high level of abstraction. The
-structure of the models resemble the modelled systems. Consequently, it is
-easy to reuse or modify existing models. For example, it is now trivial to add
-one more resistor to the Modelica model as shown in the following modified
-model.
+As we have seen, non-causal languages allow us to model physical systems at a
+high level of abstraction. The structure of the models resemble the modelled
+systems. Consequently, it is easy to reuse or modify existing models. For
+example, it is now trivial to add one more resistor to the Modelica model as
+shown in the following model.
 
 \begin{code}
 model SimpleCircuit
@@ -475,33 +479,15 @@ end SimpleCircuit;
 \section{Non-causal Modelling of Structurally-dynamic Systems}
 \label{secHybridModelling}
 
-A physical system can be hybrid. That is, it may exhibit both continuous-time
-and discrete-time behaviour. A hybrid system is usually modelled using a
-combination of continuous equations and switching statements that specify
-discontinuous changes in the system.
-
-The simulation of continuous systems is relatively well understood
-\citep{Cellier2006}. However, hybrid systems introduce a number of unique
-challenges \citep{Barton2002a,Mosterman1999a} (e.g., handling a large or
-possibly unbounded number of continuous modes, accurate event detection, and
-consistent initialisation of state variables during mode switches). The
-integration of hybrid modelling with non-causal modelling raises further
-problems (e.g., dynamic causalisation and simulation code generation during
-switches).
-
-Current non-causal modelling languages and related tools are very limited in
-their ability to model and simulate hybrid systems. Many of the limitations
-are related to the symbolic and numerical methods that must be used in the
-non-causal approach. But more fundamental reason is that most such systems
-perform all symbolic manipulations and the simulation code generation before
-simulation begins \citep{Mosterman1999a}.
-
-In this section, we discuss hybrid modelling in non-causal languages. The
-current limitations are illustrated using the Modelica model of a hybrid
-system. In particular, we highlight lack of expressiveness of the Modelica
-language when it comes to dynamic addition and removal of time varying
-variables and continuous equations to the model, and lack of dynamic
-recausalisation and code generation facilities in Modelica implementations.
+A structurally-dynamic system is usually modelled using a combination of
+continuous equations and switching statements that specify discontinuous
+changes in the system. This section is about structurally-dynamic modelling in
+non-causal languages. Current limitations are illustrated using a Modelica
+model of a simple structurally-dynamic system. In particular, this section
+highlights lack of expressiveness of the Modelica language when it comes to
+dynamic addition and removal of time-varying variables and continuous
+equations, and lack of runtime symbolic processing and code generation
+facilities in Modelica implementations.
 
 \subsection{Modelling Structurally-dynamic Systems in Modelica}
 
@@ -518,8 +504,8 @@ to gravity $m \vec{g}$. If the rod breaks, the body will fall freely.
 \caption{\label{figPendulum} Pendulum subject to gravity.}
 \end{figure}
 
-Here is an attempt to model this system in Modelica that on the surface
-appears to solve the problem:
+The following code is an attempt to model this system in Modelica that on the
+surface appears to solve the problem.
 
 \begin{code}
 model BreakingPendulum
@@ -532,7 +518,7 @@ equation
   if (time > t) then
     x   =     l  *  sin phi
     y   =  -  l  *  cos phi
-    der (der phi) + (g / l) * sin phi = 0
+    0   =  der (der phi) + (g / l) * sin phi
   else
     der v_x  =  0
     der v_y  =  -g
@@ -540,35 +526,35 @@ equation
 end BreakingPendulum;
 \end{code}
 
-However the model fails to compile. The latest version of the Modelica
-standard \citep{Modelica2007} asserts that number of equations in both branches
-of an if statement must be equal when the conditional expression contains a
-time-varying variable. If considered separately, the equations in both
-branches do solve the publicly available variables successfully. In an attempt
-to fix the model, the modeller might try to add a dummy equation for the
-variable not needed in the second mode (i.e., the variable |phi|, which
-represents the angle of deviation of the pendulum before it is broken). This
-version compiles, but the generated code fails to simulate the system. This
-example was tried using OpenModelica \citep{OpenModelica2006} and Dymola
-\citep{Dymola2008} compilers.
+Unfortunately the code fails to compile. The reason is that the latest version
+of the Modelica standard \citep[2010]{Modelica} asserts that number of
+equations in both branches of an if statement must be equal when the
+conditional expression contains a time-varying variable. If considered
+separately, the equations in both branches do solve the publicly available
+variables successfully. In an attempt to fix the model, the modeller might try
+to add a dummy equation for the variable not needed in the second mode (i.e.,
+the variable |phi|, which represents the angle of deviation of the pendulum
+before it is broken). This version compiles, but the generated code fails to
+simulate the system. This example was tried using OpenModelica
+\citep{OpenModelica} and Dymola \citep{Dymola} compilers.
 
 One of the difficulties of this example is that causality changes during the
 switch between the two modes. In the first mode position is calculated from
-state variable |phi|, which is not the case after the switch. This makes the
-job of the simulation code generator a lot harder and as it turns out Modelica
-tools are not able to handle it. This and related issues are covered in
-greater detail in \citep{ModelicaTutorial2000}. The suggested solution is more
-involved and requires reformulation of the model by making it causal. The need
-of manual reformulation to conform to certain causality eliminates the
-advantages of working in non-causal a modelling language.
+the state variable |phi|, which is not the case after the switch. This makes
+the job of the simulation code generator a lot harder and as it turns out the
+Modelica tools are not able to handle it. Specifically, the tools commit to a
+certain causality before they generate the simulation code. This and related
+issues are covered in greater detail in \citep[2000]{ModelicaTutorial}. The
+suggested Modelica solution is more involved and requires reformulation of the
+model by making it causal. The need of manual reformulation to conform to a
+certain causality eliminates the advantages of working in a non-causal
+modelling language.
 
 Currently, the Modelica language lacks expressiveness to describe structural
-changes. The breaking pendulum example demonstrated the problems that arise
-when there is a need for change of the number of variables in the system.
-Secondly, the state-of-the-art Modelica compilers carry out the symbolic
-processing and generate the simulation code all at once, prior to simulation.
-In the presence of structurally dynamic systems this is not impossible in
-general, as the number of modes may be very large, unbounded, or impossible to
-determined in advance.
+changes. The breaking pendulum example demonstrates the problems that arise
+when there is a need for change of the number of variables in the system. In
+addition, the Modelica compilers carry out the symbolic processing and
+generate the simulation code all at once, prior to simulation, which
+introduces further limitations.
 
 %}
