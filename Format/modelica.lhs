@@ -10,3 +10,5 @@
 %format extends   = "\textbf{extends}"
 %format connect   = "\textbf{connect}"
 %format .         = "."
+
+%format Real      = "Real"

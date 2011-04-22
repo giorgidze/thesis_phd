@@ -7,6 +7,9 @@
 %format <> = "\diamond"
 %format ~= = "\approx"
 
+%format Real = "\mathbb{R}"
+%format Bool = "\mathbb{B}"
+
 %format plus_sf = "+_{SF}"
 
 %format (lim (a) (b)) = "\displaystyle\lim_{" a "\to" b "}"
