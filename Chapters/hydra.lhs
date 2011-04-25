@@ -1,104 +1,10 @@
 \chapter{Hydra: A Functional Hybrid Modelling Language}
 \label{chapHydra}
 
-This chapter introduces the notions of signal, signal function and signal
-relation. The Hydra language is based on these notions. The notions are
-defined conceptually to facilitate development of and reasoning about Hydra
-models. This chapter presents the Hydra language itself informally by means of
-instructive examples. The formal definition of the language is given in
-Chapter \ref{chapDefinition}, while the language implementation is described
-in Chapter \ref{chapImplementation}.
-
-\section{Concepts of Hydra}
-
-Note that this section gives conceptual definitions of the notions of signal,
-signal function and signal relation. This section does not describe the
-implementation of these notions.
-
-\subsection{Signal}
-
-Conceptually, a \emph{signal} is a time-varying value, that is, a function
-from time to value.
-
-\begin{code}
-type Time           ~=  Real
-type Signal alpha   ~=  Time -> alpha
-\end{code}
-
-|Time| is continuous and is represented as a real number. The type parameter
-|alpha| specifies the type of values carried by the signal. For example, a
-signal that corresponds to the amount of current flowing in a certain
-electrical circuit has type |Signal Real|, while a signal that corresponds to
-the position of a certain object in a two dimensional space has type |Signal
-(Real,Real)|.
-
-The basic signal types of Hydra are real signals (i.e., |Signal Real|) and
-boolean signals (i.e., |Signal Bool|). Hydra also allows for signals of
-arbitrarily nested pairs of basic types. As an example of a signal that
-carries nested pairs, consider a signal of type |Signal
-((Real,Real),(Real,Real))| which can be used to represent current and voltage
-pairs at the positive and negative pins of a two-pin electrical component.
-
-\subsection{Signal Function}
-
-Conceptually, a \emph{signal function} is as a function from signal to signal.
-
-\begin{code}
-type SF alpha beta ~= Signal alpha -> Signal beta
-\end{code}
-
-When a value of type |SF alpha beta| is applied to an input signal of type
-|Signal alpha|, it produces an output signal of type |Signal beta|.
-
-Since a pair of signals, say |(Signal alpha,Signal beta)|, is isomorphic to a
-signal of the pair of the carried types, in this case |Signal (alpha, beta)|,
-unary signal functions suffice for handling signal functions of any arity. For
-example, the binary signal function |plus_sf| that takes two signals and
-computes sum of their values at each point in time can be given the following
-type and conceptual definition:
-
-\begin{code}
-(plus_sf) :: SF (Real,Real) Real
-(plus_sf) sf t ~= fst (sf t) + snd (sf t)
-\end{code}
-
-Hydra provides a number of primitive signal functions that lift common
-mathematical operations (e.g., |+|, |*|, |sin| and |cos|) to the signal level.
-Hydra also provides |der :: SF Real Real| signal function that differentiates
-the given signal. This signal function enables definition of differential
-equations.
-
-\subsection{Signal Relation}
-
-Conceptually, a \emph{signal relation} is a relation on signals. Stating that
-some signals are in a particular relation to each other imposes
-\emph{constraints} on those signals. Assuming these constraints can be
-satisfied, this allows some of the signals to be determined in terms of the
-others depending on which signals are known and unknown in a given context.
-That is, signal relations are noncausal, unlike signal functions where the
-knowns and unknowns (inputs and outputs) are given a priori.
-
-An ordinary relation can be seen as a predicate that decides whether some
-given values are related or not. The same is true for signal relations:
-
-\begin{code}
-SR alpha  ~=  Time -> Signal alpha -> Prop
-\end{code}
-
-Given a point in time and a signal, a signal relation defines a proposition
-constraining the signal starting from the given time point. Here, |Prop| is a
-type of propositions defined in the second-order logic. \emph{Solving} a
-relation for a given starting time thus means finding a signal that satisfies
-the predicate.
-
-Just like for signal functions, unary signal relations suffice for handling
-signal relations of any arity. For example, equality is a binary signal
-relation that can be given the following type and conceptual definition:
-
-\begin{code}
-(=) ::  SR (alpha,alpha)
-(=) t0 s ~= {-" \forall \, t \in \mathbb{R} . \, "-}  t == t0  =>  fst (s t) == snd (s t)
-\end{code}
+This chapter presents the Hydra language informally by means of instructive
+examples. The formal definition of the language and its implementation are
+given in Chapter \ref{chapDefinition} and Chapter \ref{chapImplementation},
+respectively.
 
 \section{Syntax of Hydra}
 

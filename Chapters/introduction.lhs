@@ -411,10 +411,13 @@ The rest of the dissertation is organised as follows:
 \item Chapter \ref{chapBackground} overviews the field of physical modelling,
 and the state-of-the-art causal and noncausal modelling languages.
 
-\item Chapter \ref{chapHydra} introduces the concepts that the Hydra language
-is based on and explain how to model physical systems in Hydra by means of
-examples that were carefully chosen to show case those language features that
-are absent in other noncausal modelling languages.
+\item Chapter \ref{chapConcepts} introduces central concepts of the Hydra
+langauge.
+
+\item Chapter \ref{chapHydra} explains how to model physical systems in Hydra
+by means of instructive examples. The examples were carefully chosen to show
+case those language features that are absent in other noncausal modelling
+languages.
 
 \item Chapter \ref{chapDefinition} formally defines Hydra's concrete syntax,
 abstract syntax, type system and ideal denotational semantics.

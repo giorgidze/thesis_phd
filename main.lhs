@@ -36,6 +36,7 @@
 \listoftables
 %include Chapters/introduction.lhs
 %include Chapters/background.lhs
+%include Chapters/concepts.lhs
 %include Chapters/hydra.lhs
 %include Chapters/definition.lhs
 %include Chapters/implementation.lhs
