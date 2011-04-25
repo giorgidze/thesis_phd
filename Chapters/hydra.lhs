@@ -22,7 +22,7 @@ from time to value.
 
 \begin{code}
 type Time           ~=  Real
-type Signal alpha   ~=  Real -> alpha
+type Signal alpha   ~=  Time -> alpha
 \end{code}
 
 |Time| is continuous and is represented as a real number. The type parameter
@@ -119,16 +119,16 @@ The definitions at the signal level may freely refer to entities defined at
 the functional level as the latter are time-invariant, known parameters as far
 as solving the equations are concerned. However, the opposite is not allowed:
 time-varying entities are confined to the signal level. The only signal-level
-notions that exist at the functional level are the \emph{time-invariant}
-signal relation and the signal function.
+notions that exist at the functional level are the signal relation and the
+signal function. Note that these notions are \emph{time-invariant}.
 
 Hydra is implemented as an embedding in Haskell using \emph{quasiquoting}
-\citep{Mainland2007,Mainland2008}. This means Haskell provides the functional
-level almost for free through shallow embedding. In contrast, the signal level
-is realised through deep embedding: signal relations expressed in terms of
-Hydra-specific syntax are, through the quasiquoting machinery, turned into an
-internal representation, an abstract syntax tree (AST), that then is compiled
-into simulation code.
+\citep{Mainland2007,Mainland2008}. This means that Haskell provides the
+functional level almost for free through shallow embedding. In contrast, the
+signal level is realised through deep embedding: signal relations expressed in
+terms of Hydra-specific syntax are, through the quasiquoting machinery, turned
+into an internal representation, an abstract syntax tree (AST), that then is
+compiled into simulation code.
 
 Haskell-embedded implementation of Hydra adopts the following syntax for
 defining signal relations:
@@ -137,18 +137,16 @@ defining signal relations:
 [rel| pattern -> equations |]
 \end{code}
 
-The symbols | [rel|| | and | ||] | are the quasiquotes. At compile time, GHC
-applies the user-defined (in this case defined by the embedded language
-implementer) parser function named in the opening quote to the text between
-the quotes. In this case, the parser function is |rel :: String -> SR a|.
-Values of type |SR a| are typed ASTs representing Hydra signal relations. This
-enables the embedded Hydra compiler to process them symbolically and
-ultimately compile them into simulation code.
+The symbols | [rel|| | and | ||] | are the opening and closing quasiquotes
+respectively. At compile time, GHC applies the user-defined (in this case
+defined by the embedded language implementer) parser function named in the
+opening quote to the text between the quotes. In this case, the parser
+function is |rel|.
 
 The pattern binds \emph{signal variables} that scope over the equations that
 follow. The equations are DAEs stated using \emph{signal relation application}
 (the operator |<>|). Signal relation application is how the constraints
-embodied by a signal relation are imposed on particular signals:
+embodied by a signal relation are imposed on particular signals.
 
 \begin{code}
 sr <> s
@@ -170,7 +168,7 @@ functions:
 \end{code}
 
 Just like for signal relations we use quasi-quoting for defining signal
-relations. The pattern binds \emph{signal variables} that scope over the
+functions. The pattern binds \emph{signal variables} that scope over the
 expression that follows. Signal functions can be applied to signals by
 juxtaposing them together:
 
@@ -184,11 +182,11 @@ alpha|. The type of resulting signal is |Signal beta|.
 
 \section{The |switch| combinator}
 
-The built-in equality signal relation (i.e., |=|) is capable of describing
-flat systems of equations and the signal relation application operator (i.e.,
-|<>|) provides for hierarchically structured systems of equations. In this
-section we introduce one more built-in (higher-order) signal relation that
-allows description of structurally dynamic signal relations:
+The built-in equality signal relation |=| is capable of describing flat
+systems of equations and the signal relation application operator (i.e., |<>|)
+provides for hierarchically structured systems of equations. In this section
+we introduce one more built-in (higher-order) signal relation that allows
+description of structurally dynamic signal relations.
 
 \begin{code}
 switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
@@ -200,11 +198,12 @@ type |SR a|) returned by the combinator. The first argument (of type |SR a|)
 is a signal relation that is initially active. The second argument is a signal
 function (of type |SF a Bool|). Starting from the first point in time when the
 boolean signal that is computed by applying the signal function to the signal
-constrained by the composite signal relation equals |True|, the composite
-behaviour is defined by the signal relation that is computed by applying the
-third argument (a function of type |a -> SR a|) to the instantaneous value of
-the constrained signal. A formally defined semantics of the switch combinator
-is given in Chapter \ref{chapDefinition}.
+constrained by the composite signal relation changes (from |True| to |False|
+or from |False| to |True|), the composite behaviour is defined by the signal
+relation that is computed by applying the third argument (a function of type
+|a -> SR a|) to the instantaneous value of the constrained signal. A formally
+defined semantics of the switch combinator is given in Chapter
+\ref{chapDefinition}.
 
 Note how the |switch| combinator allows for definition of a signal relation
 whose equational description changes over time. In addition, the |switch|
@@ -224,10 +223,10 @@ signal relation that captures the common behaviour of electrical components
 with two connectors (see Figure \ref{figTwoPin}):
 
 \begin{code}
-type Pin = (Double,Double)  
+type Pin = (Real,Real)  
  
-twoPin :: SR (Pin,Pin)
-twoPin = [rel| ((flow p_i,p_v),(flow n_i,n_v),u) ->
+twoPin :: SR ((Pin,Pin),Real)
+twoPin = [rel| (((flow p_i,p_v),(flow n_i,n_v)),u) ->
   p_v  -  n_v  =  u
   p_i  +  n_i  =  0
 |]
@@ -256,32 +255,26 @@ particular, the above definition of the |twoPin| signal relation is desugared
 to:
 
 \begin{code}
-
-twoPin :: SR (Pin,Pin)
-twoPin = [rel| ((p_i,p_v),(n_i,n_v),u) ->
-  $twoPinAux$ <> ((- p_i,p_v),(- n_i,n_v),u)
-  |]
-  where
-  twoPinAux :: SR (Pin,Pin)
-  twoPinAux = [rel| ((p_i,p_v),(n_i,n_v),u) ->
-    p_v  -  n_v  =  u
-    p_i  +  n_i  =  0
-  |]
+twoPin :: SR ((Pin,Pin),Real)
+twoPin = [rel| (((p_i,p_v),(n_i,n_v)),u) ->
+  p_v      -  n_v      =  u
+  (- p_i)  +  (- n_i)  =  0
+|]
 \end{code}
 
 This way, flows are always directed from an interface into a component, as it
 were, making it possible to always count flows into connection nodes as being
-positive.
+positive, as we will see later in this section.
 
-We can now use |twoPin| to define a model for a resistor parametrised with
-respect to the resistance. Note that a parametrised model is an ordinary
-function returning a signal relation:
+We can now use the |twoPin| signal relation to define a model for a resistor
+parametrised with respect to the resistance. Note that a parametrised model is
+an ordinary function returning a signal relation.
 
 \begin{code}
 resistor :: Double -> SR (Pin,Pin)
 resistor r = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
     local u
-    $twoPin$ <> ((p_i,p_v),(n_i,n_v),u)
+    $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $r$ * p_i = u
 |]
 \end{code}
@@ -290,8 +283,8 @@ Here |u| is declared as a local signal variable, that is, it is not exposed in
 the interface of the signal relation. As a consequence, |u| can not be
 constrained further unlike the rest of the variables in the interface. Note
 the two kinds of variables: the functional level ones representing
-\emph{time-invariant} parameters, and the signal-level ones, representing
-\emph{time-varying} entities, the signals. Functional-level fragments, such as
+time-invariant parameters, and the signal-level ones, representing
+time-varying entities, the signals. Functional-level fragments, such as
 variable references, are spliced into the signal level by enclosing them
 between antiquotes, \$. On the other hand time-varying entities are not
 allowed to escape to the functional level (meaning signal-variables are not in
@@ -303,15 +296,15 @@ the resistor model. Alternatively, this can be viewed as defining the resistor
 model by extending the |twoPin| model with an equation that characterises the
 specific concrete electrical component, in this case Ohm's law.
 
-To clearly see how |twoPin| contributes to the definition of |resistor|, let
-us consider what happens when the resistor model is \emph{flattened} as part
-of flattening of a complete model, a transformation that is described in
-detail in Chapter \ref{chapImplementation}. Intuitively, flattening can be
-understood as ``inlining'' of applied signal relations. Thus, the arguments of
-a signal relation application is substituted into the body of the applied
-signal relation, and the entire application is then replaced by the
-instantiated signal relation body. In our case, the result of flattening the
-signal relation |resistor 10| is:
+To clearly see how |twoPin| contributes to the definition of the |resistor|
+signal relation, let us consider what happens when the resistor model is
+\emph{flattened} as part of flattening of a complete model, a transformation
+that is described in detail in Chapter \ref{chapImplementation}. Intuitively,
+flattening can be understood as ``inlining'' of applied signal relations.
+Thus, the arguments of a signal relation application is substituted into the
+body of the applied signal relation, and the entire application is then
+replaced by the instantiated signal relation body. In our case, the result of
+flattening the signal relation |resistor 10| is:
 
 \begin{code}
 [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
@@ -328,19 +321,19 @@ similarly:
 \begin{code}
 inductor :: Double -> SR (Pin,Pin)
 inductor l = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
-    $twoPin$ <> ((p_i,p_v),(n_i,n_v),u)
+    $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $l$ * der p_i = u
 |]
 
 capacitor :: Double -> SR (Pin,Pin)
 capacitor c = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
-    $twoPin$ <> ((p_i,p_v),(n_i,n_v),u)
+    $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $c$ * der u  = p_i
 |]
 
 vSourceAC :: Double -> Double -> SR (Pin,Pin)
 vSourceAC v f = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
-    $twoPin$ <> ((p_i,p_v),(n_i,n_v),u)
+    $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     u = $v$ * sin (2 * $pi$ * $f$ * time)
 |]
 
@@ -411,7 +404,9 @@ variables are counted positively in the sum to zero equations. This is
 different from Modelica \citep{Modelica2007} where a special ``rule of signs''
 is used to determine which flow variables go with a plus sign and which go
 with a minus sign. Hydra obviates the need for the rule of signs using |flow|
-qualifiers, which also is a syntactic sugar.
+qualifiers, which also is a syntactic sugar. Despite this technical difference
+both constructs serve the same purpose, that is, generation of non-causal
+equations representing the component connections.
 
 
 \section{Higher-order Modelling in Hydra}
