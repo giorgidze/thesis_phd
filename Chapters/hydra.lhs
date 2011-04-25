@@ -75,7 +75,7 @@ some signals are in a particular relation to each other imposes
 \emph{constraints} on those signals. Assuming these constraints can be
 satisfied, this allows some of the signals to be determined in terms of the
 others depending on which signals are known and unknown in a given context.
-That is, signal relations are non-causal, unlike signal functions where the
+That is, signal relations are noncausal, unlike signal functions where the
 knowns and unknowns (inputs and outputs) are given a priori.
 
 An ordinary relation can be seen as a predicate that decides whether some
@@ -343,7 +343,7 @@ ground = [rel| (flow p_i,p_v) where
 |]
 \end{code}
 
-\subsection{Non-Causal Connections}
+\subsection{Noncausal Connections}
 \label{subSecConnections}
 
 To facilitate composition of signal relations, Hydra provides a
@@ -405,7 +405,7 @@ different from Modelica \citep{Modelica2007} where a special ``rule of signs''
 is used to determine which flow variables go with a plus sign and which go
 with a minus sign. Hydra obviates the need for the rule of signs using |flow|
 qualifiers, which also is a syntactic sugar. Despite this technical difference
-both constructs serve the same purpose, that is, generation of non-causal
+both constructs serve the same purpose, that is, generation of noncausal
 equations representing the component connections.
 
 
@@ -507,7 +507,7 @@ simple pendulum that can break at a specified point in time; see Figure
 mass $m$ at the end of a rigid, mass-less rod, subject to gravity $m \vec{g}$.
 If the rod breaks, the body will fall freely. This makes the differences
 between the two configurations sufficiently large that, for example, Modelica
-does not support non-causal modelling of this system. Instead, if simulation
+does not support noncausal modelling of this system. Instead, if simulation
 across the breaking point is desired, the modeller is forced to model the
 system in a causal, less declarative way \citep[pp.
 31--33]{ModelicaTutorial2000}.
@@ -558,7 +558,7 @@ parametrised on the initial state of the body.
 Equations marked by the keyword |init| are initialisation equations used to
 specify initial conditions.
 
-The non-causal nature of Hydra can be seen particularly clearly in the last
+The noncausal nature of Hydra can be seen particularly clearly in the last
 equation of the unbroken mode that simply states a constraint on the angle of
 deviation and its second derivative, without making any assumption regarding
 which of the two time-varying entities is going to be used to solve for the
@@ -615,7 +615,7 @@ be determined statically (and because each instantiation can depend on the
 parameter in arbitrarily complex ways), there is no way to generate all code
 prior to simulation. However, the pendulum example is simple and suffice for
 illustrative purposes. Moreover, despite its simplicity, it is already an
-example with which present non-causal languages struggle, as mentioned above.
+example with which present noncausal languages struggle, as mentioned above.
 
 \subsection{Half-wave Rectifier}
 

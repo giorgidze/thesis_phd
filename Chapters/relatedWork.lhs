@@ -37,7 +37,7 @@ The FHM design was originally inspired by Functional Reactive Programming
 (FRP) \citep{Elliott1997}, particularly Yampa \citep{Nilsson2002a}. A key
 difference is that FRP provides \emph{functions} on signals whereas FHM
 generalises this to \emph{relations} on signals. FRP can thus be seen as a
-framework for \emph{causal} simulation, while FHM supports non-causal
+framework for \emph{causal} simulation, while FHM supports noncausal
 simulation. Signal functions are first class entities in most incarnations of
 FRP, and new ones can be computed and integrated into a running system
 dynamically.  As we have seen, this capability has also been carried over to
@@ -49,7 +49,7 @@ said, in Yampa, program fragments are generated and then optimised dynamically
 \citep{Nilsson2005a}. It would be interesting to try to apply an implementation
 approach like the one we have described here to a version of FRP.
 
-\section{Non-causal Modelling and Simulation Languages}
+\section{Noncausal Modelling and Simulation Languages}
 \subsection{Sol}
 
 Sol is a Modelica-like language \citep{Zimmer2007,Zimmer2008a}. It introduces
@@ -80,23 +80,23 @@ investigated here might be of interest also in the implementation of MOSILAB.
 \subsection{Modelling Kernel Language}
 
 Broman \citep{Broman2007a,Broman2008a} is developing the Modelling Kernel
-Language (MKL) that is intended to be a core language for non-causal modelling
-languages such as Modelica. Broman takes a functional approach to non-causal
+Language (MKL) that is intended to be a core language for noncausal modelling
+languages such as Modelica. Broman takes a functional approach to noncausal
 modelling, similar to the FHM approach \citep{Nilsson2003a,Nilsson2007}. One of
 the main goals of MKL is to provide a formal semantics of the core language.
 Currently, this semantics is based on an untyped, effectful
 $\lambda$-calculus.
 
 Similarly to Hydra, MKL provides a $\lambda$-abstraction for defining
-functions and an abstraction similar to |sigrel| for defining non-causal
-models. Both functions and non-causal models are first-class entities in MKL,
-enabling higher-order, non-causal modelling. The similarity of the basic
+functions and an abstraction similar to |sigrel| for defining noncausal
+models. Both functions and noncausal models are first-class entities in MKL,
+enabling higher-order, noncausal modelling. The similarity of the basic
 abstractions in Hydra and MKL leads to a similar style of modelling in both
 languages.
 
 Thus far, the work on MKL has not specifically considered support
 for structural dynamics, meaning that its expressive power in that respect
-is similar to current main-stream, non-causal modelling and simulation
+is similar to current main-stream, noncausal modelling and simulation
 languages like Modelica. However, given the similarities between MKL and
 FHM/Hydra, MKL should be a good setting for exploring support for
 structural dynamics, which ultimately could carry over to better support

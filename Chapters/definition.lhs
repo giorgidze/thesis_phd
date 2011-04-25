@@ -59,7 +59,7 @@ The symbols used in Hydra are the following:
 Single-line comments begin with {\symb{{$-$}{$-$}}}. Multiple-line comments
 are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
 
-Non-terminals are enclosed between $\langle$ and $\rangle$. 
+Nonterminals are enclosed between $\langle$ and $\rangle$. 
 The symbols  {\arrow}  (production),  {\delimit}  (union) 
 and {\emptyP} (empty rule) belong to the BNF notation. 
 All other symbols are terminals.\\

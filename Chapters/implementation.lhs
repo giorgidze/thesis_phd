@@ -416,7 +416,7 @@ evalPrimSF  Not    = not
 \subsection{Just-in-time Compilation}
 
 The generated equations are implicitly formulated ones: the mathematical
-representation of non-causal signal relations. In general, it is not possible
+representation of noncausal signal relations. In general, it is not possible
 to transform these implicit equations into explicit ones; i.e., to completely
 causalise them \citep{Brenan1996a}. Consequently, a system of implicit
 equations needs to be solved at the start of the simulation of each structural
@@ -425,7 +425,7 @@ solution of an implicitly formulated DAE (Equation \ref{eqMain}) involves
 execution of the function $f$ a number of times (sometimes hundreds or more at
 each integration step), with varying arguments, until it converges to zero.
 The number of executions of $f$ depends on various factors including the
-required precision, the initial guess, the degree of non-linearity of the DAE,
+required precision, the initial guess, the degree of nonlinearity of the DAE,
 etc.
 
 As the functions $i$, $f$, and $e$ are invoked from within inner loops of the
@@ -587,7 +587,7 @@ compiled down to native code with efficiency on par with statically generated
 code (see section \ref{sec:background-llvm}), this aspect of the overall
 performance should be roughly similar to what can be obtained from other
 compilation-based modelling and simulation language implementations. For this
-reason, and because other compilation-based, non-causal modelling and
+reason, and because other compilation-based, noncausal modelling and
 simulation language implementations do not carry out dynamic reconfiguration,
 we do not compare the performance to other simulation software. The results
 would not be very meaningful.
@@ -761,11 +761,11 @@ switches grows as number of equations increase in structurally dynamic RLC
 circuit simulation.}
 \end{figure}
 
-Our approach offers new functionality in that it allows non-causal modelling
+Our approach offers new functionality in that it allows noncausal modelling
 and simulation of structurally dynamic systems that simply cannot be handled
 by static approaches. Thus, when evaluating the feasibility of our approach,
 one should weigh the overheads against the limitation and inconvenience of not
-being able to model such systems non-causally.
+being able to model such systems noncausally.
 
 In previous work \citep{Giorgidze2009b}, we conducted benchmarks to evaluate
 the performance of the proposed execution model. The initial results are
@@ -798,14 +798,14 @@ the mode switches provides opportunities for the JIT compiler to reuse the
 machine code from the previous mode, thus reducing the burden on the JIT
 compiler and consequently the compilation time during mode switches. In
 future, we are going to investigate reusable code generation aspects in the
-context of non-causal modelling and simulation of structurally dynamic
+context of noncausal modelling and simulation of structurally dynamic
 systems and suitability of proposed execution model for real-time
 simulation. Currently, for large systems, the implementation is only
 suitable for offline simulation.
 
-Our approach offers new functionality in that it allows non-causal modelling
+Our approach offers new functionality in that it allows noncausal modelling
 and simulation of structurally dynamic systems that simply cannot be handled
 by static approaches. Thus, when evaluating the feasibility of our approach,
 one should weigh the inherent overheads against the limitation and
 inconvenience of not being able to model and simulate such systems
-non-causally.
+noncausally.

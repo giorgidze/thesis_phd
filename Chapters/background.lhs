@@ -215,7 +215,7 @@ with growing complexity. Imagine conducting the process presented in this
 section for a physical system described with hundreds of thousands of
 equations. Modelling languages and simulation tools can help with all three
 phases mentioned above. The following section overview state-of-the-art
-representatives of causal and non-causal modelling languages. Note that, in
+representatives of causal and noncausal modelling languages. Note that, in
 this thesis we focus on modelling languages capable of simulating mathematical
 models without assuming a particular domain of physics.
 
@@ -288,14 +288,14 @@ dynamic systems. In addition, Simulink block diagrams are first-order thus
 Simulink does not support higher-order causal modelling.
 
 
-\section{Non-causal Modelling in Modelica}
+\section{Noncausal Modelling in Modelica}
 \label{secModelica}
 
 %{
 %include ../Format/modelica.lhs
 
-Modelica is a declarative language for non-causal modelling and simulation of
-physical systems. Modelica models are given using non-causal DAEs. Modelica
+Modelica is a declarative language for noncausal modelling and simulation of
+physical systems. Modelica models are given using noncausal DAEs. Modelica
 features a class system known from object-oriented programming languages for
 structuring equations and for supporting model reuse.
 
@@ -336,7 +336,7 @@ end TwoPin;
 The variables |p| and |n| represent the positive and negative pins of an
 electrical component. The variable |u| represents the voltage drop across the
 component. The variable |i| represents the current flowing into the positive
-pin. The |TwoPin| model defines the non-causal equations that these variables
+pin. The |TwoPin| model defines the noncausal equations that these variables
 satisfy.
 
 By \emph{extending} the |TwoPin| model with component-specific equations we
@@ -451,7 +451,7 @@ Modelica compilers generate executable simulation code from hierarchical
 systems of equations structured using object-oriented programming constructs
 by utilising state-of-the-art symbolic and numerical methods.
 
-As we have seen, non-causal languages allow us to model physical systems at a
+As we have seen, noncausal languages allow us to model physical systems at a
 high level of abstraction. The structure of the models resemble the modelled
 systems. Consequently, it is easy to reuse or modify existing models. For
 example, it is now trivial to add one more resistor to the Modelica model as
@@ -476,13 +476,13 @@ equation
 end SimpleCircuit;
 \end{code}
 
-\section{Non-causal Modelling of Structurally-dynamic Systems}
+\section{Noncausal Modelling of Structurally-dynamic Systems}
 \label{secHybridModelling}
 
 A structurally-dynamic system is usually modelled using a combination of
 continuous equations and switching statements that specify discontinuous
 changes in the system. This section is about structurally-dynamic modelling in
-non-causal languages. Current limitations are illustrated using a Modelica
+noncausal languages. Current limitations are illustrated using a Modelica
 model of a simple structurally-dynamic system. In particular, this section
 highlights lack of expressiveness of the Modelica language when it comes to
 dynamic addition and removal of time-varying variables and continuous
@@ -547,7 +547,7 @@ certain causality before they generate the simulation code. This and related
 issues are covered in greater detail in \citep[2000]{ModelicaTutorial}. The
 suggested Modelica solution is more involved and requires reformulation of the
 model by making it causal. The need of manual reformulation to conform to a
-certain causality eliminates the advantages of working in a non-causal
+certain causality eliminates the advantages of working in a noncausal
 modelling language.
 
 Currently, the Modelica language lacks expressiveness to describe structural
