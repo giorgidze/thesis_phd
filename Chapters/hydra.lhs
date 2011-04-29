@@ -1,4 +1,4 @@
-\chapter{Hydra: A Functional Hybrid Modelling Language}
+\chapter{Hydra by Examples}
 \label{chapHydra}
 
 This chapter presents the Hydra language informally by means of instructive
@@ -12,7 +12,7 @@ There are two levels to Hydra: the \emph{functional level} and the
 \emph{signal level}. The functional level is concerned with the definition of
 ordinary functions operating on time-invariant values. The signal level is
 concerned with the definition of signal relations and signal functions on
-time-varying values (i.e., signals).
+time-varying values (i.e., on signals).
 
 Signal relations and signal functions are \emph{first-class} entities at the
 functional level. Signals, in contrast, are \emph{not} first-class entities at
@@ -34,9 +34,9 @@ functional level almost for free through shallow embedding. In contrast, the
 signal level is realised through deep embedding: signal relations expressed in
 terms of Hydra-specific syntax are, through the quasiquoting machinery, turned
 into an internal representation, an abstract syntax tree (AST), that then is
-compiled into simulation code.
+compiled into simulation code (see Chapter \ref{chapImplementation}).
 
-Haskell-embedded implementation of Hydra adopts the following syntax for
+The Haskell-embedded implementation of Hydra adopts the following syntax for
 defining signal relations:
 
 \begin{code}
@@ -44,22 +44,21 @@ defining signal relations:
 \end{code}
 
 The symbols | [rel|| | and | ||] | are the opening and closing quasiquotes
-respectively. At compile time, GHC applies the user-defined (in this case
-defined by the embedded language implementer) parser function named in the
-opening quote to the text between the quotes. In this case, the parser
-function is |rel|.
+respectively. The pattern binds \emph{signal variables} that scope over the
+equations that follow. The equations are DAEs stated using \emph{signal
+relation application} (the operator |<>|). Signal relation application is how
+the constraints embodied by a signal relation are imposed on particular
+signals.
 
-The pattern binds \emph{signal variables} that scope over the equations that
-follow. The equations are DAEs stated using \emph{signal relation application}
-(the operator |<>|). Signal relation application is how the constraints
-embodied by a signal relation are imposed on particular signals.
+The equations are required to be well typed; For example, consider the
+following code.
 
 \begin{code}
 sr <> s
 \end{code}
 
-The equations are required to be well typed. In this example, if |sr| has the
-type |SR alpha| then |s| must have the type |Signal alpha|.
+Here, if |sr| has the type |SR alpha| then |s| must have the type |Signal
+alpha|.
 
 Hydra provides a more conventional-looking syntax for application of the
 built-in equality signal relation. For example, |a * x + b = 0| is equivalent
@@ -67,7 +66,7 @@ to |(=) <> (a * x + b, 0)|.
 
 In addition to user defined signal relations Hydra provides for user defined
 signal functions. Hydra uses the following syntax for defining signal
-functions:
+functions.
 
 \begin{code}
 [fun| pattern -> expression |]
@@ -86,7 +85,7 @@ Signal function applications are required to be well typed. In this example,
 if |sf| has the type |SF alpha beta| then |s| must have the type |Signal
 alpha|. The type of resulting signal is |Signal beta|.
 
-\section{The |switch| combinator}
+\section{The |switch| Combinator}
 
 The built-in equality signal relation |=| is capable of describing flat
 systems of equations and the signal relation application operator (i.e., |<>|)
@@ -108,18 +107,18 @@ constrained by the composite signal relation changes (from |True| to |False|
 or from |False| to |True|), the composite behaviour is defined by the signal
 relation that is computed by applying the third argument (a function of type
 |a -> SR a|) to the instantaneous value of the constrained signal. A formally
-defined semantics of the switch combinator is given in Chapter
+defined meaning of the switch combinator is given in Chapter
 \ref{chapDefinition}.
 
 Note how the |switch| combinator allows for definition of a signal relation
 whose equational description changes over time. In addition, the |switch|
 combinator allows for state transfer from the old mode and initialisation of
-the new mode by giving the function that computes the new mode from the
+the new mode using the function that computes the new mode from the
 instantaneous values of the constrained signals.
 
 In the signal relation notation described earlier the list of equations that
-follows the pattern is not necessarily a static one as they may contain signal
-relation application of structurally dynamic signal relation.
+follows the pattern is not necessarily a static one as the equations may
+contain signal relation application of structurally dynamic signal relation.
 
 \section{Models with Static Structure}
 
@@ -170,14 +169,18 @@ twoPin = [rel| (((p_i,p_v),(n_i,n_v)),u) ->
 
 This way, flows are always directed from an interface into a component, as it
 were, making it possible to always count flows into connection nodes as being
-positive, as we will see later in this section.
+positive, as we will see later in this section. Although this syntactic sugar
+results into a set of equivalent equations for the |twoPin| signal relation,
+the usage of the |flow| qualifier for a signal variable representing an
+electrical current is crucial for signal relations that model electrical
+components and there interconnections.
 
 We can now use the |twoPin| signal relation to define a model for a resistor
 parametrised with respect to the resistance. Note that a parametrised model is
 an ordinary function returning a signal relation.
 
 \begin{code}
-resistor :: Double -> SR (Pin,Pin)
+resistor :: Real -> SR (Pin,Pin)
 resistor r = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
     local u
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
@@ -225,19 +228,21 @@ Models for an inductor, a capacitor, a voltage source and a ground are defined
 similarly:
 
 \begin{code}
-inductor :: Double -> SR (Pin,Pin)
-inductor l = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
+iInductor :: Real -> Real -> SR (Pin,Pin)
+inductor l p_i_0 = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
+    init p_i = p_i_0
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $l$ * der p_i = u
 |]
 
-capacitor :: Double -> SR (Pin,Pin)
-capacitor c = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
+iCapacitor :: Real -> Real -> SR (Pin,Pin)
+iCapacitor c u0 = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
+    init u = u0
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $c$ * der u  = p_i
 |]
 
-vSourceAC :: Double -> Double -> SR (Pin,Pin)
+vSourceAC :: Real -> Real -> SR (Pin,Pin)
 vSourceAC v f = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     u = $v$ * sin (2 * $pi$ * $f$ * time)
@@ -248,6 +253,16 @@ ground = [rel| (flow p_i,p_v) where
     p_v = 0
 |]
 \end{code}
+
+Note that the inductor and the capacitor signal relation contain |init|
+equations. An |init| equations is enforced only at the point in time when the
+signal relation becomes active. In this example, the |init| equations are used
+to initialise the differential variables involved in the inductor and the
+capacitor signal relations. Note, however, that Modelica implicitly
+initialises state variables to zero. That is why initialisation equations are
+absent from the corresponding Modelica models given in Chapter
+\ref{chapBackground}. Hydra does not allow for implicit initialisation; that
+is, all initialisation equations must be specified explicitly.
 
 \subsection{Noncausal Connections}
 \label{subSecConnections}
@@ -288,7 +303,7 @@ simpleCircuit = [rel| () ->
 Note that the above code is a direct textual representation of how the
 components are connected in the circuit.
 
-In the setting of Hydra, the |connect| construct is just syntactic sugar.In
+In the setting of Hydra, the |connect| construct is just syntactic sugar. In
 particular, |connected flow| generates sum-to-zero equations and just
 |connect| generates equality constrains. The connect constructs of the
 |simpleCircuit| model are thus expanded to the following equations:
@@ -314,8 +329,73 @@ qualifiers, which also is a syntactic sugar. Despite this technical difference
 both constructs serve the same purpose, that is, generation of noncausal
 equations representing the component connections.
 
+As it was the case for the Modelica model it is trivial in Hydra to reuse the
+circuit components and model the circuit that is depicted on Figure
+\ref{figCircuit2}.
+
+\begin{code}
+simpleCircuit2 :: SR ()
+simpleCircuit2 = [rel| () ->
+    local acp_i acp_v acn_i acn_v
+    $vSourceAC 1 1$  <>  ((acp_i,acp_v),(acn_i,acn_v))
+
+    local r1p_i r1p_v r1n_i r1n_v
+    $resistor 1$     <>  ((r1p_i,r1p_v),(r1n_i,r1n_v))
+
+    local r2p_i r2p_v r2n_i r2n_v
+    $resistor 1$     <>  ((r2p_i,r2p_v),(r2n_i,r2n_v))
+
+    local lp_i lp_v ln_i ln_v
+    $inductor 1$     <>  ((lp_i,lp_v),(ln_i,ln_v))
+
+    local cp_i cp_v cn_i cn_v
+    $capacitor 1$    <>  ((cp_i,cp_v),(cn_i,cn_v))
+
+    local gp_i gp_v
+    $ground$         <>  (gp_i,gp_v)
+
+    connect flow  acp_i r1p_i r2p_i
+    connect       acp_v r1p_v r2p_v
+
+    connect flow  r1n_i cp_i
+    connect       r1n_v cp_v
+
+    connect flow  r2n_i lp_i
+    connect       r2n_v lp_v
+
+    connect flow  acn_i cn_i ln_i gp_i
+    connect       acn_v cn_v ln_v gp_v
+|]
+\end{code}
+
+\section{Simulation}
+
+The Haskell-embedded implementation of Hydra features the following function:
+
+\begin{code}
+simulate :: SR () -> Experiment -> IO ()
+\end{code}
+
+The |simulate| function takes two arguments. The first argument is the signal
+function that needs to be simulated. The second argument describes the
+\emph{experiment}, essentially a description of what needs to happen during
+the simulation. Using the second argument the modeller can set the simulation
+starting and ending times, desired time step, symbolic and numerical solvers,
+whether to use JIT compilation or interpretation, and how to visualise the
+trajectories of the signals constrained by the signal relation.
+
+The definition of the |Experiment| data type and the default experiment
+description are given in Chapter \ref{chapImplementation}. The simple circuit
+model can be simulated using the default experiment description as follows.
+
+\begin{code}
+simulate simpleCircuit defaultExperiment
+\end{code}
 
 \section{Higher-order Modelling in Hydra}
+
+In this section demonstrates higher-order modelling capabilities of Hydra.
+
 
 \begin{code}
 serial :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)

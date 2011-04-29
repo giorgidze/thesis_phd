@@ -133,3 +133,13 @@
 %format t1
 %format t2
 %format t_e
+%format p_i_0 = "p_{i_{0}}"
+%format u0
+%format r1p_i
+%format r1p_v
+%format r1n_i
+%format r1n_v
+%format r2p_i
+%format r2p_v
+%format r2n_i
+%format r2n_v
