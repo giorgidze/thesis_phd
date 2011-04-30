@@ -379,10 +379,10 @@ simulate :: SR () -> Experiment -> IO ()
 The |simulate| function takes two arguments. The first argument is the signal
 function that needs to be simulated. The second argument describes the
 \emph{experiment}, essentially a description of what needs to happen during
-the simulation. Using the second argument the modeller can set the simulation
-starting and ending times, desired time step, symbolic and numerical solvers,
-whether to use JIT compilation or interpretation, and how to visualise the
-trajectories of the signals constrained by the signal relation.
+simulation. Using the second argument the modeller can set the simulation
+starting and ending times, desired time step, symbolic processor, numerical
+solver, whether to use JIT compilation or interpretation, and how to visualise
+the trajectories of the signals constrained by the signal relation.
 
 The definition of the |Experiment| data type and the default experiment
 description are given in Chapter \ref{chapImplementation}. The simple circuit
@@ -392,14 +392,41 @@ model can be simulated using the default experiment description as follows.
 simulate simpleCircuit defaultExperiment
 \end{code}
 
+With the |defaultExperiment| parameter the |simpleCircuit| signal relation is
+simulated for 10 seconds of simulation time starting from the time point of
+zero. The time step is |0.001| and the trajectories of the constrained signals
+are printed to |stdout| in the gnuplot\footnote{url{http://www.gnuplot.info/}}
+compatible format. By default the simulation code is JIT compiled. The default
+numerical solver is SUNDIALS \cite{Sundials2005}. The users are allowed
+provide their own symbolic processors and numerical solvers. This and other
+implementation aspects are described in detail in Chapter
+\ref{chapImplementation}.
+
+The previous sections of this chapter introduced the Hydra language using the
+simple electrical circuit example. The readers familiar with the Modelica
+language can compare the Hydra model given in this Chapter to the Modelica
+model given in Chapter \ref{chapBackground}. The rest of the Chapter focuses
+on the features of Hydra that are absent from main-stream noncausal modelling
+languages such as Modelica. Specifically, we discuss higher-order and
+structurally modelling capabilities of the Hydra language.
+
 \section{Higher-order Modelling in Hydra}
 
-In this section demonstrates higher-order modelling capabilities of Hydra.
+This section demonstrates higher-order modelling capabilities of Hydra. Let us
+remain in the physical domain of electronics, but this time, consider signal
+relations that are parametrised on other signal relations. Note that so far we
+have only considered signal relations that are parametrised on real numbers.
 
+Perhaps the simplest kind of higher-order signal relation is a signal relation
+that takes two signal relations describing the two-pin electrical components
+and connects these components in serial. The following code define such signal
+relation, whereas the graphical representation of the signal relation is given
+in Figure \ref{figSerial}.
 
 \begin{code}
 serial :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
-serial sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
+serial sr1 sr2 = [rel| ((flow p_i, p_v), (flow n_i, n_v)) ->
+    local n1_i n1_v p2_i p2_v
     $sr1$  <>  ((p_i, p_v), (n1_i, n1_v))
     $sr2$  <>  ((p2_i, p2_v), (n_i, n_v))
     connect flow  n1_i p2_i
@@ -409,12 +436,39 @@ serial sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
 
 \begin{figure}
 \includegraphics[width=\textwidth]{Graphics/serial}
+\caption{\label{figSerial} Serial connection of two electrical components}
 \end{figure}
+
+Similarly the following code defines a higher-order signal relation that
+connects two electrical components in parallel. The graphical representation
+of the signal relation is given in Figure \ref{figParallel}.
+
+\begin{code}
+parallel :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
+parallel sr1 sr2 = [rel| ((flow p_i, p_v), (flow n_i, n_v)) ->
+    local p1_i p1_v n1_i n1_v
+    $sr1$  <>  ((p1_i, p1_v), (n1_i, n1_v))
+
+    local p2_i p2_v n2_i n2_v
+    $sr2$  <>  ((p2_i, p2_v), (n2_i, n2_v))
+
+    connect flow  p_i p1_i p2_i
+    connect       p_v p1_v p2_v
+    connect flow  n_i n1_i n2_i
+    connect       n_v n1_v n2_v
+|]
+\end{code}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{Graphics/parallel}
+\caption{\label{figParallel} Parallel connection of two electrical components}
+\end{figure}
+
 
 
 \begin{code}
 wire :: SR (Pin,Pin)
-wire = [rel| ((p_i,p_v),(n_i,n_v)) ->
+wire = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
     $twoPin$ <> ((p_i,p_v),(n_i,n_v),u)
     u = 0
 |]
@@ -445,24 +499,8 @@ foldr serial wire [sr1, sr2, ..., srn] =
 
 
 \begin{code}
-parallel :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
-parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
-    $sr1$  <>  ((p1_i, p1_v), (n1_i, n1_v))
-    $sr2$  <>  ((p2_i, p2_v), (n2_i, n2_v))
-    connect flow  p_i p1_i p2_i
-    connect       p_v p1_v p2_v
-    connect flow  n_i n1_i n2_i
-    connect       n_v n1_v n2_v
-|]
-\end{code}
-
-\begin{figure}
-\includegraphics[width=0.5\textwidth]{Graphics/parallel}
-\end{figure}
-
-\begin{code}
 noWire :: SR (Pin,Pin)
-noWire = [rel| ((p_i,p_v),(n_i,n_v)) ->
+noWire = [rel| ((flow p_i,p_v),(flow n_i,n_v)) ->
     $twoPin$ <>((p_i,p_v),(n_i,n_v),u)
     p_i = 0
 |]
