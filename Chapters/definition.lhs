@@ -1,15 +1,17 @@
 \chapter{Definition of Hydra}
 \label{chapDefinition}
 
-This is a highly technical chapter giving a formal definition of the Hydra
-language. Firstly, we define Hydra's lexical structure and concrete syntax
-using the regular expression and BNF notations respectively. Secondly, we give
-Hydra's abstract syntax as a Haskell algebraic data type. Thirdly, we define a
-typed intermediate representation and give translation from the untyped
-abstract syntax to the typed intermediate representation. The typed
-intermediate representation fully embodies Hydra's type system. Finally, we
-give ideal denotational semantics of Hydra by giving meaning to the typed
-intermediate representation in terms of the first-order logic.
+This is a highly technical chapter, which gives a formal definition of the
+Hydra language. The definition is given in four steps. Firstly, we define
+Hydra's lexical structure and concrete syntax using the regular expression and
+BNF notations, respectively. Secondly, we give Hydra's abstract syntax as a
+Haskell algebraic data type. Thirdly, we define a typed intermediate
+representation, again as a Haskell data type, and give a translation from the
+untyped abstract syntax to the typed intermediate representation. The typed
+intermediate representation fully embodies Hydra's type system and can be seen
+as a definition of Hydra's type system in terms of Haskell's type system.
+Finally, we give ideal denotational semantics of Hydra by giving meaning to
+the typed intermediate representation in terms of the second-order logic.
 
 \section{Concrete Syntax}
 
@@ -22,86 +24,41 @@ intermediate representation in terms of the first-order logic.
 \newcommand{\literal}[1]{\mbox{{\texttt {#1}}}}
 \newcommand{\symb}[1]{\mbox{{\texttt {#1}}}}
 
-Identifiers \nonterminal{Ident} are unquoted strings beginning with a letter,
-followed by any combination of letters, digits, and the characters {\tt \_ '},
-reserved words excluded.
+The syntactic structure of Hydra is given in Figure \ref{figSyntax}.
 
-Integer literals \nonterminal{Integer}\ are nonempty sequences of digits.
-
-Double-precision float literals \nonterminal{Double}\ have the structure
-indicated by the regular expression $\nonterminal{digit}+ \mbox{{\it `.'}}
-\nonterminal{digit}+ (\mbox{{\it `e'}} \mbox{{\it `-'}}?
-\nonterminal{digit}+)?$, that is, two sequences of digits separated by a decimal
-point, optionally followed by an unsigned or negative exponent.
-
-HsExpr literals are recognized by the regular expression \(\mbox{`\$'}
-({\nonterminal{anychar}} - \mbox{`\$'})* \mbox{`\$'}\)
-
-The reserved words used in Hydra are the following:
-
-\begin{tabular}{llll}
-{\reserved{connect}} & {\reserved{flow}} & {\reserved{init}} & {\reserved{local}}
-\end{tabular}
-
-The symbols used in Hydra are the following:
-
-\begin{tabular}{lll}
-{\symb{{$-$}{$>$}}} &{\symb{\{}} &{\symb{\}}} \\
-{\symb{\_}} &{\symb{()}} &{\symb{(}} \\
-{\symb{,}} &{\symb{)}} &{\symb{{$=$}}} \\
-{\symb{{$<$}{$>$}}} &{\symb{{$||$}{$||$}}} &{\symb{\&\&}} \\
-{\symb{{$<$}}} &{\symb{{$<$}{$=$}}} &{\symb{{$>$}}} \\
-{\symb{{$>$}{$=$}}} &{\symb{{$+$}}} &{\symb{{$-$}}} \\
-{\symb{/}} &{\symb{*}} &{\symb{\^}} \\
-{\symb{;}} & & \\
-\end{tabular}\\
-
-Single-line comments begin with {\symb{{$-$}{$-$}}}. Multiple-line comments
-are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
-
-Nonterminals are enclosed between $\langle$ and $\rangle$. 
-The symbols  {\arrow}  (production),  {\delimit}  (union) 
-and {\emptyP} (empty rule) belong to the BNF notation. 
-All other symbols are terminals.\\
+\begin{figure}
 
 \begin{tabular}{lll}
 {\nonterminal{SigRel}} & {\arrow}  &{\nonterminal{Pattern}} {\terminal{{$-$}{$>$}}} {\terminal{\{}} {\nonterminal{ListEquation}} {\terminal{\}}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{SigFun}} & {\arrow}  &{\nonterminal{Pattern}} {\terminal{{$-$}{$>$}}} {\terminal{\{}} {\nonterminal{Expr}} {\terminal{\}}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Pattern}} & {\arrow}  &{\terminal{\_}}  \\
- & {\delimit}  &{\nonterminal{Qualifier}} {\nonterminal{Ident}}  \\
+ & {\delimit}  &{\nonterminal{Ident}}  \\
  & {\delimit}  &{\terminal{()}}  \\
  & {\delimit}  &{\terminal{(}} {\nonterminal{Pattern}} {\terminal{,}} {\nonterminal{Pattern}} {\terminal{)}}  \\
-\end{tabular}\\
-
-\begin{tabular}{lll}
-{\nonterminal{Qualifier}} & {\arrow}  &{\emptyP} \\
- & {\delimit}  &{\terminal{flow}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Equation}} & {\arrow}  &{\nonterminal{Expr}} {\terminal{{$=$}}} {\nonterminal{Expr}}  \\
  & {\delimit}  &{\terminal{init}} {\nonterminal{Expr}} {\terminal{{$=$}}} {\nonterminal{Expr}}  \\
- & {\delimit}  &{\terminal{local}} {\nonterminal{Ident}} {\nonterminal{ListIdent}}  \\
- & {\delimit}  &{\terminal{connect}} {\nonterminal{Ident}} {\nonterminal{Ident}} {\nonterminal{ListIdent}}  \\
- & {\delimit}  &{\terminal{connect}} {\terminal{flow}} {\nonterminal{Ident}} {\nonterminal{Ident}} {\nonterminal{ListIdent}}  \\
+ & {\delimit}  &{\terminal{local}} {\nonterminal{Ident}}  \\
  & {\delimit}  &{\nonterminal{HsExpr}} {\terminal{{$<$}{$>$}}} {\nonterminal{Expr}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr1}} & {\arrow}  &{\nonterminal{Expr1}} {\terminal{{$||$}{$||$}}} {\nonterminal{Expr2}}  \\
  & {\delimit}  &{\nonterminal{Expr2}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr2}} & {\arrow}  &{\nonterminal{Expr2}} {\terminal{\&\&}} {\nonterminal{Expr3}}  \\
  & {\delimit}  &{\nonterminal{Expr3}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr3}} & {\arrow}  &{\nonterminal{Expr4}} {\terminal{{$<$}}} {\nonterminal{Expr4}}  \\
@@ -109,30 +66,30 @@ All other symbols are terminals.\\
  & {\delimit}  &{\nonterminal{Expr4}} {\terminal{{$>$}}} {\nonterminal{Expr4}}  \\
  & {\delimit}  &{\nonterminal{Expr4}} {\terminal{{$>$}{$=$}}} {\nonterminal{Expr4}}  \\
  & {\delimit}  &{\nonterminal{Expr4}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr4}} & {\arrow}  &{\nonterminal{Expr4}} {\terminal{{$+$}}} {\nonterminal{Expr5}}  \\
  & {\delimit}  &{\nonterminal{Expr4}} {\terminal{{$-$}}} {\nonterminal{Expr5}}  \\
  & {\delimit}  &{\nonterminal{Expr5}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr5}} & {\arrow}  &{\nonterminal{Expr5}} {\terminal{/}} {\nonterminal{Expr6}}  \\
  & {\delimit}  &{\nonterminal{Expr5}} {\terminal{*}} {\nonterminal{Expr6}}  \\
  & {\delimit}  &{\nonterminal{Expr6}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr6}} & {\arrow}  &{\nonterminal{Expr6}} {\terminal{\^}} {\nonterminal{Expr7}}  \\
  & {\delimit}  &{\terminal{{$-$}}} {\nonterminal{Expr7}}  \\
  & {\delimit}  &{\nonterminal{Expr7}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr7}} & {\arrow}  &{\nonterminal{Expr7}} {\nonterminal{Expr8}}  \\
  & {\delimit}  &{\nonterminal{Expr8}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr8}} & {\arrow}  &{\nonterminal{Ident}}  \\
@@ -142,73 +99,119 @@ All other symbols are terminals.\\
  & {\delimit}  &{\terminal{()}}  \\
  & {\delimit}  &{\terminal{(}} {\nonterminal{Expr}} {\terminal{,}} {\nonterminal{Expr}} {\terminal{)}}  \\
  & {\delimit}  &{\terminal{(}} {\nonterminal{Expr}} {\terminal{)}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{Expr}} & {\arrow}  &{\nonterminal{Expr1}}  \\
-\end{tabular}\\
+\end{tabular}
 
 \begin{tabular}{lll}
 {\nonterminal{ListEquation}} & {\arrow}  &{\emptyP} \\
  & {\delimit}  &{\nonterminal{Equation}}  \\
  & {\delimit}  &{\nonterminal{Equation}} {\terminal{;}} {\nonterminal{ListEquation}}  \\
-\end{tabular}\\
+\end{tabular}
 
+\caption{\label{figSyntax} Syntactic structure of Hydra.}
+\end{figure}
+
+Identifiers \nonterminal{Ident} are unquoted strings beginning with a letter,
+followed by any combination of letters, digits, and the characters {\tt \_}
+and {\tt '}, reserved words excluded.
+
+Integer literals \nonterminal{Int}\ are nonempty sequences of digits.
+Double-precision float literals \nonterminal{Double}\ have the structure
+indicated by the regular expression $\nonterminal{digit}+ \mbox{{\it `.'}}
+\nonterminal{digit}+ (\mbox{{\it `e'}} \mbox{{\it `-'}}?
+\nonterminal{digit}+)?$ i.e.\ two sequences of digits separated by a decimal
+point, optionally followed by an unsigned or negative exponent.
+
+HsExpr literals are recognised by the regular expression \(\mbox{`\$'}
+({\nonterminal{anychar}} - \mbox{`\$'})* \mbox{`\$'}\)
+
+The reserved words used in Hydra are the following: \begin{tabular}{lll}
+{\reserved{init}} &{\reserved{local}} & \\ \end{tabular}
+
+The symbols that are used in Hydra are given in Figure \ref{figSymbols}.
+
+\begin{figure}
+\begin{center}
 \begin{tabular}{lll}
-{\nonterminal{ListIdent}} & {\arrow}  &{\emptyP} \\
- & {\delimit}  &{\nonterminal{Ident}} {\nonterminal{ListIdent}}  \\
-\end{tabular}\\
+{\symb{{$-$}{$>$}}} &{\symb{\{}} &{\symb{\}}} \\
+{\symb{\_}} &{\symb{()}} &{\symb{(}} \\
+{\symb{,}} &{\symb{)}} &{\symb{{$=$}}} \\
+{\symb{{$<$}{$>$}}} &{\symb{{$||$}{$||$}}} &{\symb{\&\&}} \\
+{\symb{{$<$}}} &{\symb{{$<$}{$=$}}} &{\symb{{$>$}}} \\
+{\symb{{$>$}{$=$}}} &{\symb{{$+$}}} &{\symb{{$-$}}} \\
+{\symb{/}} &{\symb{*}} &{\symb{\^}} \\
+{\symb{;}} & & \\
+\end{tabular}
+\end{center}
+\caption{\label{figSymbols} Symbols used in Hydra.}
+\end{figure}
+
+Single-line comments begin with {\symb{{$-$}{$-$}}}. Multiple-line comments
+are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
+
+Non-terminals are enclosed between $\langle$ and $\rangle$. 
+The symbols  {\arrow}  (production),  {\delimit}  (union) 
+and {\emptyP} (empty rule) belong to the BNF notation. 
+All other symbols are terminals.
 
 \section{Abstract Syntax}
 
+The abstract syntax of Hydra is given in Figure \ref{figAbstractSyntax}. The
+Haskell data type definition was derived from the concrete syntax defined in
+previous section. Not that the representation is untyped; that is, it allows
+for terms that are syntactically correct but not necessarily type correct.
+
+\begin{figure}
 \begin{code}
-data Ident = Ident String
-
-data HsExpr = HsExpr String
-
-data SigRel = SigRel Pattern [Equation]
-
-data SigFun = SigFun Pattern Expr
-
-data Pattern =
-   PatWild
- | PatName Qualifier Ident
- | PatUnit
- | PatPair Pattern Pattern
-
-data Qualifier =
-   QualEmpty
- | QualFlow
-
-data Equation =
-   EquEqual Expr Expr
- | EquInit Expr Expr
- | EquLocal Ident [Ident]
- | EquConnect Ident Ident [Ident]
- | EquConnectFlow Ident Ident [Ident]
- | EquSigRelApp HsExpr Expr
-
-data Expr =
-   ExprOr Expr Expr
- | ExprAnd Expr Expr
- | ExprLt Expr Expr
- | ExprLte Expr Expr
- | ExprGt Expr Expr
- | ExprGte Expr Expr
- | ExprAdd Expr Expr
- | ExprSub Expr Expr
- | ExprDiv Expr Expr
- | ExprMul Expr Expr
- | ExprPow Expr Expr
- | ExprNeg Expr
- | ExprApp Expr Expr
- | ExprVar Ident
- | ExprAnti HsExpr
- | ExprInteger Integer
- | ExprDouble Double
- | ExprUnit
- | ExprPair Expr Expr
+data Ident   =  Ident   String
+data HsExpr  =  HsExpr  String
 \end{code}
+
+\begin{code}
+data SigRel  =  SigRel  Pattern  [Equation]
+data SigFun  =  SigFun  Pattern  Expr
+\end{code}
+
+\begin{code}
+data Pattern  =   PatWild
+              |   PatName  Ident
+              |   PatUnit
+              |   PatPair  Pattern  Pattern
+\end{code}
+
+\begin{code}
+data Equation   =  EquEqual      Expr    Expr
+                |  EquInit       Expr    Expr
+                |  EquLocal      Ident
+                |  EquSigRelApp  HsExpr  Expr
+\end{code}
+
+\begin{code}
+data Expr  =  ExprOr        Expr    Expr
+           |  ExprAnd       Expr    Expr
+           |  ExprLt        Expr    Expr
+           |  ExprLte       Expr    Expr
+           |  ExprGt        Expr    Expr
+           |  ExprGte       Expr    Expr
+           |  ExprAdd       Expr    Expr
+           |  ExprSub       Expr    Expr
+           |  ExprDiv       Expr    Expr
+           |  ExprMul       Expr    Expr
+           |  ExprPow       Expr    Expr
+           |  ExprNeg       Expr
+           |  ExprApp       Expr    Expr
+           |  ExprVar       Ident
+           |  ExprAnti      HsExpr
+           |  ExprInteger   Integer
+           |  ExprDouble    Double
+           |  ExprUnit
+           |  ExprPair      Expr    Expr
+\end{code}
+\caption{\label{figAbstractSyntax} Abstract syntax of Hydra.}
+\end{figure}
 
 \section{Desugaring}
 
