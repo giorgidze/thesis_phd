@@ -21,23 +21,12 @@
 %format (translateEqs (a)) = "{\llbracket}" a "{\rrbracket}_{eqs}"
 %format (translateExp (a)) = "{\llbracket}" a "{\rrbracket}_{exp}"
 %format (translateHs  (a)) = "{\llbracket}" a "{\rrbracket}_{hs}"
+%format (translateIdent  (a)) = "{\llbracket}" a "{\rrbracket}_{ident}"
 
 %format (desugar  (a)) = "{\llbracket}" a "{\rrbracket}"
 
-%format (desugarFlowSigRel         (a)) = "{\llbracket}" a "{\rrbracket}_{flow}"
-%format (desugarFlowFindPattern    (a)) = "{\llbracket}" a "{\rrbracket}_{find}"
-%format (desugarFlowForgetPattern  (a)) = "{\llbracket}" a "{\rrbracket}_{forget}"
-%format (desugarFlowEquations       a ) = "{\llbracket}" a "{\rrbracket}_{eqs}"
-%format (desugarFlowExpr            a ) = "{\llbracket}" a "{\rrbracket}_{exp}"
-
-%format (desugarConnectSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{connect}"
-%format (desugarConnectEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
-
-%format (desugarPairSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{pair}"
+%format (desugarPairSigRel   (a)) = "{\llbracket}" a "{\rrbracket}"
 %format (desugarPairEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
-
-%format (desugarLocalSigRel   (a)) = "{\llbracket}" a "{\rrbracket}_{local}"
-%format (desugarLocalEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
 
 %format (sem     (a)) = "{\llbracket}" a "{\rrbracket}"
 %format (semSR   (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"

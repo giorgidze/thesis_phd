@@ -4,13 +4,16 @@
 %include Format/haskell.lhs
 
 \usepackage[left=2in, right=1in, top=1in, bottom=1in, includefoot]{geometry}
+
 \usepackage{graphicx}
-\usepackage{subfigure}
+\usepackage{float}
 \usepackage{amsmath}
 \usepackage{setspace}
 \usepackage{natbib}
+
 \usepackage[firstpage]{draftwatermark}
 \SetWatermarkScale{5.0}
+
 \usepackage{hyperref}
 \hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=black, urlcolor=black}
 

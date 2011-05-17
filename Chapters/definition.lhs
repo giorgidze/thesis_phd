@@ -1,17 +1,18 @@
 \chapter{Definition of Hydra}
 \label{chapDefinition}
 
-This is a highly technical chapter, which gives a formal definition of the
-Hydra language. The definition is given in four steps. Firstly, we define
-Hydra's lexical structure and concrete syntax using the regular expression and
-BNF notations, respectively. Secondly, we give Hydra's abstract syntax as a
-Haskell algebraic data type. Thirdly, we define a typed intermediate
-representation, again as a Haskell data type, and give a translation from the
-untyped abstract syntax to the typed intermediate representation. The typed
-intermediate representation fully embodies Hydra's type system and can be seen
-as a definition of Hydra's type system in terms of Haskell's type system.
-Finally, we give ideal denotational semantics of Hydra by giving meaning to
-the typed intermediate representation in terms of the second-order logic.
+This is a highly-technical chapter giving a formal definition of the Hydra
+language. The definition is given in four steps. Firstly, we define Hydra's
+lexical structure and concrete syntax by using the regular expression notation
+and the BNF notation, respectively. Secondly, we give Hydra's untyped abstract
+syntax as a Haskell algebraic data type definition. Thirdly, we define Hydra's
+typed abstract syntax as a Haskell generalised algebraic data type definition
+and give a translation from the untyped abstract syntax to the typed abstract
+syntax. The typed representation fully embodies Hydra's type system and can be
+seen as a definition of Hydra's type system in terms of the Haskell type
+system. In other words, Hydra's type system is embedded into Haskell's type
+system. Finally, we give ideal denotational semantics of Hydra by giving
+meaning to the typed abstract syntax in terms of second-order logic.
 
 \section{Concrete Syntax}
 
@@ -24,7 +25,11 @@ the typed intermediate representation in terms of the second-order logic.
 \newcommand{\literal}[1]{\mbox{{\texttt {#1}}}}
 \newcommand{\symb}[1]{\mbox{{\texttt {#1}}}}
 
-The syntactic structure of Hydra is given in Figure \ref{figSyntax}.
+The syntactic structure of Hydra is given in Figure \ref{figSyntax}, which
+uses the BNF notation. Specifically, non-terminals are enclosed between
+$\langle$ and $\rangle$. The symbols {\arrow} (production), {\delimit} (union)
+and {\emptyP} (empty rule) belong to the BNF notation. All other symbols are
+terminals.
 
 \begin{figure}
 
@@ -114,27 +119,29 @@ The syntactic structure of Hydra is given in Figure \ref{figSyntax}.
 \caption{\label{figSyntax} Syntactic structure of Hydra.}
 \end{figure}
 
+
 Identifiers \nonterminal{Ident} are unquoted strings beginning with a letter,
 followed by any combination of letters, digits, and the characters {\tt \_}
-and {\tt '}, reserved words excluded.
+and {\tt '}, reserved words excluded. The reserved words used in Hydra are
+|init| and |local|.
 
 Integer literals \nonterminal{Int}\ are nonempty sequences of digits.
 Double-precision float literals \nonterminal{Double}\ have the structure
 indicated by the regular expression $\nonterminal{digit}+ \mbox{{\it `.'}}
 \nonterminal{digit}+ (\mbox{{\it `e'}} \mbox{{\it `-'}}?
-\nonterminal{digit}+)?$ i.e.\ two sequences of digits separated by a decimal
-point, optionally followed by an unsigned or negative exponent.
+\nonterminal{digit}+)?$; that is, two sequences of digits separated by a
+decimal point, optionally followed by an unsigned or negative exponent.
 
-HsExpr literals are recognised by the regular expression \(\mbox{`\$'}
-({\nonterminal{anychar}} - \mbox{`\$'})* \mbox{`\$'}\)
+HsExpr literals represent antiquoted Haskell expressions and are recognised by
+the regular expression \(\mbox{`\$'} ({\nonterminal{anychar}} - \mbox{`\$'})*
+\mbox{`\$'}\)
 
-The reserved words used in Hydra are the following: \begin{tabular}{lll}
-{\reserved{init}} &{\reserved{local}} & \\ \end{tabular}
+The symbols used in Hydra are given in Figure \ref{figSymbols}. In Hydra,
+single-line comments begin with {\symb{{$-$}{$-$}}} and multiple-line comments
+are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
 
-The symbols that are used in Hydra are given in Figure \ref{figSymbols}.
-
-\begin{figure}
-\begin{center}
+\begin{figure}[H]
+\centering
 \begin{tabular}{lll}
 {\symb{{$-$}{$>$}}} &{\symb{\{}} &{\symb{\}}} \\
 {\symb{\_}} &{\symb{()}} &{\symb{(}} \\
@@ -145,24 +152,15 @@ The symbols that are used in Hydra are given in Figure \ref{figSymbols}.
 {\symb{/}} &{\symb{*}} &{\symb{\^}} \\
 {\symb{;}} & & \\
 \end{tabular}
-\end{center}
 \caption{\label{figSymbols} Symbols used in Hydra.}
 \end{figure}
-
-Single-line comments begin with {\symb{{$-$}{$-$}}}. Multiple-line comments
-are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
-
-Non-terminals are enclosed between $\langle$ and $\rangle$. 
-The symbols  {\arrow}  (production),  {\delimit}  (union) 
-and {\emptyP} (empty rule) belong to the BNF notation. 
-All other symbols are terminals.
 
 \section{Abstract Syntax}
 
 The abstract syntax of Hydra is given in Figure \ref{figAbstractSyntax}. The
-Haskell data type definition was derived from the concrete syntax defined in
-previous section. Not that the representation is untyped; that is, it allows
-for terms that are syntactically correct but not necessarily type correct.
+Haskell algebraic data type definition is derived from the concrete syntax
+defined in previous section. Note that the representation is untyped; that is,
+it allows for terms that are not type correct.
 
 \begin{figure}
 \begin{code}
@@ -213,38 +211,52 @@ data Expr  =  ExprOr        Expr    Expr
 \caption{\label{figAbstractSyntax} Abstract syntax of Hydra.}
 \end{figure}
 
+
+The data type |Ident| is used to represent identifiers, specifically, signal
+variable and built-in signal function identifiers. The data type |HsExpr| is
+used to represent antiquoted Haskell expressions.
+
+The data type |SigRel| is used to represent signal relations. The data type
+has a single constructor. Given a pattern and a list of equations the
+constructor constructs the corresponding signal relation.
+
+The data type |SigFun| is used to represent signal functions. The data type
+has a single constructor. Given a pattern and a signal expression the
+constructor constructs the corresponding signal function.
+
+The data type |Pattern| is used to represent patterns that bind signal
+variables. There are four ways to construct a pattern. The constructor
+|PatWild| constructs the wild card pattern. Given an identifier the
+constructor |PatName| constructs a pattern that binds the corresponding single
+signal variable. The constructor |PatUnit| constructs the pattern that only
+matches unit signals. The constructor |PatPair| constructs a pattern that
+matches a pair of patterns.
+
+The data type |Equation| is used to represent noncausal equations and local
+signal variable declarations. The constructor |EquEqual| constructs an
+equation that asserts equality of two signal expressions. The constructor
+|EquInit| constructs an initialisation equation that asserts equality of two
+signal expressions. The constructor |EquLocal| constructs a local variable
+declaration. The constructor |EquSigRelApp| constructs a signal relation
+application that applies the signal relation referred in the antiquoted
+Haskell expression to the given signal expression.
+
+The data type |Expr| is used to represent signal expressions. Common
+mathematical operations, identifiers, antiquoted Haskell expressions, integer
+and real constants, unit signals, and pairs of signals can be used to
+construct signal expressions (see Figure \ref{figAbstractSyntax} for details).
+
 \section{Desugaring}
 
 Before we turn our attention to the translation of the untyped abstract syntax
-into the typed intermediate representation, we describe a desugaring
-translation of Hydra. The goal of this translation is to represent a Hydra
-model with fewer constructors. This in turn allows for a simpler typed
+into the typed abstract syntax, we describe a translation that desugars all
+equations that assert equality of signal pairs into equations asserting
+equality of scalar signals. This translation allows for a simpler typed
 intermediated representation as we show in the following section. The
-translation is given as a Haskell function working with the abstract syntax of
-Hydra.
+translation is given in Figure \ref{figDesugaring} as a Haskell function
+working with the untyped abstract syntax of Hydra.
 
-We break down the translation into four simple desugaring stages:
-\begin{code}
-desugar  ::  SigRel -> SigRel
-desugar  =   desugarFlowSigRel . desugarConnectSigRel . desugarPairSigRel . desugarLocalSigRel
-\end{code}
-
-In the first stage, we desugar all local signal variable definitions that bind
-multiple variables into the definitions that only bind a single variable.
-
-\begin{code}
-desugarLocalSigRel                   ::  SigRel -> SigRel
-desugarLocalSigRel (SigRel pat eqs)  =   SigRel pat [ desugarLocalEquation eq | eq <- eqs ]
-\end{code}
-
-\begin{code}
-desugarLocalEquation                             ::  Equation -> [Equation]
-desugarLocalEquation (EquLocal li1 (li2 : lis))  =   (EquLocal li1 []) : desugarLocalEquation (EquLocal li2 lis)
-desugarLocalEquation (eq)                        =   [eq]
-\end{code}
-
-In the second stage, we desugar all equations that assert equality of signal
-pairs into equations asserting equality of scalar signals.
+\begin{figure}[H]
 
 \begin{code}
 desugarPairSigRel                   ::  SigRel -> SigRel
@@ -258,180 +270,113 @@ desugarPairEquation (EquInit   (Pair e1 e2) (Pair e3 e4))   =   desugarPairEquat
 desugarPairEquation (eq)                                    =   [eq]
 \end{code}
 
-In the third stage, we desugar |connect| and |connect flow| equations into the
-equality constrains and sum to zero equations respectively.
+\caption{\label{figDesugaring} Desugaring translation of Hydra.}
 
+\end{figure}
+
+
+\section{Typed Abstract Syntax}
+
+The typed abstract syntax that embodies the type system of Hydra is given in
+Figure \ref{figTypedRepresentation} as a Haskell generalised algebraic data
+type definition. Note that the types |Signal alpha| and |PrimSF alpha beta|
+are genuine generalised algebraic data types, while the data types |SR alpha|,
+|SF alpha beta| and |Equation| are algebraic data types that use the
+generalised algebraic data type notation for consistency.
+
+\begin{figure}[H]
 \begin{code}
-desugarConnectSigRel                     ::  SigRel -> SigRel
-desugarConnectSigRel (SigRel pat1 eqs1)  =   SigRel pat1 (concat [ desugarConnectEquation eq | eq <- eqs1 ])
-\end{code}
+data SR alpha where
+  SR      ::  (Signal alpha -> [Equation]) -> SR alpha
+  Switch  ::  SR alpha -> SF alpha Bool -> (alpha -> SR alpha) -> SR alpha
 
-\begin{code}
-desugarConnectEquation                               ::  Equation -> [Equation]
-desugarConnectEquation (EquConnect li1 li2 lis)      =   let   vs    =  [ ExprVar li | li <- (li1 : li2 : lis) ]
-                                                         in    zipWith EquEqual vs (tail vs)
-desugarConnectEquation (EquConnectFlow li1 li2 lis)  =   let   vs    =  [ ExprVar li | li <- (li1 : li2 : lis) ]
-                                                         in    [EquEqual  (foldr1 ExprAdd vs) (ExprDouble 0)]
-desugarConnectEquation (eq)                          =   [eq]
-\end{code}
-
-In the fourth stage, we desugar |flow| signal variable declarations by
-negating every occurrence of such variables.
-
-\begin{code}
-desugarFlowSigRel                     ::  SigRel -> SigRel
-desugarFlowSigRel (SigRel pat1 eqs1)  =   let  flowVars = desugarFlowFindPattern pat1
-                                               pat2 = desugarFlowForgetPattern pat1
-                                               eqs2 = foldr (\s eqs -> desugarFlowEquations (s,eqs)) eqs1 flowVars
-                                          in   SigRel pat2 eqs2
-\end{code}
-
-\begin{code}
-desugarFlowFindPattern                                 ::  Pattern -> [String]
-desugarFlowFindPattern (PatUnit)                       =   []
-desugarFlowFindPattern (PatWild)                       =   []
-desugarFlowFindPattern (PatName QualEmpty _)           =   []
-desugarFlowFindPattern (PatName QualFlow (LIdent s1))  =   [s1]
-desugarFlowFindPattern (PatPair p1 p2)                 =   desugarFlowFindPattern p1 ++ desugarFlowFindPattern p2
-\end{code}
-
-\begin{code}
-desugarFlowForgetPattern                                ::  Pattern -> Pattern
-desugarFlowForgetPattern (pat@(PatUnit))                =   pat
-desugarFlowForgetPattern (pat@(PatWild))                =   pat
-desugarFlowForgetPattern (pat@(PatName QualEmpty li1))  =   pat
-desugarFlowForgetPattern (pat@(PatName QualFlow  li1))  =   pat
-desugarFlowForgetPattern (pat@(PatTuple pats))          =   PatTuple [ desugarFlowForgetPattern p | p <- pats ]
-\end{code}
-
-\begin{code}
-desugarFlowEquations                                             ::  (String,[Equation]) -> [Equation]
-desugarFlowEquations (_  ,  [])                                  =   []
-desugarFlowEquations (s  ,  (EquSigRelApp hs1 e1) : eqs)         =   (EquSigRelApp hs1 (desugarFlowExpr (s,e1)))                   :  desugarFlowEquations (s,eqs)
-desugarFlowEquations (s  ,  (EquEqual e1 e2) : eqs)              =   (EquEqual (desugarFlowExpr (s,e1)) (desugarFlowExpr (s,e2)))  :  desugarFlowEquations (s,eqs)
-desugarFlowEquations (s  ,  (EquInit e1 e2) : eqs)               =   (EquInit (desugarFlowExpr (s,e1)) (desugarFlowExpr (s,e2)))   :  desugarFlowEquations (s,eqs)
-desugarFlowEquations (s  ,  eq@(EquLocal (LIdent s1) []) : eqs)  =   if s1 == s then(eq : eqs) else eq : desugarFlowEquations (s,eqs)
-\end{code}
-
-\begin{code}
-desugarFlowExpr                                ::  (String,Expr) -> Expr
-desugarFlowExpr (s,e@(ExprVar (LIdent s1)))    =   if s1 == s then ExprNeg e else e
-desugarFlowExpr (s,ExprAdd  e1 e2)             =   ExprAdd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprSub  e1 e2)             =   ExprSub     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprDiv  e1 e2)             =   ExprDiv     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprMul  e1 e2)             =   ExprMul     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprPow  e1 e2)             =   ExprPow     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprOr   e1 e2)             =   ExprOr      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprAnd  e1 e2)             =   ExprAnd     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprLt   e1 e2)             =   ExprLt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprLte  e1 e2)             =   ExprLte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprGt   e1 e2)             =   ExprGt      (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprGte  e1 e2)             =   ExprGte     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprApp  e1 e2)             =   ExprApp     (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprPair e1 e2)             =   ExprPair    (desugarFlowExpr (s,e1))  (desugarFlowExpr (s,e2))
-desugarFlowExpr (s,ExprNeg  e1)                =   ExprNeg     (desugarFlowExpr (s,e1))
-desugarFlowExpr (_,e)                         =   e
-\end{code}
-
-\section{Typed Intermediate Representation}
-
-The following typed representation of Hydra models embodies the type system of
-Hydra.
-
-\begin{code}
-data SR a where
-  SR      ::  (Signal a -> [Equation]) -> SR a
-  Switch  ::  SR a -> SF a Bool -> (a -> SR a) -> SR a
-
-data SF a b where
-  SF :: (Signal a -> Signal b) -> SF a b
+data SF alpha beta where
+  SF :: (Signal alpha -> Signal beta) -> SF alpha beta
 
 data Equation where
-  Local :: (Signal Double -> [Equation]) -> Equation
-  Equal :: Signal Double -> Signal Double -> Equation
-  Init  :: Signal Double -> Signal Double -> Equation
-  App   :: SR a -> Signal a -> Equation
+  Local  ::  (Signal Real -> [Equation]) -> Equation
+  Equal  ::  Signal Real -> Signal Real -> Equation
+  Init   ::  Signal Real -> Signal Real -> Equation
+  App    ::  SR alpha -> Signal alpha -> Equation
 
-data Signal a where
+data Signal alpha where
   Unit     ::  Signal ()
-  Time     ::  Signal Double
-  Const    ::  a -> Signal a
-  Pair     ::  Signal a -> Signal b -> Signal (a,b)
-  PrimApp  ::  PrimSF a b -> Signal a -> Signal b
+  Time     ::  Signal Real
+  Const    ::  alpha -> Signal alpha
+  Pair     ::  Signal alpha -> Signal beta -> Signal (alpha,beta)
+  PrimApp  ::  PrimSF alpha beta -> Signal alpha -> Signal beta
 
-data PrimSF a b where
-  Der    ::  PrimSF Double Double
+data PrimSF alpha beta where
+  Der    ::  PrimSF Real Real
   Or     ::  PrimSF (Bool,Bool) Bool
   And    ::  PrimSF (Bool,Bool) Bool
   Not    ::  PrimSF Bool Bool
-  Lt     ::  PrimSF Double Bool
-  Lte    ::  PrimSF Double Bool
-  Gt     ::  PrimSF Double Bool
-  Gte    ::  PrimSF Double Bool
-  Exp    ::  PrimSF Double Double
-  Sqrt   ::  PrimSF Double Double
-  Log    ::  PrimSF Double Double
-  Sin    ::  PrimSF Double Double
-  Tan    ::  PrimSF Double Double
-  Cos    ::  PrimSF Double Double
-  Asin   ::  PrimSF Double Double
-  Atan   ::  PrimSF Double Double
-  Acos   ::  PrimSF Double Double
-  Sinh   ::  PrimSF Double Double
-  Tanh   ::  PrimSF Double Double
-  Cosh   ::  PrimSF Double Double
-  Asinh  ::  PrimSF Double Double
-  Atanh  ::  PrimSF Double Double
-  Acosh  ::  PrimSF Double Double
-  Abs    ::  PrimSF Double Double
-  Sgn    ::  PrimSF Double Double
-  Add    ::  PrimSF (Double,Double) Double
-  Mul    ::  PrimSF (Double,Double) Double
-  Div    ::  PrimSF (Double,Double) Double
-  Pow    ::  PrimSF (Double,Double) Double
+  Lt     ::  PrimSF Real Bool
+  Lte    ::  PrimSF Real Bool
+  Gt     ::  PrimSF Real Bool
+  Gte    ::  PrimSF Real Bool
+  Exp    ::  PrimSF Real Real
+  Sqrt   ::  PrimSF Real Real
+  Log    ::  PrimSF Real Real
+  Sin    ::  PrimSF Real Real
+  Tan    ::  PrimSF Real Real
+  Cos    ::  PrimSF Real Real
+  Asin   ::  PrimSF Real Real
+  Atan   ::  PrimSF Real Real
+  Acos   ::  PrimSF Real Real
+  Sinh   ::  PrimSF Real Real
+  Tanh   ::  PrimSF Real Real
+  Cosh   ::  PrimSF Real Real
+  Asinh  ::  PrimSF Real Real
+  Atanh  ::  PrimSF Real Real
+  Acosh  ::  PrimSF Real Real
+  Abs    ::  PrimSF Real Real
+  Sgn    ::  PrimSF Real Real
+  Add    ::  PrimSF (Real,Real) Real
+  Mul    ::  PrimSF (Real,Real) Real
+  Div    ::  PrimSF (Real,Real) Real
+  Pow    ::  PrimSF (Real,Real) Real
 \end{code}
+\caption{\label{figTypedRepresentation} Typed intermediate representation of Hydra.}
+\end{figure}
+
+\section{From Untyped to Typed Abstract Syntax}
+
+The translation rules that transform a model in the untyped representation
+into the corresponding model in the typed representation are given in Figure
+\ref{figSigRelSigFunTrans} and Figure \ref{figSigTrans}. These rules translate
+an untyped term into Haskell code that builds the corresponding typed term.
+The pattern matching semantics in the left-hand side of the translation rules
+are that of Haskell.
+
+Note that there are no translation rules that generate the |Switch|
+constructor. The functional-level combinator |switch|, which was introduced in
+Chapter \ref{chapHydra}, generates the |Switch| constructor of the typed
+abstract syntax. Specifically, the |switch| combinator is defined as follows.
 
 \begin{code}
-instance Num (Signal Double) where
-  (+) e1 e2     = PrimApp Add (Pair e1 e2)
-  (*) e1 e2     = PrimApp Mul (Pair e1 e2)
-  (-) e1 e2     = PrimApp Add (Pair e1 ((Const (-1)) * e2))
-  negate e1     = (Const (-1)) * e1
-  abs e1        = PrimApp Abs e1
-  signum e1     = PrimApp Sgn e1
-  fromInteger i = Const (fromIntegral i)
-
-instance Fractional (Signal Double) where
-  (/) e1 e2 = PrimApp Div (Pair e1 e2)
-  recip e1 = 1 / e1
-  fromRational r = Const (fromRational r)
-
-instance Floating (Signal Double) where
-  pi          = Const pi
-  exp   e1    = PrimApp Exp   e1
-  log   e1    = PrimApp Log   e1
-  sqrt  e1    = PrimApp Sqrt  e1
-  sin   e1    = PrimApp Sin   e1
-  cos   e1    = PrimApp Cos   e1
-  tan   e1    = PrimApp Tan   e1
-  asin  e1    = PrimApp Asin  e1
-  acos  e1    = PrimApp Acos  e1
-  atan  e1    = PrimApp Atan  e1
-  sinh  e1    = PrimApp Sinh  e1
-  cosh  e1    = PrimApp Cosh  e1
-  tanh  e1    = PrimApp Tanh  e1
-  asinh e1    = PrimApp Asinh e1
-  acosh e1    = PrimApp Acosh e1
-  atanh e1    = PrimApp Atanh e1
-  (**) e1 e2  = PrimApp Pow   (Pair e1 e2)
+switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
+switch = Switch
 \end{code}
 
-\section{From Untyped to Typed Representation}
+The typed abstract syntax embodies Hydra's type system features that were only
+informally introduced in earlier sections of the thesis. Let us outline
+several key features. A type of a signal relation is determined by its
+pattern. A type of a structurally-dynamic signal relation remains unchanged
+despite the structural changes. Signal relation and signal function
+applications must be well typed. This includes the application of the built-in
+equality signal relation.
 
-In this section we present translation rules transforming a model in the
-untyped representation into the corresponding model in the typed
-representation.
+Note, however, that the type system says nothing about solvability of signal
+relations. It is possible to define a type correct signal relation that does
+not have a solution or has more than one solution. It is the modeller's
+responsibility to define a signal relation that has an unique solution. Recent
+work in the context of the FHM framework makes progress in the direction of
+more expressive type systems incorporating the solvability aspect of noncausal
+models \citep{Nilsson2008a,Capper2010a}. Incorporation of the aforementioned
+work in Hydra is a subject of future research.
 
+\begin{figure}
 \begin{code}
 translateSR (SigRel  pattern  equations)   =  SR  (\ translatePat (pattern)  ->  translateEqs (equations))
 translateSF (SigFun  pattern  expression)  =  SF  (\ translatePat (pattern)  ->  translateExp (expression))
@@ -439,51 +384,156 @@ translateSF (SigFun  pattern  expression)  =  SF  (\ translatePat (pattern)  -> 
 
 \begin{code}
 translatePat (PatWild)                =  _
-translatePat (PatName _ (LIdent s1))  =  translateHs (s1)
+translatePat (PatName (Ident s))      =  translateHs (s)
 translatePat (PatUnit)                =  Unit
 translatePat (PatPair pat1 pat2)      =  Pair (translatePat pat1) (translatePat pat2)
 \end{code}
 
 \begin{code}
 translateEqs ([])                                   =  []
-translateEqs ((EquSigRelApp (HsExpr s1) e1) : eqs)  =  (App    (translateHs s1)   (translateExp e1))  :  translateEqs (eqs)
+translateEqs ((EquSigRelApp (HsExpr s) e) : eqs)    =  (App    (translateHs s)    (translateExp e))   :  translateEqs (eqs)
 translateEqs ((EquEqual  e1 e2) : eqs)              =  (Equal  (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
 translateEqs ((EquInit   e1 e2) : eqs)              =  (Init   (translateExp e1)  (translateExp e2))  :  translateEqs (eqs)
-translateEqs ((EquLocal (LIdent s1) _) : eqs)       =  [Local  (\ (translateHs s1) -> (translateEqs eqs))]
+translateEqs ((EquLocal (Ident s)) : eqs)           =  [Local  (\ (translateHs s) -> (translateEqs eqs))]
+\end{code}
+
+\caption{\label{figSigRelSigFunTrans} Translation of untyped signal functions
+and signal relations into typed signal functions and signal relations. The
+translation rule |translateHs| takes a string in the concrete syntax of
+Haskell and generates the corresponding Haskell code. The translation rules
+|translateExp| and |translateIdent| are given in Figure \ref{figSigTrans}.}
+
+\end{figure}
+
+\begin{figure}
+\begin{code}
+translateExp (ExprAnti (HsExpr s1))             =  Const (translateHs (s1))
+translateExp (ExprVar (Ident s))                =  translateIdent (s1)
+translateExp (ExprAdd e1 e2)                    =  PrimApp Add (Pair (translateExp e1)  (translateExp e1))
+translateExp (ExprSub e1 e2)                    =  PrimApp Sub (Pair (translateExp e1)  (translateExp e1))
+translateExp (ExprDiv e1 e2)                    =  PrimApp Div (Pair (translateExp e1)  (translateExp e1))
+translateExp (ExprMul e1 e2)                    =  PrimApp Mul (Pair (translateExp e1)  (translateExp e1))
+translateExp (ExprPow e1 e2)                    =  PrimApp Pow (Pair (translateExp e1)  (translateExp e1))
+translateExp (ExprNeg e1)                       =  PrimApp Neg (translateExp e1)
+translateExp (ExprApp (ExprAnti (HsExpr s)) e)  =  (case translateHs (s) of SF f -> f) (translateExp e)
+translateExp (ExprApp e1 e2)                    =  (translateExp e1) (translateExp e2)
+translateExp (ExprInteger i1)                   =  Const (fromIntegral i1)
+translateExp (ExprDouble d1)                    =  Const d1
+translateExp (ExprUnit)                         =  Unit
+translateExp (ExprPair e1 e2)                   =  Pair  (translateExp e1) (translateExp e2)
+translateExp (ExprOr  e1 e2)                    =  PrimApp Or   (translateExp e1, translateExp e2)
+translateExp (ExprAnd e1 e2)                    =  PrimApp And  (translateExp e1, translateExp e2)
+translateExp (ExprLt  e1  e2)                   =  PrimApp Lt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprLte e1  e2)                   =  PrimApp Lte  ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprGt  e1  e2)                   =  PrimApp Gt   ((translateExp e1)  -  (translateExp e2))
+translateExp (ExprGte e1  e2)                   =  PrimApp Gte  ((translateExp e1)  -  (translateExp e2))
 \end{code}
 
 \begin{code}
-translateExp (ExprAnti (HsExpr s1))      =  translateHs (s1)
-translateExp (ExprVar (LIdent "time"))   =  Time
-translateExp (ExprVar (LIdent "true"))   =  Const True
-translateExp (ExprVar (LIdent "false"))  =  Const False
-translateExp (ExprVar (LIdent "not"))    =  PrimApp Not
-translateExp (ExprVar (LIdent s1))       =  translateHs (s1)
-translateExp (ExprAdd e1 e2)             =  (translateExp e1)  +   (translateExp e2)
-translateExp (ExprSub e1 e2)             =  (translateExp e1)  -   (translateExp e2)
-translateExp (ExprDiv e1 e2)             =  (translateExp e1)  /   (translateExp e2)
-translateExp (ExprMul e1 e2)             =  (translateExp e1)  *   (translateExp e2)
-translateExp (ExprPow e1 e2)             =  (translateExp e1)  **  (translateExp e2)
-translateExp (ExprNeg e1)                =  negate (translateExp e1)
-translateExp (ExprApp e1 e2)             =  (translateExp e1) (translateExp e2)
-translateExp (ExprInteger i1)            =  Const (fromIntegral i1)
-translateExp (ExprDouble d1)             =  Const d1
-translateExp (ExprUnit [])               =  Unit
-translateExp (ExprPair e1 e2)            =  Pair  (translateExp e1) (translateExp e2)
-translateExp (ExprOr  e1 e2)             =  PrimApp Or   (translateExp e1, translateExp e2)
-translateExp (ExprAnd e1 e2)             =  PrimApp And  (translateExp e1, translateExp e2)
-translateExp (ExprLt  e1  e2)            =  PrimApp Lt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprLte e1  e2)            =  PrimApp Lte  ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprGt  e1  e2)            =  PrimApp Gt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprGte e1  e2)            =  PrimApp Gte  ((translateExp e1)  -  (translateExp e2))
+translateIdent (Ident "time")    =  Time
+translateIdent (Ident "true")    =  Const True
+translateIdent (Ident "false")   =  Const False
+translateIdent (Ident "not")     =  PrimApp Not
+translateIdent (Ident "der")     =  PrimApp Der
+translateIdent (Ident "exp")     =  PrimApp Exp
+translateIdent (Ident "sqrt")    =  PrimApp Sqrt
+translateIdent (Ident "log")     =  PrimApp Log
+translateIdent (Ident "sin")     =  PrimApp Sin
+translateIdent (Ident "tan")     =  PrimApp Tan
+translateIdent (Ident "cos")     =  PrimApp Cos
+translateIdent (Ident "asin")    =  PrimApp Asin
+translateIdent (Ident "atan")    =  PrimApp Atan
+translateIdent (Ident "acos")    =  PrimApp Acos
+translateIdent (Ident "sinh")    =  PrimApp Sinh
+translateIdent (Ident "tanh")    =  PrimApp Tanh
+translateIdent (Ident "cosh")    =  PrimApp Cosh
+translateIdent (Ident "asinh")   =  PrimApp Asinh
+translateIdent (Ident "atanh")   =  PrimApp Atanh
+translateIdent (Ident "acosh")   =  PrimApp Acosh
+translateIdent (Ident "abs")     =  PrimApp Abs
+translateIdent (Ident "signum")  =  PrimApp Sgn
+translateIdent (Ident s)         =  translateHs (s)
 \end{code}
+\caption{\label{figSigTrans} Translation of untyped signal expressions into typed signal expressions.}
+\end{figure}
 
 \section{Ideal Denotational Semantics}
 
-Note that the domains of the following denotational semantics of Hydra are the
-same as the conceptual definitions of signals, signal functions, and signal
-relations given in Chapter \ref{chapHydra}.
+A formal language definition has a number of advantages over an informal
+presentation. A formal semantics does not leave room for ambiguity and allows
+different implementers to implement the same language. In addition, a formally
+defined semantics paves the way for proving useful statements about the
+language.
 
+There are a number different approaches to specification of formal semantics.
+Two most widely used approaches are operational semantics \citep{Plotkin2004a}
+and denotation semantics \citep{Scott1982a}. An operational semantics formally
+defines an abstract machine and how the language terms are executed on the
+machine. A denotational semantics formally defines translation of the language
+terms into terms in a formalism that is well understood (often a filed of
+mathematics).
+
+One characteristic of noncausal, modelling languages setting them apart from
+traditional programming languages is that concrete implementations of
+noncausal languages only aim to approximate the model defined at the source
+level. For example, consider the system of equations modelling the simple
+electrical circuit given in Chapter \ref{chapBackground}. In the process of
+deriving the simulation code we introduced a number of approximations. The
+continuous real numbers were approximated using the double-precision machine
+floating point numbers and the system of equations was approximated using the
+Haskell code implementing the forward Euler method.
+
+Implementations of noncausal, modelling languages allow modellers to choose
+floating point representations (e.g., single or double precision), symbolic
+processing methods and numerical simulation methods that needs to be used
+during the simulation. This amounts to allowing modellers to choose the
+combination model approximations prior to simulation.
+
+The fact that the implementations are only expected to approximate noncausal
+models needs to be taken into account when defining a formal semantics for a
+noncausal language. In particular, definition of operational semantics is
+problematic as it is hard to account for myriad of approximation combinations
+that were outlined earlier. One option is to parameterise the operational
+semantics on approximations. This is feasible, but leaves bulk of operational
+details unspecified defeating the purpose of an operational semantics.
+
+For the reasons outlined above, and because the concept of first-class models,
+which allows for higher-order and structurally-dynamic modelling, is not
+predicated on particular approximations used during simulation, we opted to
+use \emph{ideal} denotational semantics for formally defining the Hydra
+language. By referring to the semantics as ideal, we emphasise that concrete
+implementations are only expected to approximate the denotational semantics.
+
+The primary goal of the denotational semantics that is given in this section
+is to precisely and concisely communicate Hydra's definition to modelling
+language designers and implementers, in order to facilitate incorporation
+Hydra's key features in other noncausal modelling languages.
+
+Although not considered in this thesis, the ideal denotational semantics of
+Hydra can also be used to verify concrete implementations of Hydra with
+certain approximations. In addition, the denotational semantics can be used to
+check whether concrete simulation results correspond to the source-level
+noncausal model, again under certain approximation; for example, by using the
+absolute error tolerance of the numerical simulation. These two applications
+of the ideal denotational semantics are subject of future work.
+
+The ideal denotational semantics of Hydra are given in Figure
+\ref{figSigRelSigFunSem} and in Figure \ref{figSigSem}. Note that the domains
+of the denotational semantics are the same as the conceptual definitions of
+signals, signal functions, and signal relations given in Chapter
+\ref{chapHydra}. Specifically, signal relations are mapped to functions from
+starting time and signal to second-order logic proposition, signal functions
+are mapped to functions from signal to signal, and signals are mapped to
+function from time to value. Time is represented as a real number.
+
+A signal relation denotation may involve existentially quantified function
+symbols (i.e., signals). This is what makes the denotations second-order logic
+propositions (i.e., not expressible in first-order logic). In other words,
+solving of a signal relation can be understood as proving of \emph{existence}
+of signals that satisfy the given constrains (see Figure
+\ref{figSigRelSigFunSem} for details).
+
+\begin{figure}
 \begin{code}
 semSR (SR f)            =   \t0 s -> semEqs ((0,t0,f s))
 semSR (Switch sr sf f)  =   \t0 s -> {-" \forall \, t \in \mathbb{R} . \, "-} t >= t0 =>
@@ -506,8 +556,10 @@ semEqs  (i  ,  t0  ,  (Equal s1 s2)  :  eqs  )  =   ({-" \forall \, t \in \mathb
 semEqs  (i  ,  t0  ,  (Init  s1 s2)  :  eqs  )  =   ({-" \forall \, t \in \mathbb{R} . \, "-}  t == t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
 semEqs  (i  ,  t0  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t0 s)                         &&  semEqs  (i,t0,eqs)
 \end{code}
+\caption{\label{figSigRelSigFunSem} Denotations for signal relations, signal functions and equations.}
+\end{figure}
 
-
+\begin{figure}
 \begin{code}
 semSig (Unit)                       =   \_  ->  ()
 semSig (Time)                       =   \t  ->  t
@@ -542,5 +594,6 @@ semSig (PrimApp Lt s)               =   \t  ->  ((semSig s)   t)  <   0
 semSig (PrimApp Lte s)              =   \t  ->  ((semSig s)   t)  <=  0
 semSig (PrimApp Gt s)               =   \t  ->  ((semSig s)   t)  >   0
 semSig (PrimApp Gte s)              =   \t  ->  ((semSig s)   t)  >=  0
-
 \end{code}
+\caption{\label{figSigSem} Denotations for signals}
+\end{figure}
