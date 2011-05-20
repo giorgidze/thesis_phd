@@ -2,20 +2,22 @@
 \label{chapImplementation}
 
 \section{Embedding}
-\label{sec:embedding}
+\label{secEmbedding}
 
 Hydra is implemented as a Haskell embedded DSL. We use quasiquoting, a recent
 Haskell extension implemented in Glasgow Haskell Compiler (GHC), to provide a
 convenient surface (i.e., concrete) syntax for Hydra. The implementation uses
 quasiquoting to generate the typed representation of Hydra models from strings
-in the concrete syntax. Functions performing the aforementioned
-transformation, so called quasiquoters, are specified in the opening
-quasiquotes. In GHC, a quasiquoter generates Haskell code using using Template
-Haskell \citep{Sheard2002}.
+in the concrete syntax. A function performing the aforementioned
+transformation, a so-called quasiquoter, is specified in the opening
+quasiquote. In GHC, a quasiquoter generates Haskell code using using the
+Template Haskell \citep{Sheard2002} representation of Haskell programs.
+Template Haskell is a compile-time meta programming facility for Haskell
+implemented in GHC.
 
-GHC executes quasiquoters before type checking, at Haskell compile time. As
-the typed intermediate representation fully embodies the type system of Hydra,
-we effectively delegate the task of type checking to the host language type
+GHC executes a quasiquoter before type checking, at Haskell compile time. As
+the typed abstract syntax of Hydra fully embodies the type system of Hydra, we
+effectively delegate the task of type checking to the host language type
 checker. This approach reduces the language specification and implementation
 effort by reusing the host language type system and the host language type
 checker. However, the disadvantage of this approach is the fact that typing
@@ -24,28 +26,103 @@ errors are not domain specific.
 The implementation of Hydra provides two quasiquoters: the |rel| quasiquoter
 for generating typed signal relations, and the |fun| quasiquoter for
 generating typed signal functions. The implementation of the quasiquoters is
-broken down into three stages: pasring, desugaring and translation into the
-typed representation.
+broken down into three stages: parsing, desugaring and translation into the
+typed abstract syntax.
 
 Firstly, the string in the concrete syntax of Hydra is parsed and the
 corresponding untyped representation is generated as an abstract syntax tree
 (AST). The BNF Converter (BNFC), a compiler front-end generator from a
-Labelled BNF grammar \citep{BNFC2004}, is used to generate the parser and the
-AST data type. The syntax and the AST data type is exactly the same as given
-in the language definition in Chapter \ref{chapDefinition}. In addition, we
-use BNFC to generate a layout resolver allowing for list of equations in |rel|
+labelled BNF grammar \citep{BNFC2004}, is used to generate the parser and the
+AST data type. The labelled BNF grammar of Hydra is given in Figure
+\ref{figGrammar}. The syntax that the generated parser implements and the
+generated AST data type is exactly the same as given in the language
+definition in Chapter \ref{chapDefinition}. In addition, we use BNFC to
+generate Hydra's layout resolver allowing for list of equations in |rel|
 quasiquotes to be constructed without curly braces and semicolons. The layout
 rules are the same as for Haskell.
 
-Secondly, the untyped representation is desugarred exactly as it is presented
+\begin{figure}
+\begin{verbatim}
+entrypoints SigRel, SigFun;
+
+SigRel.         SigRel    ::= Pattern "->" "{" [Equation] "}" ;
+
+SigFun.         SigFun    ::= Pattern "->" "{" Expr       "}" ;
+
+PatWild.        Pattern   ::= "_" ;
+PatName.        Pattern   ::= Ident ;
+PatUnit.        Pattern   ::= "()" ;
+PatPair.        Pattern   ::= "(" Pattern "," Pattern ")" ;
+
+EquEqual.       Equation  ::=        Expr "=" Expr ;
+EquInit.        Equation  ::= "init" Expr "=" Expr ;
+EquLocal.       Equation  ::= "local" Ident;
+EquSigRelApp.   Equation  ::= HsExpr "<>" Expr ;
+
+ExprOr.         Expr1     ::= Expr1 "||" Expr2 ;
+ExprAnd.        Expr2     ::= Expr2 "&&" Expr3 ;
+ExprLt.         Expr3     ::= Expr4 "<"  Expr4 ;
+ExprLte.        Expr3     ::= Expr4 "<=" Expr4 ;
+ExprGt.         Expr3     ::= Expr4 ">"  Expr4 ;
+ExprGte.        Expr3     ::= Expr4 ">=" Expr4 ;
+ExprAdd.        Expr4     ::= Expr4 "+"  Expr5 ;
+ExprSub.        Expr4     ::= Expr4 "-"  Expr5 ;
+ExprDiv.        Expr5     ::= Expr5 "/"  Expr6 ;
+ExprMul.        Expr5     ::= Expr5 "*"  Expr6 ;
+ExprPow.        Expr6     ::= Expr6 "^"  Expr7 ;
+ExprNeg.        Expr6     ::= "-" Expr7 ;
+ExprApp.        Expr7     ::= Expr7 Expr8 ;
+ExprVar.        Expr8     ::= Ident ;
+ExprAnti.       Expr8     ::= HsExpr ;
+ExprInteger.    Expr8     ::= Integer ;
+ExprDouble.     Expr8     ::= Double ;
+ExprUnit.       Expr8     ::= "()" ;
+ExprPair.       Expr8     ::= "(" Expr "," Expr ")" ;
+_.              Expr      ::= Expr1 ;
+_.              Expr1     ::= Expr2 ;
+_.              Expr2     ::= Expr3 ;
+_.              Expr3     ::= Expr4 ;
+_.              Expr4     ::= Expr5 ;
+_.              Expr5     ::= Expr6 ;
+_.              Expr6     ::= Expr7 ;
+_.              Expr7     ::= Expr8 ;
+_.              Expr8     ::= "(" Expr ")" ;
+
+separator Equation ";" ;
+
+comment "--" ;
+comment "{-" "-}" ;
+
+token HsExpr ('$' (char - '$')* '$') ;
+
+layout "->" ;
+\end{verbatim}
+
+\caption{\label{figGrammar} Labelled BNF grammar of Hydra. This labelled BNF
+grammar is used to generate Hydra's parser, untyped abstract syntax and layout
+resolver.}
+
+\end{figure}
+
+Secondly, the untyped representation is desugared exactly as it is presented
 in the language definition (see Chapter \ref{chapDefinition}).
 
-Thirdly, the desugared untyped representation is translated into the typed
-representation. This step involves generation of Haskell code using Template
-Haskell \citep{Sheard2002}.
+Finally, the desugared untyped representation is translated into the typed
+representation. This step implements the corresponding translation rules given
+in Chapter \ref{chapDefinition}. Note that the translation rules generate
+Haskell code. This is implemented by using the Template Haskell facility of
+GHC.
 
 We illustrate the quasiquoting process using the following signal relation
-modelling the parametrised van der Pol oscillator:
+that models a parametrised van der Pol oscillator. The oscillator model is
+given in Figure \ref{figVanDerPol}. After the parsing stage the quasiquoted
+signal relation turns into the AST that is given in Figure
+\ref{figVanDerPolAst}. After the desugaring stage we get the AST that is given
+in Figure \ref{figVanDerPolAstDesugar}. After translation into the typed
+representation we get the typed AST that is given in Figure
+\ref{figVanDerPolAstTyped}.
+
+\begin{figure}
 
 \begin{code}
 vanDerPol :: Double -> SR ()
@@ -57,9 +134,13 @@ vanDerPol mu = [rel| () ->
 |]
 \end{code}
 
-After the parsing stage the quasiquoted signal relation turns into the
-following AST:
+\caption{\label{figVanDerPol} Signal relation modelling a parametrised van der
+Pol oscillator.}
 
+\end{figure}
+
+\begin{figure}
+\small
 \begin{code}
 SigRel  PatUnit
         [  EquLocal   (Ident "x") [Ident "y"]
@@ -71,14 +152,20 @@ SigRel  PatUnit
                       (ExprAdd  (ExprNeg (ExprVar (Ident "x")))
                                 (ExprMul  (ExprMul  (ExprAnti (HsExpr "$mu$"))
                                                     (ExprSub  (ExprInteger 1)
-                                                              (ExprMul  (ExprVar (Ident "x"))
-                                                                        (ExprVar (Ident "x")))))
+                                                              (ExprMul
+                                                                 (ExprVar (Ident "x"))
+                                                                 (ExprVar (Ident "x")))))
                                           (ExprVar (Ident "x"))))
         ]
 \end{code}
 
-After the desugaring stage we get the following AST:
+\caption{\label{figVanDerPolAst} Untyped abstract syntax tree representing the
+|vanDerPol| signal relation.}
 
+\end{figure}
+
+\begin{figure}
+\small
 \begin{code}
 SigRel  PatUnit
         [  EquLocal   (Ident "x") []
@@ -91,24 +178,52 @@ SigRel  PatUnit
                       (ExprAdd  (ExprNeg (ExprVar (Ident "x")))
                                 (ExprMul  (ExprMul  (ExprAnti (HsExpr "$mu$"))
                                                     (ExprSub  (ExprInteger 1)
-                                                              (ExprMul  (ExprVar (Ident "x"))
-                                                                        (ExprVar (Ident "x")))))
+                                                              (ExprMul
+                                                                 (ExprVar (Ident "x"))
+                                                                 (ExprVar (Ident "x")))))
                                           (ExprVar (Ident "x"))))
 
         ]
 \end{code}
 
-After translation into the typed representation we get the following typed
-representation:
+\caption{\label{figVanDerPolAstDesugar} Desugared, untyped abstract syntax
+tree representing the |vanDerPol| signal relation.}
 
+\end{figure}
+
+\begin{figure}
+\small
 \begin{code}
-SR  (\() ->  [Local (\x -> [Local (\y ->  [  Init x (Const 1.0)
-                                          ,  Init y (Const 1.0)
-                                          ,  Equal (PrimApp Der x) y
-                                          ,  Equal  (PrimApp Der y)
-                                                    ((-x) + (Const mu) * ((Const 1.0) - x * x) * y)
-                                          ])])])
+SR  (\() ->
+      [Local (\x ->
+              [Local (\y -> 
+                      [  Init x (Const 1.0)
+                      ,  Init y (Const 1.0)
+                      ,  Equal (PrimApp Der x) y
+                      ,  Equal  (PrimApp Der y)
+                                (PrimApp
+                                   Add
+                                   (Pair  (PrimApp Neg x)
+                                          (PrimApp
+                                             Mul
+                                             (Pair  (PrimApp
+                                                       Mul
+                                                       (Pair  (Const mu)
+                                                              (PrimApp
+                                                                 Sub
+                                                                 (Pair  (Const 1.0)
+                                                                        (PrimApp Mul (Pair x x)))))))
+                                             y)))
+
+
+                      ])])])
 \end{code}
+
+\caption{\label{figVanDerPolAstTyped} Typed abstract syntax tree representing
+the |vanDerPol| signal relation.}
+
+\end{figure}
+
 
 Let me overview the typed representation once again, to define the |switch|
 combinator in terms of the corresponding constructor of the typed
