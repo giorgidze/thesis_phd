@@ -1,6 +1,12 @@
 \chapter{Implementation of Hydra}
 \label{chapImplementation}
 
+This chapter describes how Hydra is embedded in Haskell and how embedded
+noncausal models are simulated. Performance of the the simulator is evaluated
+by focussing on the implementation aspects that are absent from main-stream,
+noncausal language implementations (i.e., runtime symbolic processing and JIT
+compilation).
+
 \section{Embedding}
 \label{secEmbedding}
 
@@ -224,15 +230,15 @@ the |vanDerPol| signal relation.}
 
 \end{figure}
 
+Let us briefly overview the typed abstract syntax used in the implementation
+of Hydra. This is to highlight a minor difference from the typed abstract
+syntax that was presented in the language definition in Chapter
+\ref{chapDefinition} and to draw your attention on the mixed-level embedding
+techniques used in the implementation.
 
-Let me overview the typed representation once again, to define the |switch|
-combinator in terms of the corresponding constructor of the typed
-representation, to illustrate a minor change in the typed representation for
-the implementation purposes, and to draw your attention on the mixed-level
-embedding techniques used in the implementation.
-
-There are two ways to form a signal relation: either from equations that
-constrain the given signal, or by composing signal relations temporally:
+The typed abstract syntax allows for two ways to form a signal relation:
+either from equations that constrain the given signal, or by composing signal
+relations temporally:
 
 \begin{code}
 data SR a where
@@ -244,13 +250,13 @@ The constructor |SigRel| forms a signal relation from a function that takes a
 signal and returns a list of equations constraining the given signal. This
 list of equations constitute a system of Differential Algebraic Equations
 (DAEs) that defines the signal relation by expressing constraints on the
-signal. Having said that, the system is not necessarily a static one as the
+signal. he system of equations is not necessarily a static one as the
 equations may refer to signal relations that contain switches.
 
-The |switch|-combinator, which is used in \ref{chapHydra}, forms a signal
-relation by temporal composition of two signal relations. Internally, such a
-temporal composition is represented by a signal relation constructed by the
-|Switch| constructor:
+The |switch|-combinator, which was introduced in Chapter \ref{chapHydra},
+forms a signal relation by temporal composition of two signal relations.
+Internally, in the implementation of Hydra, such a temporal composition is
+represented by a signal relation constructed by the |Switch| constructor:
 
 \begin{code}
 switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
@@ -275,7 +281,7 @@ equation generator functions in the |SigRel| constructor are allowed to be
 passed a signal that is constrained elsewhere using the signal relation
 application.
 
-Initialisation equations, constructed by |Init|, provide initial conditions.
+Initialisation equations, constructed by |Init|, state initial conditions.
 They are only in force when a signal relation instance first becomes active
 (for example, equations like |init (x,y) = (1,1)|).
 
@@ -284,10 +290,9 @@ that the valuations of the two signals have to be equal for as long as the
 containing signal relation instance is active (for example, equations like
 |der x = y|).
 
-The fourth kind of equation is signal relation application, |App|, i.e.
-equations like |sr <> (x, y + 2)|. This brings all equations of a signal
-relation into scope by instantiating them for the expressions to which the
-relation is applied.
+The fourth kind of equation is signal relation application, |App|; that is,
+equations like |sr <> (x, y + 2)|. The application constrains the given
+signals by the equations defined in the signal relation.
 
 The typed representation of signals is a standard first-order representation
 making it easy to manipulate signal expressions symbolically and compiling
@@ -303,11 +308,11 @@ data Signal a where
   Var      ::  Integer -> Signal Double
 \end{code}
 
-As you can see, this data type definition contains one more constructor,
-namely the |Var| constructor. This constructor is not used at the stage of
-quasiquoting. Instead, the constructor is used later on at the stage of
-flattening to instantiate each local signal variable to unique signal variable
-by using the constructor's |Integer| field.
+As you can see, this data type definition contains one constructor that is not
+featured in the language definition, namely the |Var| constructor. This
+constructor is not used at the stage of quasiquoting. Instead, the constructor
+is used later on at the stage of flattening to instantiate each local signal
+variable to unique signal variable by using the constructor's |Integer| field.
 
 The implementation of Hydra supports the same set of primitive functions as
 defined in the language definition. Hence, in the implementation we use the
@@ -332,23 +337,63 @@ efficiency.
 \section{Simulation}
 \label{sec:simulation}
 
-In this section we describe how an iteratively staged Hydra program is
-run. The process is illustrated in Fig. \ref{fig:simulation} and is
-conceptually divided into four stages. In the first stage, a signal relation
-is flattened and subsequently transformed into a mathematical representation
-suitable for numerical simulation. In the second stage, this representation is
-JIT compiled into efficient machine code. In the third stage, the compiled
-code is passed to a numerical solver that simulates the system until the end
-of simulation or an event occurrence. In the fourth stage, in the case of an
-event occurrence, the event is analysed, a corresponding new signal relation
-is computed and the process is repeated from the first stage. In the
-following, each stage is described in more detail.
+In this section we describe how iteratively staged Hydra morels are simulated.
+The process is conceptually divided into four stages as illustrated in Figure
+\ref{figSimulation}. In the first stage, a signal relation is flattened and
+subsequently transformed into a mathematical representation suitable for
+numerical simulation. In the second stage, this representation is JIT compiled
+into efficient machine code. In the third stage, the compiled code is passed
+to a numerical solver that simulates the system until the end of simulation or
+an event occurrence. In the fourth stage, in the case of an event occurrence,
+the event is analysed, a corresponding new signal relation is computed and the
+process is repeated from the first stage.
 
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width = \textwidth]{Graphics/simulation}
+\end{center}
+\caption{\label{figSimulation} Execution model of Hydra.}
+\end{figure}
+
+Before we describe the four stages of the simulation in detail. Let us briefly
+overview a function that performs this four stages. Note that the simulator
+performs the aforementioned four stages iteratively at each structural change.
+The |simulate| function, which performs the simulation, has the following type
+signature:
+\begin{code}
+simulate :: SR () -> Experiment -> IO ()
+\end{code}
+The function takes a signal relation and an experiment description and
+simulates the system. The |Experiment| data type is defined in Figure
+\ref{figExperiment}. The |timeStart| field specifies the simulation starting
+time. The |timeStop| field specifies the simulation stopping time. The
+|timeStep| field specifies the simulation time step. When the |jitCompile|
+field is set to |True|, the simulator JIT compiles signal relations down to
+the machine code for the architecture that the simulation is running on even
+for the dynamically generated signal relations. When the |jitCompile| field is
+set to |False|, the simulator makes use of interpretation instead of JIT
+compilation. The |symbolicProcessor| specifies the simulator's runtime
+symbolic processor. The |numericalSolver| specifies the simulator's numerical
+solver. The |trajectoryVisualiser| specifies how to visualise the simulation
+results (i.e., change of signal values over time). The data type definitions
+for |SymTab|, |NumericalSover| and |TrajectoryVisualiser| are given later on
+in this chapter.
+
+The implementation of Hydra of Hydra provides the default experiment
+configuration that is given in Figure \ref{figDefaultExperiment}. Note that,
+the last three fields of the experiment description record are expected to be
+modified by expert users willing to provide there own runtime symbolic
+processor and numerical solvers. The behaviour of the
+|defaultSymbolicProcessor|, |defaultNumericalSolver| and
+|defaultTrajectoryVisualiser| are described in detail later in this chapter.
+
+\begin{figure}
 \begin{code}
 data Experiment = Experiment {
-     timeStart             :: Double
-  ,  timeStop              :: Double
-  ,  timeStep              :: Double
+     timeStart             :: Real
+  ,  timeStop              :: Real
+  ,  timeStep              :: Real
   ,  jitCompile            :: Bool
   ,  symbolicProcessor     :: SymTab -> SymTab
   ,  numericalSolver       :: NumericalSolver
@@ -356,6 +401,11 @@ data Experiment = Experiment {
   }
 \end{code}
 
+\caption{\label{figExperiment} Data type for experiment descriptions.}
+
+\end{figure}
+
+\begin{figure}
 \begin{code}
 defaultExperiment :: Experiment
 defaultExperiment = Experiment {
@@ -369,68 +419,122 @@ defaultExperiment = Experiment {
   }
 \end{code}
 
+\caption{\label{figDefaultExperiment} Default experiment description.}
 
-\begin{figure}[t]
-\begin{center}
-\includegraphics[width = \textwidth]{Graphics/simulation}
-\end{center}
-\caption{\label{fig:simulation} Execution model of Hydra.}
 \end{figure}
 
+\section{Symbolic Processing}
+\label{secSymbolicProcessing}
 
-\subsection{Symbolic Processing}
-\label{sec:simulation-processing}
+% As a first step, all signal variables are renamed to give them distinct names.
+% This helps avoiding name clashes during flattening, unfolding of signal
+% relation application (see Sec. \ref{sec:background-hydrabyexample}), and thus
+% simplifies this process. Having carried out this preparatory renaming step,
+% all signal relation applications are unfolded until the signal relation is
+% completely flattened.
 
-As a first step, all signal variables are renamed to give them distinct names.
-This helps avoiding name clashes during flattening, unfolding of signal
-relation application (see Sec. \ref{sec:background-hydrabyexample}), and thus
-simplifies this process. Having carried out this preparatory renaming step,
-all signal relation applications are unfolded until the signal relation is
-completely flattened.
+% Further symbolic processing is then performed to transform the flattened
+% signal relation into a form that is suitable for numerical simulation. In
+% particular, derivatives of compound signal expressions are computed
+% symbolically. In the case of higher-order derivatives, extra variables and
+% equations are introduced to ensure that all derivatives in the flattened
+% system are first order.
 
-Further symbolic processing is then performed to transform the flattened
-signal relation into a form that is suitable for numerical simulation. In
-particular, derivatives of compound signal expressions are computed
-symbolically. In the case of higher-order derivatives, extra variables and
-equations are introduced to ensure that all derivatives in the flattened
-system are first order.
+% While the numerical solver used in the current implementation handles
+% higher-index systems of equations, it is desirable to perform index reduction
+% symbolically at this stage as well \citep{Brenan1996a,Zimmer2009a}. Hydra does
+% not yet do this, but we intend to implement symbolic index reduction in the
+% future.
 
-While the numerical solver used in the current implementation handles
-higher-index systems of equations, it is desirable to perform index reduction
-symbolically at this stage as well \citep{Brenan1996a,Zimmer2009a}. Hydra does
-not yet do this, but we intend to implement symbolic index reduction in the
-future.
+% Finally, the following equations are generated at the end of the stage of
+% symbolic processing: 
+% \begin{eqnarray}
+% i(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & 0 \label{init-eq} \\
+% f(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & 0 \label{main-eq} \\
+% e(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & 0 \label{event-eq}
+% \end{eqnarray}
+% Here, $\vec{x}$ is a vector of differential variables, $\vec{y}$ is a vector
+% of algebraic variables, and $t$ is time. Equation (\ref{init-eq}) determines
+% the initial conditions for (\ref{main-eq}); that is, the values of
+% $\frac{d\vec{x}}{dt}$,$\vec{x}$ and $\vec{y}$ at time $t = t_{0}$, the
+% starting time for the current set of equations. Equation (\ref{main-eq}) is
+% the main DAE of the system that is integrated in time starting from the
+% initial conditions. Equation (\ref{event-eq}) specifies the event conditions
+% (signals crossing 0).
 
-Finally, the following equations are generated at the end of the stage of
-symbolic processing: 
-\begin{eqnarray}
-i(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & 0 \label{init-eq} \\
-f(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & 0 \label{main-eq} \\
-e(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & 0 \label{event-eq}
-\end{eqnarray}
-Here, $\vec{x}$ is a vector of differential variables, $\vec{y}$ is a vector
-of algebraic variables, and $t$ is time. Equation (\ref{init-eq}) determines
-the initial conditions for (\ref{main-eq}); that is, the values of
-$\frac{d\vec{x}}{dt}$,$\vec{x}$ and $\vec{y}$ at time $t = t_{0}$, the
-starting time for the current set of equations. Equation (\ref{main-eq}) is
-the main DAE of the system that is integrated in time starting from the
-initial conditions. Equation (\ref{event-eq}) specifies the event conditions
-(signals crossing 0).
+In this section we describe the first stage performed by the simulator,
+symbolic processing. A symbolic processor is a function from symbol table to
+symbol table. The symbol table data type that used in the implementation of
+Hydra is given in Figure \ref{figSymTab}. The symbol table record has five
+fields.
 
+The |model| field is for a top-level signal relation that is active. At the
+start of the simulation, the |simulate| function places application its first
+argument of type |SR ()| to the |Unit| signal. In other words, the |model|
+field contains a system hierarchical equations with signal relation
+applications and temporal compositions that is currently active.
+
+The |equations| field is for a flat list of equations that describe an active
+mode of operation. By flat we meant that the list of equations only contain
+|Init| and |Equal| equations. At the start of the simulation, the |simulate|
+functions places an empty list in this field.
+
+The |events| filed is for a list of event occurrences. Recall the the type
+signature of the |switch| combinator. A signal function that detects events
+returns a boolean signal. The simulator places the boolean signal expressions
+that describe an event occurrence at each structural change. Initially, at the
+start of the simulation, the simulator places an empty list in the |events|
+field of the symbol table.
+
+The |time| field is for a current time. Initially the simulator places the
+starting time given in the experiment description. This filed is modified at
+each structural change with the time of an event occurrence.
+
+The instance field is for storing instantaneous of real values signals. The
+simulator stores instantaneous values of active signals at each structural
+change. The instantaneous real values are stored as an array of pairs of
+reals. The first field of the pair is stores the instantaneous signal value,
+while the second field of the pair stores the instantaneous value of the
+signal's differential.
+
+\begin{figure}
 \begin{code}
 data SymTab = SymTab {
      model         :: [Equation]
   ,  equations     :: [Equation]
   ,  events        :: [(Signal Bool)]
   ,  time          :: Double
-  ,  instants      :: Array Int (Double,Double)
+  ,  instants      :: Array Integer (Real,Real)
   }
 \end{code}
+
+\caption{\label{figSymTab} Data type for symbol tables.}
+
+\end{figure}
+
+The task of the symbolic processor is to handle occurred events by modifying
+the |model| field, to generate a flat list of events that may occur in the
+active mode of operation by updating , and to generate flat list of equations
+describing to the active mode by updating the |equations| field. The
+implementation of Hydra provides the default symbolic processor that is
+defined as follows:
 
 \begin{code}
 defaultSymbolicProcessor  ::  SymTab -> SymTab
 defaultSymbolicProcessor  =   flattenEquations . flattenEvents . handleEvents
 \end{code}
+
+As you can see, the default symbolic processor is defined as a composition of
+three symbolic processing steps. The first step handles occurred events by
+modifying the |model| field of the symbol table. The event handler is defined
+in Figure \ref{figHandleEvents}. The second step generates a list of boolean
+signal expression representing the list of possible events in the active mode
+of operation as defined in Figure \ref{figFlattenEvents}. Note that this step
+involves evaluation of the instantaneous signal values using the |time| and
+|instants| fields of the symbol table. The |eval| function is defined in
+Figure \ref{figEval}.
+
+\begin{figure}
 
 \begin{code}
 handleEvents     ::  SymTab -> SymTab
@@ -453,13 +557,18 @@ handleEvs (st,evs,(App (Switch sr (SF sf) f) s) : eqs)      =
              :  handleEvs (st,evs,eqs)
 \end{code}
 
+\caption{\label{figHandleEvents} Function that handles events.}
+
+\end{figure}
+
+\begin{figure}
 \begin{code}
 flattenEvents :: SymTab -> SymTab
 flattenEvents st = st {events = buildEvs (0,st{events = []},model st)} 
 \end{code}
 
 \begin{code}
-buildEvs :: (Int,SymTab,[Equation]) -> SymTab
+buildEvs :: (Integer,SymTab,[Equation]) -> SymTab
 buildEvs (_,st,[])                                       = st
 buildEvs (i,st,(Local f) : eqs)                          = buildEvs (i + 1,st,f (Var i) ++ eqs)
 buildEvs (i,st,(Equal  _ _) : eqs)                       = buildEvs (i,st,eqs)
@@ -469,23 +578,14 @@ buildEvs (i,st,(App (Switch sr (SF sf) _) s) : eqs)      =
   buildEvs (i,st {events = (sf s) : (events st)},(App sr s) : eqs)
 \end{code}
 
-\begin{code}
-flattenEquations :: SymTab -> SymTab
-flattenEquations st = st {equations = flattenEqs (0,model st)}
-\end{code}
+\caption{\label{figFlattenEvents} Function that generates the flat list of
+events that may occur in the active mode of operation.}
 
-\begin{code}
-flattenEqs                                        ::  (Int,[Equation]) -> [Equation]
-flattenEqs (_,[])                                 =   []
-flattenEqs (i, (App (SR sr) s) : eqs)             =   flattenEqs (i,sr s ++ eqs)
-flattenEqs (i, (App (Switch sr _ _) s) : eqs)     =   flattenEqs (i,(App sr s) : eqs)
-flattenEqs (i, (Local f) : eqs)                   =   flattenEqs (i + 1,f (Var i) ++ eqs)
-flattenEqs (i, (Equal _ _) : eqs)                 =   eq : flattenEqs (i,eqs)
-flattenEqs (i, (Init _ _) : eqs)                  =   eq : flattenEqs (i,eqs)
-\end{code}
+\end{figure}
 
+\begin{figure}
 \begin{code}
-eval :: (Double,Array Int (Double,Double),Signal a) -> a
+eval :: (Double,Array Integer (Double,Double),Signal a) -> a
 eval (_,_,Unit)                 = ()
 eval (t,_,Time)                 = t
 eval (_,_,Const c)              = c
@@ -520,12 +620,34 @@ evalPrimSF  Div    = uncurry (/)
 evalPrimSF  Pow    = uncurry (**)
 evalPrimSF  Lt     = \ d -> (d <  0)
 evalPrimSF  Lte    = \ d -> (d <= 0)
-evalPrimSF  Gt     = \ d -> (d >  0) 
+evalPrimSF  Gt     = \ d -> (d >  0)
 evalPrimSF  Gte    = \ d -> (d >= 0)
 evalPrimSF  Or     = uncurry (||)
-evalPrimSF  And    =  uncurry (&&)
+evalPrimSF  And    = uncurry (&&)
 evalPrimSF  Not    = not
 \end{code}
+
+\caption{\label{figEval} Functions that evaluate instantaneous signal values.}
+
+\end{figure}
+
+
+
+\begin{code}
+flattenEquations :: SymTab -> SymTab
+flattenEquations st = st {equations = flattenEqs (0,model st)}
+\end{code}
+
+\begin{code}
+flattenEqs                                        ::  (Integer,[Equation]) -> [Equation]
+flattenEqs (_,[])                                 =   []
+flattenEqs (i, (App (SR sr) s) : eqs)             =   flattenEqs (i,sr s ++ eqs)
+flattenEqs (i, (App (Switch sr _ _) s) : eqs)     =   flattenEqs (i,(App sr s) : eqs)
+flattenEqs (i, (Local f) : eqs)                   =   flattenEqs (i + 1,f (Var i) ++ eqs)
+flattenEqs (i, (Equal _ _) : eqs)                 =   eq : flattenEqs (i,eqs)
+flattenEqs (i, (Init _ _) : eqs)                  =   eq : flattenEqs (i,eqs)
+\end{code}
+
 
 
 \subsection{Just-in-time Compilation}
