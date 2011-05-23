@@ -530,9 +530,15 @@ modifying the |model| field of the symbol table. The event handler is defined
 in Figure \ref{figHandleEvents}. The second step generates a list of boolean
 signal expression representing the list of possible events in the active mode
 of operation as defined in Figure \ref{figFlattenEvents}. Note that this step
-involves evaluation of the instantaneous signal values using the |time| and
-|instants| fields of the symbol table. The |eval| function is defined in
-Figure \ref{figEval}.
+involves evaluation of the instantaneous signal values by using the |eval|
+function the |time| and |instants| fields of the symbol table. The |eval|
+function is defined in Figure \ref{figEval}. The third step flattens the
+hierarchical system of equations placed in the |model| field of the symbol
+table into the |equations| field of the symbol table. The flat list only
+contains |Init| and |Equal| equations. The |Equal| equations define the DAE
+that describes the active mode of operation. The |Init| equations describe the
+initial conditions for the DAE. The flattening transformation is given in
+Figure \ref{figFlattenEquations}.
 
 \begin{figure}
 
@@ -632,7 +638,7 @@ evalPrimSF  Not    = not
 \end{figure}
 
 
-
+\begin{figure}
 \begin{code}
 flattenEquations :: SymTab -> SymTab
 flattenEquations st = st {equations = flattenEqs (0,model st)}
@@ -648,35 +654,125 @@ flattenEqs (i, (Equal _ _) : eqs)                 =   eq : flattenEqs (i,eqs)
 flattenEqs (i, (Init _ _) : eqs)                  =   eq : flattenEqs (i,eqs)
 \end{code}
 
+\caption{\label{figFlattenEquations} Functions that flatten hierarchical
+systems of equations.}
+
+\end{figure}
+
+Each of the three steps of the default symbolic processor has compact and
+self-explanatory definition, especially, the |flattenEquations| function. To
+my knowledge, this is the shortest formal and executable definition of the
+flattening process for noncausal modelling languages. This is partly due to
+the simple abstract syntax and utilisation of shallow embedding techniques,
+specifically, embedded functions in the |SR| and |Switch| constructors.
+
+The default symbolic processor that is described in this section can be
+extended by modellers. This extensibility is especially useful for providing
+further symbolic processing steps that operate on flattened equations. For
+example, the default symbolic processor does not implement the index reduction
+transformation \citep{Cellier2006}. The index reduction transformation
+minimises algebraic dependencies between equations involved in the flat DAE.
+This allows numerical solvers to more efficiently simulate the DAE
+\citep{Brenan1996a}. A good overview of index reduction algorithms is given in
+the book by \citet{Cellier2006}. One of those algorithms can be used to extend
+the default symbolic processor by running the transformation after the
+|flattenEquations| step.
+
+As an example of a symbolic processor extension the implementation of Hydra
+provides a processor that handles higher-order derivatives and derivatives of
+complex signal expressions (i.e., not just signal variables). Equations that
+involve higher-order derivatives are translated into equivalent set of
+equations involving only first-order derivatives. Derivatives of complex
+signal expressions are handled using symbolic differentiation. The to steps
+ensure that in the flattened model only first order derivatives of signal
+variables appear.
 
 
-\subsection{Just-in-time Compilation}
+\section{Just-in-time Compilation}
 
-The generated equations are implicitly formulated ones: the mathematical
-representation of noncausal signal relations. In general, it is not possible
-to transform these implicit equations into explicit ones; i.e., to completely
-causalise them \citep{Brenan1996a}. Consequently, a system of implicit
-equations needs to be solved at the start of the simulation of each structural
-configuration mode and at every integration step. For example, a numerical
-solution of an implicitly formulated DAE (Equation \ref{eqMain}) involves
-execution of the function $f$ a number of times (sometimes hundreds or more at
-each integration step), with varying arguments, until it converges to zero.
-The number of executions of $f$ depends on various factors including the
-required precision, the initial guess, the degree of nonlinearity of the DAE,
-etc.
+Mathematically the end result of the stage of symbolic processing is the
+following list of equations:
 
-As the functions $i$, $f$, and $e$ are invoked from within inner loops of the
-solver, they have to be compiled into machine code for efficiency: any
+\begin{eqnarray}
+i(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & \vec{r_i} \label{init-eq} \\
+f(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & \vec{r_f} \label{main-eq} \\
+e(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & \vec{r_e} \label{event-eq}
+\end{eqnarray}
+
+Here, $\vec{x}$ is a vector of differential variables, $\vec{y}$ is a vector
+of algebraic variables, $t$ is time, $\vec{r_i}$ is a residual vector of
+initialisation equations, $\vec{r_f}$ is a residual vector of differential
+algebraic equations, and $\vec{r_e}$ is a vector of boolean signal values. The
+aforementioned vectors of signals; that is, time-varying vectors.
+
+Equation \ref{init-eq} corresponds to |Init| equations that are placed in the
+|equations| field of the symbol table and determines the initial conditions
+for (\ref{main-eq}); that is, the values of $\frac{d\vec{x}}{dt}$,$\vec{x}$
+and $\vec{y}$ at time $t = t_{0}$, the starting time for the current set of
+equations. Equation \ref{main-eq} corresponds to |Equal| equations that are
+placed in the |equations| field of the symbol table, and thus is the main DAE
+of the system that is integrated in time starting from the initial conditions.
+Equation \ref{event-eq} corresponds to boolean signals placed in the |events|
+field of the symbol table and specifies event conditions.
+
+The task of a DAE solver is to find time varying valuations of $\vec{x}$ and
+$\vec{y}$ such that the residual vectors are zero. In addition a DAE solver is
+required to detect points in time when the vector $\vec{r_e}$ changes and
+report it as an event occurrence.
+
+The generated equations are implicitly formulated ones. In general, it is not
+possible to transform these implicit equations into explicit ones; that is, to
+completely causalise them \citep{Brenan1996a}. Consequently, a system of
+implicit equations needs to be solved at the start of the simulation of each
+structural configuration mode and at every integration step. For example, a
+numerical solution of an implicitly formulated DAE (Equation \ref{main-eq})
+involves evaluation of the function $f$ a number of times (sometimes hundreds
+or more at each integration step), with varying arguments, until it converges
+to zero. The number of executions of $f$ depends on various factors including
+the required precision, the initial guess, the degree of nonlinearity of the
+DAE and so on.
+
+As the functions $i$, $f$, and $e$ are evaluated from within inner loops of
+the solver, they have to be compiled into machine code for efficiency: any
 interpretive overhead here would be considered intolerable by practitioners
 for most applications. However, as Hydra allows the equations to be changed in
 arbitrary ways \emph{during} simulation, the equations have to be compiled
-whenever they change, as opposed to only prior to simulation. (As an
+whenever they change, as opposed to only prior to simulation. As an
 optimisation, the code compiled for equations might be cached for future,
-possible reuse: see below.) Our Hydra implementation employs JIT machine code
-generation using the compiler infrastructure provided by LLVM. The functions
-$i$, $f$ and $e$ are compiled into LLVM instructions that in turn are compiled
-by the LLVM JIT compiler into native machine code. Function pointers to the
-generated machine code are then passed to the numerical solver.
+possible reuse: see Chapter \ref{chapFutureWork}. The implementation of Hydra
+employs JIT machine code generation using the compiler infrastructure provided
+by LLVM. The functions $i$, $f$ and $e$ are compiled into LLVM instructions
+that in turn are compiled by the LLVM JIT compiler into native machine code.
+Function pointers to the generated machine code are then passed to the
+numerical solver.
+
+The function pointers have the following Haskell type:
+
+\begin{code}
+data Void
+
+type Residual = FunPtr  (       CDouble
+                            ->  Ptr CDouble
+                            ->  Ptr CDouble
+                            ->  Ptr CDouble
+                            ->  IO Void)
+\end{code}
+
+The first function argument is for time. The second argument is for vector of
+real valued signal. The third argument is for vector of differentials of real
+valued signals. The forth argument is for vector of residuals, or in the case
+of the event specification vector of boolean signal values where |-1.0|
+represent |False| and |1.0| represents |True|. The residual functions read the
+first three arguments and write the residual values in the fourth argument. As
+this functions are passed to numerical solvers it is critical to allow for
+fast positional access of vector elements and in-place vector updates. Hence,
+the use C-style arrays.
+
+To give you an idea to what kind of code is generated for residuals that
+correspond to flat system of equations, Figure \ref{figLLVMCodeUnopt} gives
+unoptimised LLVM code for the parametrised van der Pol oscillator. The
+corresponding optimised LLVM is given in Figure \ref{figLLVMCodeOpt}.
+
 
 \begin{figure}
 \singlespacing
@@ -707,7 +803,7 @@ entry:
   store double %22, double* %23
   br label %BB_0
 
-BB_0:                                             ; preds = %entry
+BB_0:
   %24 = getelementptr double* %1, i32 1
   %25 = load double* %24
   %26 = getelementptr double* %2, i32 0
@@ -718,15 +814,57 @@ BB_0:                                             ; preds = %entry
   store double %29, double* %30
   br label %BB_1
 
-BB_1:                                             ; preds = %BB_0
+BB_1:
   ret void
 }
 \end{verbatim}
 \doublespacing
-\caption{Unoptimised LLVM code for the parametrised van der Pol oscillator.}
+
+\caption{\label{figLLVMCodeUnopt} Unoptimised LLVM code for the parametrised
+van der Pol oscillator.}
+
 \end{figure}
 
-\subsection{Numerical Simulation}
+
+\begin{figure}
+\singlespacing
+\small
+\begin{verbatim}
+define void @hydra_residual_main(double, double*, double*, double*) {
+entry:
+  %4  = getelementptr double* %2, i32 1
+  %5  = load double* %4
+  %6  = load double* %1
+  %7  = fmul double %6, -1.000000e+00
+  %8  = fmul double %6, %6
+  %9  = fmul double %8, -1.000000e+00
+  %10 = fadd double %9, 1.000000e+00
+  %11 = fmul double %10, 3.000000e+00
+  %12 = getelementptr double* %1, i32 1
+  %13 = load double* %12
+  %14 = fmul double %11, %13
+  %15 = fadd double %7, %14
+  %16 = fmul double %15, -1.000000e+00
+  %17 = fadd double %5, %16
+  store double %17, double* %3
+  %18 = load double* %12
+  %19 = load double* %2
+  %20 = fmul double %19, -1.000000e+00
+  %21 = fadd double %18, %20
+  %22 = getelementptr double* %3, i32 1
+  store double %21, double* %22
+  ret void
+}
+\end{verbatim}
+\doublespacing
+
+\caption{\label{figLLVMCodeOpt} Optimised LLVM code for the parametrised
+van der Pol oscillator.}
+
+\end{figure}
+
+
+\section{Numerical Simulation}
 
 The numerical suite used in the current implementation of Hydra is called
 SUNDIALS \citep{Sundials2005}. The components we use are KINSOL, a nonlinear
@@ -776,39 +914,38 @@ data NumericalSolver = NumericalSolver {
 type TrajectoryVisualiser = CDouble -> CInt -> Ptr CDouble -> IO ()
 \end{code}
 
-\subsection{Event Handling}
-\label{sec:simulation-eventhandling}
-
-At the moment of an event occurrence (one of the signals monitored by $e$
-crossing 0), the numerical simulator terminates and presents the following
-information to an event handler: Name of the event variable for which an event
-occurrence has been detected, time $t_e$ of the event occurrence and
-instantaneous values of the signal variables (i.e., values of
-$\frac{d\vec{x}}{dt}$, $\vec{x}$ and $\vec{y}$ at time $t_e$).
-
-The event handler traverses the original unflattened signal relation and finds
-the event value expression (a signal-level expression) that is associated with
-the named event variable. In the case of the breaking pendulum model, the
-expression is |((x,y),(vx,vy))|. This expression is evaluated by substituting
-the instantaneous values of the corresponding signals for the variables. The
-event handler applies the second argument of the |switch| combinator (i.e.,
-the function to compute the new signal relation to switch into) to the
-functional-level event value. In the case of the breaking pendulum model, the
-function |freeFall| is applied to the instantaneous value of
-|((x,y),(vx,vy))|. The result of this application is a new signal relation.
-The part of the original unflattened signal relation is updated by replacing
-the old signal relation with the new one. The flat system of equations for the
-previous mode and the machine code that was generated for it by the LLVM JIT
-compiler are discarded. The simulation process for the updated model continues
-from the first stage and onwards.
-
-In the current implementation, the new signal relation is flattened and new
-equations generated without reusing old ones from previous modes. In other
-words, events are not treated locally. In addition, the state of the whole
-system needs to be transferred for global and explicit reinitialisation of the
-entire system at every event using a \emph{top level} switch, like in the
-breaking pendulum example. We hope to address these issues in the future: see
-Section \ref{sec:futurework}.
+% \section{Event Handling}
+% 
+% At the moment of an event occurrence (one of the signals monitored by $e$
+% crossing 0), the numerical simulator terminates and presents the following
+% information to an event handler: Name of the event variable for which an event
+% occurrence has been detected, time $t_e$ of the event occurrence and
+% instantaneous values of the signal variables (i.e., values of
+% $\frac{d\vec{x}}{dt}$, $\vec{x}$ and $\vec{y}$ at time $t_e$).
+% 
+% The event handler traverses the original unflattened signal relation and finds
+% the event value expression (a signal-level expression) that is associated with
+% the named event variable. In the case of the breaking pendulum model, the
+% expression is |((x,y),(vx,vy))|. This expression is evaluated by substituting
+% the instantaneous values of the corresponding signals for the variables. The
+% event handler applies the second argument of the |switch| combinator (i.e.,
+% the function to compute the new signal relation to switch into) to the
+% functional-level event value. In the case of the breaking pendulum model, the
+% function |freeFall| is applied to the instantaneous value of
+% |((x,y),(vx,vy))|. The result of this application is a new signal relation.
+% The part of the original unflattened signal relation is updated by replacing
+% the old signal relation with the new one. The flat system of equations for the
+% previous mode and the machine code that was generated for it by the LLVM JIT
+% compiler are discarded. The simulation process for the updated model continues
+% from the first stage and onwards.
+% 
+% In the current implementation, the new signal relation is flattened and new
+% equations generated without reusing old ones from previous modes. In other
+% words, events are not treated locally. In addition, the state of the whole
+% system needs to be transferred for global and explicit reinitialisation of the
+% entire system at every event using a \emph{top level} switch, like in the
+% breaking pendulum example. We hope to address these issues in the future: see
+% Section \ref{sec:futurework}.
 
 \section{Performance}
 \label{secPerformance}
