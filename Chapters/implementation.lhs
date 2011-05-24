@@ -984,13 +984,8 @@ the circuit.
 
 \begin{table}
 \centering
-\scriptsize
 
-\begin{tabular}{|| p{1.1cm}
-                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}}
-                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}}
-                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}} ||}
-  \hline
+\begin{tabular}{|| l || r || r || r || r || r || r ||}  \hline
 
   & \multicolumn{2}{c||}{200  Components}
   & \multicolumn{2}{c||}{400  Components}
@@ -1012,10 +1007,9 @@ the circuit.
   & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}}
   & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}} \\ \hline
 
-  Symbolic \mbox{Processing}  &  \ 0.063  \ &  \ 0.6   \  &  \ 0.147  \  & \ 0.6   \  &  \ 0.236  \  &  \ 0.5   \  \\ \hline
+  Symbolic \mbox{Processing}  &  \ 0.067  \ &  \ 0.6   \  &  \ 0.153  \  & \ 0.6   \  &  \ 0.244  \  &  \ 0.5   \  \\ \hline
   JIT \mbox{Compilation}      &  \ 1.057  \ &  \ 10.2  \  &  \ 2.120  \  & \ 8.3   \  &  \ 3.213  \  &  \ 6.6   \  \\ \hline
-  Numerical \mbox{Simulation} &  \ 9.273  \ &  \ 89.2  \  &  \ 23.228 \  & \ 91.1  \  &  \ 45.140 \  &  \ 92.9  \  \\ \hline
-  Event \mbox{Handling}       &  \ 0.004  \ &  \ 0.0   \  &  \ 0.006  \  & \ 0.0   \  &  \ 0.008  \  &  \ 0.0   \  \\ \hline \hline
+  Numerical \mbox{Simulation} &  \ 9.273  \ &  \ 89.2  \  &  \ 23.228 \  & \ 91.1  \  &  \ 45.140 \  &  \ 92.9  \  \\ \hline \hline
   Total                       &  \ 10.397 \ &  \ 100.0 \  &  \ 25.501 \  & \ 100.0 \  &  \ 48.598 \  &  \ 100.0 \  \\ \hline
 \end{tabular}
 \caption{\label{table:larger-system-1} Time profile of structurally dynamic RLC circuit simulation (part I).
@@ -1024,12 +1018,9 @@ the circuit.
 
 \begin{table}
 \centering
-\scriptsize
+\begin{tabular}{|| l || r || r || r || r || r || r ||}
 
-\begin{tabular}{|| p{1.1cm}
-                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}}
-                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}}
-                || r@@{\hspace{2pt}} || r@@{\hspace{2pt}} ||}
+
   \hline
 
   & \multicolumn{2}{c||}{800  Components}
@@ -1052,10 +1043,9 @@ the circuit.
   & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}}
   & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}} \\ \hline
 
-  Symbolic \mbox{Processing}  &  \ 0.328  \ &  \ 0.4    \ &  \ 0.439   \ &  \ 0.4    \ &  \ 0.534   \ &  \ 0.3    \ \\ \hline
+  Symbolic \mbox{Processing}  &  \ 0.339  \ &  \ 0.4    \ &  \ 0.454   \ &  \ 0.4    \ &  \ 0.534   \ &  \ 0.3    \ \\ \hline
   JIT \mbox{Compilation}      &  \ 4.506  \ &  \ 4.9    \ &  \ 5.660   \ &  \ 5.1    \ &  \ 6.840   \ &  \ 4.3    \ \\ \hline
-  Numerical \mbox{Simulation} &  \ 86.471 \ &  \ 94.7   \ &  \ 105.066 \ &  \ 94.5   \ &  \ 152.250 \ &  \ 95.4   \ \\ \hline
-  Event \mbox{Handling}       &  \ 0.011  \ &  \ 0.0    \ &  \ 0.015   \ &  \ 0.0    \ &  \ -       \ &  \ -      \ \\ \hline \hline
+  Numerical \mbox{Simulation} &  \ 86.471 \ &  \ 94.7   \ &  \ 105.066 \ &  \ 94.5   \ &  \ 152.250 \ &  \ 95.4   \ \\ \hline \hline
   Total                       &  \ 91.317 \ &  \ 100.0  \ &  \ 111.179 \ &  \ 100.0  \ &  \ 159.624 \ &  \ 100.0  \ \\ \hline
 \end{tabular}
 \caption{\label{table:larger-system-2} Time profile of structurally dynamic RLC circuit simulation (part II).
