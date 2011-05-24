@@ -47,6 +47,7 @@ quasiquotes to be constructed without curly braces and semicolons. The layout
 rules are the same as for Haskell.
 
 \begin{figure}
+\small
 \begin{verbatim}
 entrypoints SigRel, SigFun;
 
