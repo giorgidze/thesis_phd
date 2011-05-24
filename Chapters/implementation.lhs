@@ -733,7 +733,6 @@ optimised LLVM is given in Figure \ref{figLLVMCodeOpt}.
 
 
 \begin{figure}
-\singlespacing
 \small
 \begin{verbatim}
 define void @hydra_residual_main(double, double*, double*, double*) {
@@ -776,7 +775,6 @@ BB_1:
   ret void
 }
 \end{verbatim}
-\doublespacing
 
 \caption{\label{figLLVMCodeUnopt} Unoptimised LLVM code for the parametrised
 van der Pol oscillator.}
@@ -785,7 +783,6 @@ van der Pol oscillator.}
 
 
 \begin{figure}
-\singlespacing
 \small
 \begin{verbatim}
 define void @hydra_residual_main(double, double*, double*, double*) {
@@ -814,7 +811,6 @@ entry:
   ret void
 }
 \end{verbatim}
-\doublespacing
 
 \caption{\label{figLLVMCodeOpt} Optimised LLVM code for the parametrised
 van der Pol oscillator.}

@@ -184,7 +184,7 @@ simulation code for efficiency.
 In addition to presenting the language definition and implementation, the
 aforementioned claims are also backed up by illustrating a range of example
 physical systems that can not be modelled and simulated in current noncausal
-languages. The examples are chosen, on purpose, to show case those language
+languages. The examples are carefully chosen to show case those language
 features of Hydra that are lacking in other noncausal modelling languages.
 
 The language design choices and implementation approaches presented here can
