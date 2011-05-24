@@ -45,7 +45,7 @@
 %include Chapters/implementation.lhs
 %include Chapters/relatedWork.lhs
 
-\chapter{Conclusions}
+\chapter{Directions for Future Work and Conclusions}
 \label{chapConclusions}
 
 \bibliographystyle{plainnat}
