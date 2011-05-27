@@ -3,11 +3,11 @@
 
 This is a highly technical chapter giving a formal definition of the Hydra
 language. The definition is given in four steps. Firstly, we define Hydra's
-lexical structure and concrete syntax by using the regular expression notation
-and the BNF notation, respectively. Secondly, we give Hydra's untyped abstract
-syntax as a Haskell algebraic data type definition. Thirdly, we define Hydra's
-typed abstract syntax as a Haskell generalised algebraic data type definition
-and give a translation from the untyped abstract syntax to the typed abstract
+lexical structure and concrete syntax by using regular expression and BNF
+notations, respectively. Secondly, we give Hydra's untyped abstract syntax as
+a Haskell algebraic data type definition. Thirdly, we define Hydra's typed
+abstract syntax as a Haskell generalised algebraic data type definition and
+give a translation from the untyped abstract syntax to the typed abstract
 syntax. The typed representation fully embodies Hydra's type system and can be
 seen as a definition of Hydra's type system in terms of the Haskell type
 system. In other words, Hydra's type system is embedded into Haskell's type
@@ -249,12 +249,12 @@ construct signal expressions (see Figure \ref{figAbstractSyntax} for details).
 \section{Desugaring}
 
 Before we turn our attention to the translation of the untyped abstract syntax
-into the typed abstract syntax, we describe a translation that desugars all
+into typed abstract syntax, we describe a translation that desugars all
 equations that assert equality of signal pairs into equations asserting
 equality of scalar signals. This translation allows for a simpler typed
-intermediated representation as we show in the following section. The
-translation is given in Figure \ref{figDesugaring} as a Haskell function
-working with the untyped abstract syntax of Hydra.
+representation as we show in the following section. The translation is given
+in Figure \ref{figDesugaring} as a Haskell function working with the untyped
+abstract syntax of Hydra.
 
 \begin{figure}[H]
 
@@ -372,7 +372,7 @@ Note, however, that the type system says nothing about solvability of signal
 relations. It is possible to define a type correct signal relation that does
 not have a solution or has more than one solution. It is the modeller's
 responsibility to define a signal relation that has an unique solution. Recent
-work in the context of the FHM framework makes progress in the direction of
+work in the context of the FHM framework has made progress in the direction of
 more expressive type systems incorporating the solvability aspect of noncausal
 models \citep{Nilsson2008a,Capper2010a}. Incorporation of the aforementioned
 work in Hydra is a subject of future research.
@@ -471,7 +471,7 @@ Two most widely used approaches are operational semantics \citep{Plotkin2004a}
 and denotation semantics \citep{Scott1982a}. An operational semantics formally
 defines an abstract machine and how the language terms are executed on the
 machine. A denotational semantics formally defines translation of the language
-terms into terms in a formalism that is well understood (often a filed of
+terms into terms in a formalism that is well understood (often a field of
 mathematics).
 
 One characteristic of noncausal, modelling languages setting them apart from
@@ -481,22 +481,23 @@ level. For example, consider the system of equations modelling the simple
 electrical circuit given in Chapter \ref{chapBackground}. In the process of
 deriving the simulation code we introduced a number of approximations. The
 continuous real numbers were approximated using the double-precision machine
-floating point numbers and the system of equations was approximated using the
+floating-point numbers and the system of equations was approximated using the
 Haskell code implementing the forward Euler method.
 
 Implementations of noncausal, modelling languages allow modellers to choose
-floating point representations (e.g., single or double precision), symbolic
+floating-point representations (e.g., single or double precision), symbolic
 processing methods and numerical simulation methods that needs to be used
-during the simulation. This amounts to allowing modellers to choose the
-combination model approximations prior to simulation.
+during the simulation. This amounts to allowing modellers to choose a
+combination of approximations prior to simulation.
 
 The fact that the implementations are only expected to approximate noncausal
 models needs to be taken into account when defining a formal semantics for a
 noncausal language. In particular, definition of operational semantics is
-problematic as it is hard to account for myriad of approximation combinations
-that were outlined earlier. One option is to parameterise the operational
-semantics on approximations. This is feasible, but leaves bulk of operational
-details unspecified defeating the purpose of an operational semantics.
+problematic as it is hard to account for the myriad of approximation
+combinations that were outlined earlier. One option is to parameterise the
+operational semantics on approximations. This is feasible, but leaves bulk of
+operational details unspecified defeating the purpose of an operational
+semantics.
 
 For the reasons outlined above, and because the concept of first-class models,
 which allows for higher-order and structurally dynamic modelling, is not
@@ -531,7 +532,7 @@ A signal relation denotation may involve existentially quantified function
 symbols (i.e., signals). This is what makes the denotations second-order logic
 propositions (i.e., not expressible in first-order logic). In other words,
 solving of a signal relation can be understood as proving of \emph{existence}
-of signals that satisfy the given constrains (see Figure
+of signals that satisfy the given constraints (see Figure
 \ref{figSigRelSigFunSem} for details).
 
 \begin{figure}
@@ -562,39 +563,39 @@ semEqs  (i  ,  t0  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t0 s)           
 
 \begin{figure}
 \begin{code}
-semSig (Unit)                       =   \_  ->  ()
-semSig (Time)                       =   \t  ->  t
-semSig (Const d)                    =   \_  ->  d
-semSig (Pair s1 s2)                 =   \t  ->  ((semSig s1) t,(semSig s2) t)
-semSig (PrimApp Der s)              =   \t  ->  {-" \displaystyle\lim_{\Delta t \to 0} \frac{ "-} (semSig s) {-" (t + \Delta t) - "-} (semSig s) {-" (t)}{\Delta t} "-}
-semSig (PrimApp Exp s)              =   \t  ->  exp      ((semSig s)  t)
-semSig (PrimApp Sqrt s)             =   \t  ->  sqrt     ((semSig s)  t)
-semSig (PrimApp Log s)              =   \t  ->  log      ((semSig s)  t)
-semSig (PrimApp Sin s)              =   \t  ->  sin      ((semSig s)  t)
-semSig (PrimApp Tan s)              =   \t  ->  tan      ((semSig s)  t)
-semSig (PrimApp Cos s)              =   \t  ->  cos      ((semSig s)  t)
-semSig (PrimApp Asin s)             =   \t  ->  asin     ((semSig s)  t)
-semSig (PrimApp Atan s)             =   \t  ->  atan     ((semSig s)  t)
-semSig (PrimApp Acos s)             =   \t  ->  acos     ((semSig s)  t)
-semSig (PrimApp Sinh s)             =   \t  ->  sinh     ((semSig s)  t)
-semSig (PrimApp Tanh s)             =   \t  ->  tanh     ((semSig s)  t)
-semSig (PrimApp Cosh s)             =   \t  ->  cosh     ((semSig s)  t)
-semSig (PrimApp Asinh s)            =   \t  ->  asinh    ((semSig s)  t)
-semSig (PrimApp Atanh s)            =   \t  ->  atanh    ((semSig s)  t)
-semSig (PrimApp Acosh s)            =   \t  ->  acosh    ((semSig s)  t)
-semSig (PrimApp Abs s)              =   \t  ->  abs      ((semSig s)  t)
-semSig (PrimApp Sgn s)              =   \t  ->  signum   ((semSig s)  t)
-semSig (PrimApp Add  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  +             ((semSig s2) t)
-semSig (PrimApp Mul  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  *             ((semSig s2) t)
-semSig (PrimApp Div  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  /             ((semSig s2) t)
-semSig (PrimApp Pow  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  ^             ((semSig s2) t)
-semSig (PrimApp Or   (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  ||            ((semSig s2) t)
-semSig (PrimApp And  (Pair s1 s2))  =   \t  ->  ((semSig s1)  t)  &&            (semSig s2) t
-semSig (PrimApp Not s1)             =   \t  ->  not ((semSig s1)  t)
-semSig (PrimApp Lt s)               =   \t  ->  ((semSig s)   t)  <   0
-semSig (PrimApp Lte s)              =   \t  ->  ((semSig s)   t)  <=  0
-semSig (PrimApp Gt s)               =   \t  ->  ((semSig s)   t)  >   0
-semSig (PrimApp Gte s)              =   \t  ->  ((semSig s)   t)  >=  0
+semSig (Unit)                       =   \ _  ->  ()
+semSig (Time)                       =   \ t  ->  t
+semSig (Const d)                    =   \ _  ->  d
+semSig (Pair s1 s2)                 =   \ t  ->  ((semSig s1) t,(semSig s2) t)
+semSig (PrimApp Der s)              =   \ t  ->  {-" \displaystyle\lim_{\Delta t \to 0} \frac{ "-} (semSig s) {-" (t + \Delta t) - "-} (semSig s) {-" (t)}{\Delta t} "-}
+semSig (PrimApp Exp s)              =   \ t  ->  exp      ((semSig s)  t)
+semSig (PrimApp Sqrt s)             =   \ t  ->  sqrt     ((semSig s)  t)
+semSig (PrimApp Log s)              =   \ t  ->  log      ((semSig s)  t)
+semSig (PrimApp Sin s)              =   \ t  ->  sin      ((semSig s)  t)
+semSig (PrimApp Tan s)              =   \ t  ->  tan      ((semSig s)  t)
+semSig (PrimApp Cos s)              =   \ t  ->  cos      ((semSig s)  t)
+semSig (PrimApp Asin s)             =   \ t  ->  asin     ((semSig s)  t)
+semSig (PrimApp Atan s)             =   \ t  ->  atan     ((semSig s)  t)
+semSig (PrimApp Acos s)             =   \ t  ->  acos     ((semSig s)  t)
+semSig (PrimApp Sinh s)             =   \ t  ->  sinh     ((semSig s)  t)
+semSig (PrimApp Tanh s)             =   \ t  ->  tanh     ((semSig s)  t)
+semSig (PrimApp Cosh s)             =   \ t  ->  cosh     ((semSig s)  t)
+semSig (PrimApp Asinh s)            =   \ t  ->  asinh    ((semSig s)  t)
+semSig (PrimApp Atanh s)            =   \ t  ->  atanh    ((semSig s)  t)
+semSig (PrimApp Acosh s)            =   \ t  ->  acosh    ((semSig s)  t)
+semSig (PrimApp Abs s)              =   \ t  ->  abs      ((semSig s)  t)
+semSig (PrimApp Sgn s)              =   \ t  ->  signum   ((semSig s)  t)
+semSig (PrimApp Add  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  +             ((semSig s2) t)
+semSig (PrimApp Mul  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  *             ((semSig s2) t)
+semSig (PrimApp Div  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  /             ((semSig s2) t)
+semSig (PrimApp Pow  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  ^             ((semSig s2) t)
+semSig (PrimApp Or   (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  ||            ((semSig s2) t)
+semSig (PrimApp And  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  &&            (semSig s2) t
+semSig (PrimApp Not s1)             =   \ t  ->  not ((semSig s1)  t)
+semSig (PrimApp Lt s)               =   \ t  ->  ((semSig s)   t)  <   0
+semSig (PrimApp Lte s)              =   \ t  ->  ((semSig s)   t)  <=  0
+semSig (PrimApp Gt s)               =   \ t  ->  ((semSig s)   t)  >   0
+semSig (PrimApp Gte s)              =   \ t  ->  ((semSig s)   t)  >=  0
 \end{code}
-\caption{\label{figSigSem} Denotations for signals}
+\caption{\label{figSigSem} Denotations for signals.}
 \end{figure}
