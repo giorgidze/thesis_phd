@@ -90,9 +90,9 @@ i    & = & i_1 + i_2 \\
 \end{eqnarray}
 \end{subequations}
 
-This symbolic manipulation process is called \emph{causalisation}. Note that
-now the cause-effect relationship is explicitly specified which was not the
-case for the implicit DAE.
+This symbolic manipulation process is called \emph{causalisation}. Now the
+cause-effect relationship is explicitly specified which was not the case for
+the implicit DAE.
 
 Let us substitute the variables defined in the first five equations in the
 last two equations. This effectively eliminates the algebraic equations from
@@ -214,10 +214,10 @@ common practise. However, manual translation becomes tedious and error prone
 with growing complexity. Imagine conducting the process presented in this
 section for a physical system described with hundreds of thousands of
 equations. Modelling languages and simulation tools can help with all three
-phases mentioned above. The following section overview state-of-the-art
-representatives of causal and noncausal modelling languages. Note that, in
-this thesis we focus on modelling languages capable of simulating mathematical
-models without assuming a particular domain of physics.
+phases mentioned above. The following section overviews state-of-the-art
+representatives of causal and noncausal modelling languages. In this thesis we
+focus on modelling languages capable of simulating mathematical models without
+assuming a particular domain of physics.
 
 \section{Causal Modelling in Simulink}
 \label{secSimulink}
@@ -225,8 +225,8 @@ models without assuming a particular domain of physics.
 Simulink is a graphical block diagramming tool for causal modelling and
 simulation. The block diagram depicted in Figure \ref{figCircuitBlockDiagram1}
 is a model of the simple electrical circuit from Figure \ref{figCircuit1}.
-Note the use of causal blocks (with input and outputs) for multiplication,
-summation and integration.
+Note that the diagram uses causal blocks (with input and outputs) for
+multiplication, summation and integration.
 
 \begin{figure}
 \begin{center}
@@ -259,7 +259,7 @@ corresponds to the second equation.
 We demonstrate the aforementioned reuse problem, by causally modelling a
 modified circuit where one more resistor is added to the simple electrical
 circuit as shows in Figure \ref{figCircuit2}. The causal model is given in
-Figure \ref{figCircuitBlockDiagram2}. Note that, we were not able to reuse the
+Figure \ref{figCircuitBlockDiagram2}. Note that we were not able to reuse the
 resistor model from the original circuit diagram. In addition, a simple
 addition to the physical system caused hardly obvious changes in the causal
 model.
@@ -315,7 +315,7 @@ end Pin;
 
 The connector record introduces the variable |i| and the variable |v|
 representing the current flowing into the connector and the voltage at the
-connector respectively. Note that the connector record does not introduce
+connector respectively. In Modelica, connector records do not introduce
 equations. The meaning of the flow annotation is explained later on when
 \emph{connect equations} are introduced.
 

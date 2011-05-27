@@ -25,7 +25,7 @@ functional level as the latter are time-invariant, known parameters as far as
 solving the signal-level equations are concerned. However, the opposite is not
 allowed; that is, a time-varying entity is confined to the signal level. The
 signal-level notions that exist at the functional level are signal relation
-and signal function. Note that these notions are time-invariant.
+and signal function. These notions are time-invariant.
 
 The Hydra language is implemented as a Haskell-embedded DSL using quasiquoting
 \citep{Mainland2007,Mainland2008}. As a result, Haskell provides the
@@ -83,10 +83,10 @@ the functional level. This markers are useful when reading Hydra code
 listings. The separation is also enforced at the type level of the host
 language by the |SR| and |SF| type constructors.
 
-Note that, because signals are not first-class entities at the functional
-level it is not possible to construct a value of type |Signal alpha| directly
-at the functional level. Signals only exist indirectly through the signal
-level definitions of signal relations and signal functions.
+Because signals are not first-class entities at the functional level, it is
+not possible to construct a value of type |Signal alpha| directly at the
+functional level. Signals only exist indirectly through the signal level
+definitions of signal relations and signal functions.
 
 \section{The |switch| Combinator}
 
@@ -112,11 +112,11 @@ computed by applying the third argument (a function of type |a -> SR a|) to
 the instantaneous value of the constrained signal. A formally defined meaning
 of the switch combinator is given in Chapter \ref{chapDefinition}.
 
-Note how the |switch| combinator allows for definition of a signal relation
-whose equational description changes over time. In addition, the |switch|
-combinator allows for state transfer from the old mode and initialisation of
-the new mode using the function that computes the new mode from the
-instantaneous values of the constrained signal.
+The |switch| combinator allows for definition of a signal relation whose
+equational description changes over time. In addition, the |switch| combinator
+allows for state transfer from the old mode and initialisation of the new mode
+using the function that computes the new mode from the instantaneous values of
+the constrained signal.
 
 In the signal relation notation described earlier the list of equations that
 follows the pattern is not necessarily a static one as the equations may
@@ -173,7 +173,7 @@ of the signal relation. As a consequence, |u| can only be constrained in this
 signal relation, unlike the rest of the variables in the pattern, which can be
 constrained further.
 
-Note the two kinds of variables: the functional-level ones representing
+Hydra uses two kinds of variables: the functional-level ones representing
 time-invariant parameters, and the signal-level ones, representing
 time-varying entities, the signals. Functional-level fragments, such as
 variable references, are spliced into the signal level by enclosing them
@@ -181,12 +181,12 @@ between antiquotes, \$. On the other hand time-varying entities are not
 allowed to escape to the functional level; that is, signal-variables are not
 in scope between antiquotes and outside the quasiquotes.
 
-Note how antiquoting is used to splice in a copy of the |twoPin| signal
-relation; that is, its equations are reused in the context of the resistor
-model. Readers familiar with object-oriented, noncausal languages like
-Modelica, can view this as a definition of the resistor model by extending the
-|twoPin| model with an equation that characterises the specific concrete
-electrical component, in this case Ohm's law.
+The |resistor| signal relation uses antiquoting to splice in a copy of the
+|twoPin| signal relation; that is, its equations are reused in the context of
+the resistor model. Readers familiar with object-oriented, noncausal languages
+like Modelica, can view this as a definition of the resistor model by
+extending the |twoPin| model with an equation that characterises the specific
+concrete electrical component, in this case Ohm's law.
 
 To clearly see how |twoPin| contributes to the definition of the |resistor|
 signal relation, let us consider what happens when the resistor model is

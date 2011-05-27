@@ -157,10 +157,10 @@ are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
 
 \section{Abstract Syntax}
 
-The abstract syntax of Hydra is given in Figure \ref{figAbstractSyntax}. The
+Hydra's abstract syntax is given in Figure \ref{figAbstractSyntax}. The
 Haskell algebraic data type definition is derived from the concrete syntax
-defined in previous section. Note that the representation is untyped; that is,
-it allows for terms that are not type correct.
+defined in previous section. The representation is untyped; that is, it allows
+for terms that are syntactically correct but not necessarily type correct.
 
 \begin{figure}
 \begin{code}
@@ -349,10 +349,11 @@ an untyped term into Haskell code that builds the corresponding typed term.
 The pattern matching semantics in the left-hand side of the translation rules
 are that of Haskell.
 
-Note that there are no translation rules that generate the |Switch|
-constructor. The functional-level combinator |switch|, which was introduced in
-Chapter \ref{chapHydra}, generates the |Switch| constructor of the typed
-abstract syntax. Specifically, the |switch| combinator is defined as follows.
+You may have noticed that there are no translation rules that generate the
+|Switch| constructor. The functional-level combinator |switch|, which was
+introduced in Chapter \ref{chapHydra}, generates the |Switch| constructor of
+the typed abstract syntax. Specifically, the |switch| combinator is defined as
+follows.
 
 \begin{code}
 switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a

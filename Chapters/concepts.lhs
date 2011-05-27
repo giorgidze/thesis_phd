@@ -5,8 +5,8 @@ This chapter introduces three central concepts of the Hydra language: signal,
 signal function and signal relation. These concepts facilitate development of
 and reasoning about Hydra models, and are used both in informal (see Chapter
 \ref{chapHydra}) and formal (see Chapter \ref{chapDefinition}) presentations
-of the language. Note that this chapter only covers conceptual definitions;
-how the concepts of Hydra are implemented is covered in Chapter
+of the language. This chapter only covers conceptual definitions; how the
+concepts of Hydra are implemented is covered in Chapter
 \ref{chapImplementation}.
 
 \section{Signal}

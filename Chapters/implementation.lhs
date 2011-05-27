@@ -273,10 +273,10 @@ data Equation where
 The |Local| constructor forms equations that merely introduce local signals.
 As it is evident from the language definition, such signals can be constrained
 only by the equations that are returned by the function that is the first
-argument of the |Local| constructor. This is also enforced by the language
-implementation, as we will see later in this chapter. Note that equation
-generating functions in the |SigRel| constructor are allowed to be passed a
-signal that is constrained elsewhere.
+argument of the |Local| constructor. In contrast, equation generating
+functions in the |SigRel| constructor are allowed to be passed a signal that
+is constrained elsewhere. This distinction is enforced by the language
+implementation, as we will see later in this chapter.
 
 Initialisation equations, formed by the |Init| constructor, state initial
 conditions. They are only in force when a signal relation instance first
@@ -314,12 +314,12 @@ The implementation of Hydra supports the same set of primitive functions as
 defined in the language definition. Hence, in the implementation we use the
 same |PrimSF| data type as given in the language definition.
 
-Note the use of a mixture of shallow and deep techniques of embedding. The
-embedded functions in the |SR|, |Switch|, |Local| and |App| constructors
-correspond to the shallow part of the embedding. The rest of the data
-constructors, namely, |Equal|, |Init|, and all constructors of the |Signal|
-data type correspond to the deep part of the embedding, providing an explicit
-representation of language terms for further symbolic processing and
+The implementation of Hydra uses a mixture of shallow and deep techniques of
+embedding. The embedded functions in the |SR|, |Switch|, |Local| and |App|
+constructors correspond to the shallow part of the embedding. The rest of the
+data constructors, namely, |Equal|, |Init|, and all constructors of the
+|Signal| data type correspond to the deep part of the embedding, providing an
+explicit representation of language terms for further symbolic processing and
 ultimately compilation. As we will see in more detail below, each mode of
 operation can be described as a flat list of equations where each equation is
 constructed, either, by the |Init| constructor or by the |Equal| constructor.
@@ -352,10 +352,9 @@ repeated from the first stage by staring the new itearation.
 \end{figure}
 
 Before we describe the three stages of the simulation in detail, let us
-briefly overview a function that performs these three stages. Note that the
-simulator performs the aforementioned the three stages iteratively at each
-structural change. The |simulate| function, which performs the simulation, has
-the following type signature:
+briefly overview a function that performs these three stages. The simulator
+performs the aforementioned the three stages iteratively at each structural
+change. A function that performs simulation has the following type signature:
 
 \begin{code}
 simulate :: SR () -> Experiment -> IO ()
@@ -378,10 +377,10 @@ The |numericalSolver| specifies the simulator's numerical solver. The
 chapter.
 
 The implementation of Hydra provides the default experiment configuration that
-is given in Figure \ref{figDefaultExperiment}. Note that, the last three
-fields of the experiment description record are expected to be modified by
-expert users willing to provide there own runtime symbolic processor and
-numerical solvers. The behaviour of the |defaultSymbolicProcessor|,
+is given in Figure \ref{figDefaultExperiment}. Note that the last three fields
+of the experiment description record are expected to be modified by expert
+users willing to provide there own runtime symbolic processor and numerical
+solvers. The behaviour of the |defaultSymbolicProcessor|,
 |defaultNumericalSolver| and |defaultTrajectoryVisualiser| are described in
 detail later in this chapter.
 
@@ -911,11 +910,10 @@ noncausal modelling and simulation language implementations do not carry out
 dynamic mode switching, we do not compare the performance to other simulation
 software. The results would not be very meaningful.
 
-Note that, the implementation of Hydra provides for user-defined symbolic
-processors and numerical solvers. In the following we evaluate the performance
-of the default symbolic processor and the default numerical solver. Hydra does
-not provide for user-defined JIT compiler. In the following, we evaluate the
-built-in LLVM based JIT compiler.
+The implementation of Hydra provides for user-defined symbolic processors and
+numerical solvers. It does not provide for user-defined JIT compiler. In the
+following we evaluate the performance of the default symbolic processor, the
+default numerical solver and the built-in LLVM based JIT compiler.
 
 The evaluation setup is as follows. The numerical simulator integrates the
 system using variable-step, variable-order BDF (Backward Differentiation
