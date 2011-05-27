@@ -1,36 +1,37 @@
 \chapter{Introduction}
 \label{chapIntroduction}
 
-The field of physical modelling and simulation plays vital role in design,
-implementation and analysis of systems in numerous areas of science and
-engineering. Examples include: electronics, mechanics, thermodynamics,
+The field of physical modelling and simulation plays a vital role in the
+design, implementation and analysis of systems in numerous areas of science
+and engineering. Examples include: electronics, mechanics, thermodynamics,
 chemical reaction kinetics, population dynamics and neural networks
-\citep{Cellier1991}. To cope with increasing size and complexity of physical
-models, a number modelling and simulation languages have been developed. The
-modelling and simulation languages can be divided in two broad categories:
-\emph{causal} and \emph{noncausal}.
+\citep{Cellier1991}. To cope with the increasing size and complexity of
+physical models, a number modelling and simulation languages have been
+developed. The modelling and simulation languages can be divided in two broad
+categories: \emph{causal} and \emph{noncausal}.
 
 A causal model is formulated in terms of \emph{explicit} equations, for
 example, \emph{ordinary differential equations} (ODEs) in explicit form. That
 is, the cause-effect relationship is explicitly specified by the modeller
-\citep{Cellier2006}. In other words, the equations are directed; only
+\citep{Cellier2006}. In other words, the equations are directed: only
 \emph{unknown} variables can appear on the left hand side of the equal sign,
 and only \emph{known} variables on the other side. Since the equations are
-directed, it is relatively straight forward to translate causal models into a
-low level simulation code (e.g., into a sequence of assignment statements) and
+directed, it is relatively straightforward to translate causal models into a
+low-level simulation code (e.g., into a sequence of assignment statements) and
 simulate it. Simulink is a prominent representative of causal modelling
 languages \citep[2008]{Simulink}.
 
 A noncausal model is formulated in terms of \emph{implicit} equations, for
 example, \emph{differential algebraic equations} (DAEs) in implicit form. In
 other words, the equations are undirected: both known and unknown variables
-may appear on both sides of equal sign \citep{Cellier2006}. The translation of
-noncausal models into simulation code involves additional symbolic processing
-and numerical simulation methods that are not required for causal modelling
-and simulation. Examples include: symbolic transformations that try to
-causalise noncausal models and if this is not possible numerical solvers for
-(nonlinear) implicit equations. Modelica is a prominent, state-of-the-art
-representative of noncausal modelling languages \citep[2010]{Modelica}.
+may appear on both sides of the equal sign \citep{Cellier2006}. The
+translation of noncausal models into simulation code involves additional
+symbolic processing and numerical simulation methods that are not required for
+causal modelling and simulation. Examples include: symbolic transformations
+that try to causalise noncausal models and, if this is not possible, numerical
+solvers for (nonlinear) implicit equations. Modelica is a prominent,
+state-of-the-art representative of noncausal modelling languages
+\citep[2010]{Modelica}.
 
 Noncausal modelling has a number of advantages over causal modelling. The
 most important ones are listed below:
@@ -38,12 +39,12 @@ most important ones are listed below:
 \begin{itemize}
 
 \item In many physical domains models are more naturally represented using
-noncausal equations and in some physical domains models cannot be represented
+noncausal equations, and in some physical domains models cannot be represented
 using only causal equations.
 
-\item Noncausal languages are more declarative and approach modelling
-problems from higher level of abstraction by focusing on \emph{what} to model
-rather than \emph{how} to model to enable simulation.
+\item Noncausal languages are more declarative and approach modelling problems
+from a higher level of abstraction by focusing on \emph{what} to model rather
+than \emph{how} to model to enable simulation.
 
 \item Noncausal models are more reusable as equations can be used in a number
 of different ways depending on their usage context (e.g., causalised in a
@@ -63,17 +64,17 @@ MathWorks (Simscape).
 A language entity is \emph{first-class} if it can be (1) passed as a parameter
 to functions, (2) returned as a result from functions, (3) constructed at
 runtime and (4) placed in data structures \citep{Scott2009a}. Current,
-main-stream noncausal languages are not treating models as first-class values
+main-stream noncausal languages do not treat models as first-class values
 \citep{Nilsson2003a}. This limits their expressiveness and applicability,
 resulting in a very limited capabilities in the following crucial application
-areas of modelling languages: \emph{higher-order} and
-\emph{structurally dynamic} modelling.
+areas of modelling languages: \emph{higher-order} and \emph{structurally
+dynamic} modelling.
 
 \subsection{Higher-order Modelling}
 
 Higher-order modelling allows parametrisation of models on other models
 \citep{Nilsson2003a}. For instance, a car model can be parametrised on the
-list of tires it is using, and an electrical transmission line model can be
+list of tyres it is using, and an electrical transmission line model can be
 parametrised on the list of electrical components on the line. This style of
 modelling is not supported by main-stream, noncausal languages, including
 Modelica. Tool specific and external scripting languages are often used to
@@ -106,15 +107,15 @@ in data structures have not been considered.
 
 \subsection{Structurally Dynamic Modelling}
 
-Physical modelling often entails modelling of major changes in the system
-behaviour by changing the equations that describe the system dynamics
-\citep{Mosterman1997}. A model where equational description changes over time
-is called structurally dynamic. Each structural configuration of the model is
-known as a \emph{mode} of operation. \citet{Cellier2006} refer to structurally
-dynamic systems as \emph{variable-structure} systems. Structurally dynamic
-systems are an example of the more general notion of hybrid systems
-\citep{Nilsson2003a}. The term structurally dynamic emphasises only one
-discrete aspect, that is, the change of equations at discrete points in time.
+Major system behaviour changes are often modelled by changing the equations
+that describe the system dynamics \citep{Mosterman1997}. A model where the
+equational description changes over time is called structurally dynamic. Each
+structural configuration of the model is known as a \emph{mode} of operation.
+\citet{Cellier2006} refer to structurally dynamic systems as
+\emph{variable-structure} systems. Structurally dynamic systems are an example
+of the more general notion of hybrid systems \citep{Nilsson2003a}. The term
+structurally dynamic emphasises only one discrete aspect, that is, the change
+of equations at discrete points in time.
 
 \emph{Cyber-physical} systems \citep{Lee2008a}, where digital computers
 interact with continuous physical systems, can also be seen as instances of
@@ -125,8 +126,8 @@ equations describing the dynamics of the continuous part. Recently,
 the US National Science Foundation identified Cyber-physical systems as one of
 its key research areas \citep[2008]{NSF2008a}.
 
-Current noncausal languages offer a quite limited support for modelling
-structurally dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
+Current noncausal languages offer limited support for modelling structurally
+dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
 Zimmer2008a}. There are a number of reasons for this limited support. This
 thesis concentrates on one particular reason related to the design and
 implementation of modelling and simulation languages, specifically the
@@ -157,9 +158,9 @@ simulation (MOSILAB and Acumen).
 This dissertation presents a novel approach to the design and implementation
 of noncausal modelling and simulation languages with first-class models
 supporting higher-order and structurally dynamic modelling. The thesis
-formally defines a noncausal modelling language called Hydra and describes
-its implementation in great detail. Hydra provides noncausal modelling and
-simulation capabilities that go beyond the state of the art and represents a
+formally defines a noncausal modelling language called Hydra and describes its
+implementation in great detail. Hydra provides noncausal modelling and
+simulation capabilities that go beyond the state of the art and represents
 significant progress in the field of design and implementation of declarative
 modelling and simulation languages, in particular:
 
@@ -183,12 +184,12 @@ simulation code for efficiency.
 In addition to presenting the language definition and implementation, the
 aforementioned claims are also backed up by illustrating a range of example
 physical systems that cannot be modelled and simulated in current noncausal
-languages. The examples are carefully chosen to show case those language
+languages. The examples are carefully chosen to showcase those language
 features of Hydra that are lacking in other noncausal modelling languages.
 
 The language design choices and implementation approaches presented here can
 be used to enhance existing noncausal modelling and simulation languages, as
-well as, to design and implement new modelling languages. This thesis provides
+well as to design and implement new modelling languages. This thesis provides
 a self-contained reference for such undertaking by defining the language
 semantics formally and providing an in-depth description of the
 implementation.
@@ -196,11 +197,11 @@ implementation.
 Many language features of Hydra follow closely those proposed by
 \cite{Nilsson2003a} in the context of the FHM framework and can be seen as the
 first concrete language definition and implementation that is based on the FHM
-framework. However, as I have already mentioned, at this stage Hydra focuses
-only on one aspect of hybrid modelling, namely, structural-dynamism. Other
-discrete aspects that do not lead to structural reconfigurations (e.g.,
-\emph{impulses} \citep{Nilsson2003a,Nilsson2003b}) are not considered in this
-thesis, but, in principle, can be incorporated in the Hydra language.
+framework. However, as already mentioned, at this stage Hydra supports only
+one aspect of hybrid modelling, namely, structural dynamism. Other discrete
+aspects that do not lead to structural reconfigurations (e.g., \emph{impulses}
+\citep{Nilsson2003a,Nilsson2003b}) are not considered in this thesis, but, in
+principle, can be incorporated in the Hydra language.
 
 This work can be seen as an application of successful ideas developed in
 functional programming languages research to declarative modelling and
@@ -219,14 +220,14 @@ Embedding is a powerful and popular way to implement DSLs \citep{Hudak1998}.
 Compared with implementing a language from scratch, extending a suitable
 general-purpose programming language, the \emph{host language}, with notions
 addressing a particular application or problem domain tends to save a lot of
-design and implementation efforts. The motivation behind using an embedding
+design and implementation effort. The motivation behind using an embedding
 approach for Hydra is to concentrate the language design and implementation
-efforts on noncausal modelling notions that are domain specific and absent in
+effort on noncausal modelling notions that are domain specific and absent in
 the host language, and, at the same time, to reuse the rest from the host
 language.
 
-Having said that, the concept of first-class models, and runtime symbolic
-processing and JIT compilation approaches implemented in Hydra are not
+Having said that, the concept of first-class models, and the runtime symbolic
+processing and JIT compilation approaches implemented in Hydra, are not
 predicated on embedded implementation. These language design and
 implementation approaches can be used in other noncausal modelling languages,
 embedded or otherwise.
@@ -241,15 +242,15 @@ suitable representation. These terms are given meaning by interpretation or
 compilation \citep{Hudak1998}. This is a more heavy-weight approach, but also
 more flexible one. Indeed, it is often necessary to inspect the embedded
 language terms for optimisation or compilation. To benefit from the advantages
-of, both, shallow and deep embeddings, a combined approach, called
-\emph{mixed-level} embedding, can be used \citep{Giorgidze2010a}.
+of both shallow and deep embeddings, a combined approach called
+\emph{mixed-level} embedding can be used \citep{Giorgidze2010a}.
 
-As mentioned above (see Section \ref{secFirstClassModels}), Hydra supports
-runtime generation and JIT compilation of noncausal models. Specifically, in
-response to \emph{events} occurring at discrete points in time, the simulation
-is stopped and, depending on simulation results thus far, new equations are
+As mentioned in Section \ref{secFirstClassModels}, Hydra supports runtime
+generation and JIT compilation of noncausal models. Specifically, in response
+to \emph{events} occurring at discrete points in time, the simulation is
+stopped and, depending on the simulation results thus far, new equations are
 generated for further simulation \citep{Giorgidze2009a}. This kind of DSL is
-referred as \emph{iteratively staged}, emphasising that the domain is
+referred to as \emph{iteratively staged}, emphasising that the domain is
 characterised by repeated program generation, compilation and execution
 \citep{Giorgidze2010a}.
 
@@ -286,7 +287,7 @@ meta language that is out of the picture once the generated program is ready
 for execution, the host language is in this case part of the dynamic semantics
 of the embedded language through the shallow parts of the embedding. We thus
 add further tools to the DSL tool box for embedding a class of languages that
-thus far has not been studied much from embedding and staged programming
+thus far has not been studied much from an embedding and staged programming
 perspective.
 
 While embedded DSL development methodology is not the main focus of this work,
@@ -308,15 +309,14 @@ iteratively staged embedded DSL efficiently.
 \section{Published Peer-reviewed Contributions}
 
 The content of this thesis is partly based on the peer-reviewed publications
-that are listed in this section (see below). I wrote the papers in
-collaboration with my coauthors. This thesis was written by myself. I have
-implemented the software described in this dissertation and in the following
-papers. The software is available on my
-webpage\footnote{\url{http://www.cs.nott.ac.uk/~ggg/}} under the open source
-BSD license.
+that are listed in this section. I wrote the papers in collaboration with my
+coauthors. This thesis was written by myself. I have implemented the software
+described in this dissertation and in the following papers. The software is
+available on my webpage\footnote{\url{http://www.cs.nott.ac.uk/~ggg/}} under
+the open source BSD license.
 
 The following four papers describe various aspects of the design and
-implementation of Hydra, as well as, a number of its applications.
+implementation of Hydra, as well as a number of its applications.
 
 \begin{itemize}
 \item
@@ -390,7 +390,7 @@ George Giorgidze, Torsten Grust, Tom Schreiber, and Jeroen Weijers.
 
 Some parts of the thesis assume that the reader is familiar with Haskell,
 predicate logic, and BNF notation. Haskell is used for defining Hydra, as well
-as, for implementing it. The BNF notation is used for specifying the concrete
+as for implementing it. BNF notation is used for specifying the concrete
 syntax of Hydra. Predicate logic is used for explaining the language concepts
 and to give the ideal denotational semantics of Hydra.
 
@@ -410,12 +410,12 @@ The rest of the dissertation is organised as follows:
 \item Chapter \ref{chapBackground} overviews the field of physical modelling,
 and the state-of-the-art causal and noncausal modelling languages.
 
-\item Chapter \ref{chapConcepts} introduces central concepts of the Hydra
-langauge.
+\item Chapter \ref{chapConcepts} introduces the central concepts of the Hydra
+language.
 
 \item Chapter \ref{chapHydra} explains how to model physical systems in Hydra
-by means of instructive examples. The examples were carefully chosen to show
-case those language features that are absent in other noncausal modelling
+by means of instructive examples. The examples were carefully chosen to
+showcase those language features that are absent in other noncausal modelling
 languages.
 
 \item Chapter \ref{chapDefinition} formally defines Hydra's concrete syntax,
