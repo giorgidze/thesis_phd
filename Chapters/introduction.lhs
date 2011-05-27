@@ -67,7 +67,7 @@ main-stream noncausal languages are not treating models as first-class values
 \citep{Nilsson2003a}. This limits their expressiveness and applicability,
 resulting in a very limited capabilities in the following crucial application
 areas of modelling languages: \emph{higher-order} and
-\emph{structurally-dynamic} modelling.
+\emph{structurally dynamic} modelling.
 
 \subsection{Higher-order Modelling}
 
@@ -104,22 +104,21 @@ higher-order modelling, but construction of noncausal models at
 simulation runtime and manipulation of collections of models placed
 in data structures have not been considered.
 
-\subsection{Structurally-dynamic Modelling}
+\subsection{Structurally Dynamic Modelling}
 
 Physical modelling often entails modelling of major changes in the system
 behaviour by changing the equations that describe the system dynamics
 \citep{Mosterman1997}. A model where equational description changes over time
 is called structurally dynamic. Each structural configuration of the model is
-known as a \emph{mode} of operation. \citet{Cellier2006} refer to
-structurally-dynamic systems as \emph{variable-structure} systems.
-Structurally-dynamic systems are an example of the more general notion of
-hybrid systems \citep{Nilsson2003a}. The term structurally-dynamic emphasises
-only one discrete aspect, that is, the change of equations at discrete points
-in time.
+known as a \emph{mode} of operation. \citet{Cellier2006} refer to structurally
+dynamic systems as \emph{variable-structure} systems. Structurally dynamic
+systems are an example of the more general notion of hybrid systems
+\citep{Nilsson2003a}. The term structurally dynamic emphasises only one
+discrete aspect, that is, the change of equations at discrete points in time.
 
 \emph{Cyber-physical} systems \citep{Lee2008a}, where digital computers
 interact with continuous physical systems, can also be seen as instances of
-hybrid systems. In this context, structurally-dynamic modelling is relevant;
+hybrid systems. In this context, structurally dynamic modelling is relevant;
 as modelling of a cyber-physical system where the digital part's influence
 causes major changes in the physical part may require changing of the
 equations describing the dynamics of the continuous part. Recently,
@@ -127,7 +126,7 @@ the US National Science Foundation identified Cyber-physical systems as one of
 its key research areas \citep[2008]{NSF2008a}.
 
 Current noncausal languages offer a quite limited support for modelling
-structurally-dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
+structurally dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
 Zimmer2008a}. There are a number of reasons for this limited support. This
 thesis concentrates on one particular reason related to the design and
 implementation of modelling and simulation languages, specifically the
@@ -141,7 +140,7 @@ of assignment statements) with little or no need for dynamic memory or code
 management. This results in a good performance, but such language design and
 implementation approach restricts the number of modes to be modest as, in
 general, separate code must be generated for each mode. This rules out
-supporting \emph{highly} structurally-dynamic systems where the number of
+supporting \emph{highly} structurally dynamic systems where the number of
 modes is too large or even a priori unbounded.
 
 There are a number of efforts to design and implement modelling and simulation
@@ -157,7 +156,7 @@ simulation (MOSILAB and Acumen).
 
 This dissertation presents a novel approach to the design and implementation
 of noncausal modelling and simulation languages with first-class models
-supporting higher-order and structurally-dynamic modelling. The thesis
+supporting higher-order and structurally dynamic modelling. The thesis
 formally defines a noncausal modelling language called Hydra and describes
 its implementation in great detail. Hydra provides noncausal modelling and
 simulation capabilities that go beyond the state of the art and represents a
@@ -176,7 +175,7 @@ four points outlined in the beginning of Section \ref{secFirstClassModels}).
 \emph{just-in-time} (JIT) compilation to enable efficient simulation of
 noncausal models that are generated at simulation runtime. To my knowledge,
 Hydra is the first language that enables support \emph{both} for modelling and
-simulation of highly structurally-dynamic systems and for compilation of
+simulation of highly structurally dynamic systems and for compilation of
 simulation code for efficiency.
 
 \end{itemize}
@@ -298,11 +297,11 @@ particular:
 \begin{itemize}
 
 \item The thesis presents a case study of mixed-level embedding of an
-iteratively-staged DSL in a host language that does not provide built-in
+iteratively staged DSL in a host language that does not provide built-in
 multi-stage programming capabilities.
 
 \item The thesis describes how to use JIT compilation to implement an
-iteratively-staged embedded DSL efficiently.
+iteratively staged embedded DSL efficiently.
 
 \end{itemize}
 
@@ -352,7 +351,7 @@ Henrik Nilsson and George Giorgidze.
   Publishing House.
 \end{itemize}
 
-The following two papers are about highly structurally-dynamic, causal
+The following two papers are about highly structurally dynamic, causal
 modelling and simulation using Yampa, a Haskell-embedded Functional Reactive
 Programming (FRP) language \citep{Hudak2003}. The combinator that allows
 switching of equations during simulation runtime in Hydra draws its

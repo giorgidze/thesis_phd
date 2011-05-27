@@ -23,7 +23,7 @@
 
 \title{
   \Huge{\textbf{First-class Models}} \\
-  \LARGE{On a Noncausal Language for Higher-order and Structurally-dynamic Modelling and Simulation} \\[2cm]
+  \LARGE{On a Noncausal Language for Higher-order and Structurally Dynamic Modelling and Simulation} \\[2cm]
   \Large{\textbf{George Giorgidze, BSc, MSc}} \\[2cm]
   \Large{Thesis submitted to The University of Nottingham \\
   for the degree of Doctor of Philosophy}

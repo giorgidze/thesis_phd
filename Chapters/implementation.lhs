@@ -333,7 +333,7 @@ efficiency.
 \section{Simulation}
 \label{sec:simulation}
 
-In this section we describe how iteratively-staged Hydra models are simulated.
+In this section we describe how iteratively staged Hydra models are simulated.
 The process is conceptually divided into three stages as illustrated in Figure
 \ref{figSimulation}. In the first stage, a signal relation is flattened and
 subsequently transformed into a mathematical representation suitable for
@@ -925,50 +925,8 @@ LLVM 2.5, respectively. Simulations are performed on a 2.0\,GHz x86-64
 Intel{\textregistered} Core{\texttrademark}2 CPU. However, presently, we do
 not exploit any parallelism, running everything on a single core.
 
-% Let us first consider the model of the breaking pendulum from Section
-% \ref{sec:background-hydrabyexample}. We simulate it over the time interval $t
-% \ \epsilon \ [0,20]$, letting the pendulum break at $t = 10$. Table
-% \ref{table:breaking-pendulum} shows the amount of time spent simulating each
-% mode of the system, and within that how much time that is spent on each of the
-% four conceptual simulation process stages (see Section \ref{sec:simulation}).
-% As can be seen, most time (80--90\,\%) is spent on numerical simulation,
-% meaning the overheads of our dynamic code generation approach was small in
-% this case. Also, in absolute terms, it can be seen that the amount of time
-% spent on symbolic processing, JIT compilation, and event handling was small,
-% just fractions of a second.
-%
-% \begin{table}
-% \centering
-% \scriptsize
-% \begin{tabular}{|| p{1.1cm} || r || r || r || r ||}
-%   \hline
-%
-%   & \multicolumn{2}{c||}{Pendulum}
-%   & \multicolumn{2}{c||}{Free Fall} \\
-%
-%   & \multicolumn{2}{c||}{$t \  \epsilon \ [0, 10) $}
-%   & \multicolumn{2}{c||}{$t \  \epsilon \ [10, 20]$} \\ \hline
-%
-%   & \multicolumn{2}{c||}{CPU Time}
-%   & \multicolumn{2}{c||}{CPU Time} \\ \hline
-%
-%   & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}}
-%   & \multicolumn{1}{c||}{s} & \multicolumn{1}{c||}{\protect{\%}} \\ \hline
-%
-%   Symbolic \mbox{Processing}  &  0.0001  &   0.2  &  0.0000  &  0.0   \\ \hline
-%   JIT \mbox{Compilation}      &  0.0110  &  18.0  &  0.0077  &  9.1   \\ \hline
-%   Numerical \mbox{Simulation} &  0.0500  &  81.8  &  0.0767  &  90.9  \\ \hline
-%   Event \mbox{Handling}       &  0.0000  &   0.0  &  -       &  -     \\ \hline \hline
-%   Total                       &  0.0611  &  100.0 &  0.0844  &  100.0 \\ \hline
-% \end{tabular}
-%
-% \caption{\label{table:breaking-pendulum} Time profile of the breaking pendulum
-% simulation.}
-%
-% \end{table}
-
 To evaluate how the performance of the implementation scales with an
-increasing number of equations, we constructed a structurally-dynami model of
+increasing number of equations, we constructed a structurally dynamic model of
 an RLC circuit (i.e., a circuit consisting of resistors, inductors and
 capacitors) with dynamic structure. In the initial mode of operation the
 circuit contains 200 components, described by 1000 equations in total (5
@@ -1081,8 +1039,8 @@ JIT compiler to reuse the machine code from the previous mode, thus reducing
 the burden on the JIT compiler and consequently the compilation time during
 mode switches. We think it is worthwhile to investigate reusable code
 generation aspects in the context of noncausal modelling and simulation of
-structurally-dynamic systems and suitability of proposed execution model for
-(soft) real-time simulation. Currently, for large structurally-dynamic
+structurally dynamic systems and suitability of proposed execution model for
+(soft) real-time simulation. Currently, for large structurally dynamic
 systems, the implementation is only suitable for offline simulation.
 
 The implementation of Hydra offers new functionality in that it allows

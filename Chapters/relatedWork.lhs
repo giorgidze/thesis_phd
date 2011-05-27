@@ -32,7 +32,7 @@ simulation, while FHM supports noncausal simulation. Signal functions are
 first class entities in most incarnations of FRP, and new ones can be computed
 and integrated into a running system dynamically. As we have seen, this
 capability has also been carried over to FHM. This means that these FRP
-versions, including Yampa, also are examples of iteratively-staged languages.
+versions, including Yampa, also are examples of iteratively staged languages.
 However, as all FRP versions supporting highly dynamic system structure so far
 have been interpreted, the program generation aspect is much less pronounced
 than what is the case for Hydra. That said, in Yampa, program fragments are
@@ -68,7 +68,7 @@ statechart approach implies that all structural modes must be explicitly
 specified in advance, meaning that MOSILAB does not support highly
 structurally dynamic systems. Even so, if the number of possible
 configurations is large (perhaps generated mechanically by meta-modelling),
-higher-order and structurally-dynamic modelling techniques and their
+higher-order and structurally dynamic modelling techniques and their
 implementations investigated here might be of interest also in the
 implementation of MOSILAB.
 

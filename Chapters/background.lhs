@@ -278,7 +278,7 @@ model.
 \caption{\label{figCircuitBlockDiagram2} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit2}.}
 \end{figure}
 
-Simulink can be used to model some structurally-dynamic systems, special
+Simulink can be used to model some structurally dynamic systems, special
 blocks are used two \emph{switch} between block diagrams as a response to
 discrete events. This makes Simulink very useful indeed for modelling of
 structurally dynamic systems. However, the number of configurations or modes
@@ -476,20 +476,20 @@ equation
 end SimpleCircuit;
 \end{code}
 
-\section{Noncausal Modelling of Structurally-dynamic Systems}
+\section{Noncausal Modelling of Structurally Dynamic Systems}
 \label{secHybridModelling}
 
-A structurally-dynamic system is usually modelled using a combination of
+A structurally dynamic system is usually modelled using a combination of
 continuous equations and switching statements that specify discontinuous
-changes in the system. This section is about structurally-dynamic modelling in
+changes in the system. This section is about structurally dynamic modelling in
 noncausal languages. Current limitations are illustrated using a Modelica
-model of a simple structurally-dynamic system. In particular, this section
+model of a simple structurally dynamic system. In particular, this section
 highlights lack of expressiveness of the Modelica language when it comes to
 dynamic addition and removal of time-varying variables and continuous
 equations, and lack of runtime symbolic processing and code generation
 facilities in Modelica implementations.
 
-\subsection{Modelling Structurally-dynamic Systems in Modelica}
+\subsection{Modelling Structurally Dynamic Systems in Modelica}
 
 Let us model a physical system whose structural configuration changes abruptly
 during simulation: a simple pendulum that can break at a specified point in

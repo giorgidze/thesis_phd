@@ -1,7 +1,7 @@
 \chapter{Definition of Hydra}
 \label{chapDefinition}
 
-This is a highly-technical chapter giving a formal definition of the Hydra
+This is a highly technical chapter giving a formal definition of the Hydra
 language. The definition is given in four steps. Firstly, we define Hydra's
 lexical structure and concrete syntax by using the regular expression notation
 and the BNF notation, respectively. Secondly, we give Hydra's untyped abstract
@@ -363,7 +363,7 @@ switch = Switch
 The typed abstract syntax embodies Hydra's type system features that were only
 informally introduced in earlier sections of the thesis. Let us outline
 several key features. A type of a signal relation is determined by its
-pattern. A type of a structurally-dynamic signal relation remains unchanged
+pattern. A type of a structurally dynamic signal relation remains unchanged
 despite the structural changes. Signal relation and signal function
 applications must be well typed. This includes the application of the built-in
 equality signal relation.
@@ -499,7 +499,7 @@ semantics on approximations. This is feasible, but leaves bulk of operational
 details unspecified defeating the purpose of an operational semantics.
 
 For the reasons outlined above, and because the concept of first-class models,
-which allows for higher-order and structurally-dynamic modelling, is not
+which allows for higher-order and structurally dynamic modelling, is not
 predicated on particular approximations used during simulation, we opted to
 use \emph{ideal} denotational semantics for formally defining the Hydra
 language. By referring to the semantics as ideal, we emphasise that concrete

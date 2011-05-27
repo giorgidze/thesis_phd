@@ -14,12 +14,12 @@ domains.
 Current, main-stream noncausal languages are not treating models as
 first-class values. That is, a model can not be parametrised on other models
 or generated at simulation runtime. This results in a very limited
-higher-order and structurally-dynamic modelling capabilities, and limits the
+higher-order and structurally dynamic modelling capabilities, and limits the
 expressiveness and applicability of noncausal languages.
 
 This thesis is about a novel approach to the design and implementation of
 noncausal languages with first-class models supporting higher-order and
-structurally-dynamic modelling. In particular, the thesis presents a language
+structurally dynamic modelling. In particular, the thesis presents a language
 that enables: (1) higher-order modelling capabilities by embedding noncausal
 models as first-class entities into a functional programming language and (2)
 efficient simulation of noncausal models that are generated at simulation

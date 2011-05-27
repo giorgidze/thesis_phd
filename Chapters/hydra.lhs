@@ -94,7 +94,7 @@ The built-in equality signal relation (i.e., |=|) is capable of describing
 flat systems of equations and the signal relation application operator (i.e.,
 |<>|) provides for hierarchically structured systems of equations. In this
 section we introduce one more built-in (higher-order) signal relation that
-allows for description of structurally-dynamic signal relations.
+allows for description of structurally dynamic signal relations.
 
 \begin{code}
 switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
@@ -120,7 +120,7 @@ the constrained signal.
 
 In the signal relation notation described earlier the list of equations that
 follows the pattern is not necessarily a static one as the equations may
-contain a signal relation application of a structurally-dynamic signal
+contain a signal relation application of a structurally dynamic signal
 relation.
 
 \section{Models with Static Structure}
@@ -552,9 +552,9 @@ this section puts an emphasis on how the host, higher-order functional
 language can provide expressive facilities for higher-order, noncausal
 modelling.
 
-\section{Structurally-dynamic Modelling}
+\section{Structurally Dynamic Modelling}
 
-To introduce structurally-dynamic modelling in Hydra, let us model a physical
+To introduce structurally dynamic modelling in Hydra, let us model a physical
 system whose structural configuration changes abruptly during simulation: a
 simple pendulum that can break at a specified point in time; see Figure
 \ref{figPendulum}. The pendulum is modelled as a body represented by a point
@@ -725,7 +725,7 @@ by using the |simulate| function are presented in Figure
 \end{figure}
 
 
-\section{Highly Structurally-dynamic Modelling}
+\section{Highly Structurally Dynamic Modelling}
 
 In the breaking pendulum example and in the half-wave rectifier example
 feature only two modes of operation. In principle (with a suitable language
@@ -787,11 +787,11 @@ divide ((x0,y0),(vx0,vy0)) = [rel| ((x,y),(vx,vy)) ->
 
 The model assumes that the kinetic energy is not lost and the balls divide the
 initial kinetic energy by bouncing to opposite directions. This is an example
-of a highly structurally-dynamic system; the number of modes can not be
+of a highly structurally dynamic system; the number of modes can not be
 determined prior to simulation and it is not feasible to generate the code
 prior to simulation.
 
 Unfortunately, due to the limitations of main-stream noncausal modelling
-languages, declarative equational modelling of (highly) structurally-dynamic
+languages, declarative equational modelling of (highly) structurally dynamic
 systems remains an elusive application. We believe the adoption of the Hydra
 features described in this chapter will remedy this unfortunate situation.
