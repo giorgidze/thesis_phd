@@ -56,7 +56,7 @@ Hydra provides a more conventional-looking syntax for application of the
 built-in equality signal relation. For example, the equation |a * x + b = 0| is
 equivalent to |(=) <> (a * x + b, 0)|.
 
-In addition to user defined signal relations Hydra provides for user defined
+In addition to user-defined signal relations, Hydra provides for user-defined
 signal functions. Hydra uses the following syntax for defining signal
 functions.
 
@@ -64,7 +64,7 @@ functions.
 [fun| pattern -> expression |]
 \end{code}
 
-Just like for signal relations quasi-quoting is used for defining signal
+Just like for signal relations, quasiquoting is used for defining signal
 functions. The pattern binds signal variables that scope over the expression
 that follows. Signal functions can be applied to signals by juxtaposing them
 together:
@@ -79,7 +79,7 @@ alpha|. The type of the resulting signal is |Signal beta|.
 
 The quasiquotes, in addition to serving as an embedded DSL implementation
 tool, can be seen as clear syntactic markers separating the signal level from
-the functional level. This markers are useful when reading Hydra code
+the functional level. These markers are useful when reading Hydra code
 listings. The separation is also enforced at the type level of the host
 language by the |SR| and |SF| type constructors.
 
@@ -110,15 +110,15 @@ composite signal relation changes (from |True| to |False| or from |False| to
 |True|), the composite behaviour is defined by the signal relation that is
 computed by applying the third argument (a function of type |a -> SR a|) to
 the instantaneous value of the constrained signal. A formally defined meaning
-of the switch combinator is given in Chapter \ref{chapDefinition}.
+of the |switch| combinator is given in Chapter \ref{chapDefinition}.
 
 The |switch| combinator allows for definition of a signal relation whose
 equational description changes over time. In addition, the |switch| combinator
 allows for state transfer from the old mode and initialisation of the new mode
-using the function that computes the new mode from the instantaneous values of
+using the function that computes the new mode from an instantaneous value of
 the constrained signal.
 
-In the signal relation notation described earlier the list of equations that
+In the signal relation notation described earlier, the list of equations that
 follows the pattern is not necessarily a static one as the equations may
 contain a signal relation application of a structurally dynamic signal
 relation.
@@ -192,9 +192,9 @@ To clearly see how |twoPin| contributes to the definition of the |resistor|
 signal relation, let us consider what happens when the resistor model is
 \emph{flattened} as part of flattening of a complete model, a transformation
 that is described in detail in Chapter \ref{chapImplementation}. Intuitively,
-flattening can be understood as ``inlining'' of applied signal relations to
-reduce the signal relation into a list of signal equality constrains (i.e., a
-flat DAE). In the process of flattening, the arguments of a signal relation
+flattening can be understood as inlining of applied signal relations to reduce
+the signal relation into a list of signal equality constraints (i.e., a flat
+DAE). In the process of flattening, the arguments of a signal relation
 application are substituted into the body of the applied signal relation, and
 the entire application is then replaced by the instantiated signal relation
 body. In our case, the result of flattening the signal relation |resistor 10|
@@ -256,9 +256,9 @@ specified explicitly.
 
 Unlike Modelica, Hydra does not provide a special language construct for
 specifying noncausal connections; that is, Hydra does not provide a construct
-like |connect| from the Modelica language. However, thanks for signal
-relations being first-class entities, it is possible to implement higher-order
-combinators that facilitate connection of noncausal models.
+like |connect| from the Modelica language. However, because signal relations
+are first-class entities, it is possible to implement higher-order combinators
+that facilitate connection of noncausal models.
 
 To model the simple electrical circuit as an interconnection of the already
 modelled components let us define three higher-order signal relations
@@ -419,22 +419,22 @@ zero. The time step is set to |0.001| and the trajectories of the constrained
 signals are printed to the standard output in the
 gnuplot\footnote{url{http://www.gnuplot.info/}} compatible format. By default
 the simulation code is JIT compiled. The default numerical solver is SUNDIALS
-\citep{Sundials2005}. The users are allowed to provide their own symbolic
+\citep{Sundials2005}, but users allowed to provide their own symbolic
 processors and numerical solvers. This and other implementation aspects are
 described in detail in Chapter \ref{chapImplementation}.
 
 The earlier sections of this chapter introduced the Hydra language using the
-simple electrical circuit example. This example allows readers familiar with
+simple electrical-circuit example. This example allows readers familiar with
 object-oriented, noncausal languages like Modelica to compare the Hydra model
 given in this Chapter to the Modelica model given in Chapter
 \ref{chapBackground}. The rest of the Chapter focuses on the features of Hydra
 that are absent from main-stream, noncausal modelling languages. Specifically,
-we discuss higher-order and structurally modelling capabilities of the Hydra
-language.
+we discuss higher-order and structurally dynamic modelling capabilities of the
+Hydra language.
 
 \section{More Higher-order Modelling}
 
-We have already seen several higher-order models; for example, |serial|,
+We have already seen several higher-order models; for example, the |serial|,
 |parallel| and |groundedCircuit| signal relations. This section considers more
 higher-order modelling examples, but this time concentrating on signal
 relations that are parametrised on collections of signal relations. The
@@ -461,7 +461,7 @@ foldr _ z []     =  z
 foldr f z (x:xs) =  f x (foldr f z xs)
 \end{code}
 
-The function takes as arguments a binary operator, a starting value which is
+The function takes as arguments a binary operator, a starting value that is
 typically the right-identity of the binary operator, and a list. The |foldr|
 function folds the list using the binary operator, from right to left:
 
@@ -620,7 +620,7 @@ To this end, the |switch| combinator is used:
 \begin{code}
 breakingPendulum :: Real -> Real -> Real -> SR Body
 breakingPendulum t l phi0 =
-  switch (pendulum l phi0) [fun|\_ -> time >= $t$ |] (\b -> freeFall b)
+  switch (pendulum l phi0) [fun| \ _ -> time >= $t$ |] (\b -> freeFall b)
 \end{code}
 
 In this signal relation, the switch happens at an \emph{a priori} specified
@@ -637,18 +637,21 @@ in Figure \ref{figPendulumPlot}
 \caption{\label{figPendulumPlot} Plot showing how |x| and |y| coordinates of the body on the breaking pendulum change over time.}
 \end{figure}
 
-We have already remonstrated how the |switch| combinator can be used to
+We have already demonstrated how the |switch| combinator can be used to
 dynamically add and remove signal variables and noncausal equations. This
 flexibility is useful even when the number of equations and variables remain
 unchanged during the simulation. The book by \citet{Cellier2006} gives one
-such example: the half-wave rectifier circuit with ideal diode and in-line
-inductor that is depicted in Figure \ref{figRectifier}.
+such example: the half-wave rectifier circuit with an ideal diode and an
+in-line inductor that is depicted in Figure \ref{figRectifier}.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/rectifier.pdf}
 \end{center}
-\caption{\label{figRectifier} Half-wave rectifier circuit with ideal diode and in-line inductor.}
+
+\caption{\label{figRectifier} Half-wave rectifier circuit with an ideal diode
+and an in-line inductor.}
+
 \end{figure}
 
 The half-wave rectifier circuit can be modelled easily in languages like
@@ -684,9 +687,9 @@ relations to switch into each other.
 
 \begin{code}
 ioDiode  ::  SR (Pin,Pin)
-ioDiode  =   switch   nowire  [fun| ((_,p_v),(_,n_v))  ->  p_v - n_v > 0 |]  (\_ -> icDiode)
+ioDiode  =   switch   nowire  [fun| ((_,p_v),(_,n_v))  ->  p_v - n_v > 0 |]  ( \ _ -> icDiode)
 icDiode  ::  SR (Pin,Pin)
-icDiode  =   switch   wire    [fun| ((p_i,_),(_,_))    ->  p_i < 0 |]        (\_ -> ioDiode)
+icDiode  =   switch   wire    [fun| ((p_i,_),(_,_))    ->  p_i < 0 |]        ( \ _ -> ioDiode)
 \end{code}
 
 The switches are controlled by the polarity of the voltage and the current
@@ -727,12 +730,12 @@ by using the |simulate| function are presented in Figure
 
 \section{Highly Structurally Dynamic Modelling}
 
-In the breaking pendulum example and in the half-wave rectifier example
-feature only two modes of operation. In principle (with a suitable language
-design and implementation) it is possible to generate code for two modes of
-operation prior to simulation. However, despite their simplicity, these are
-examples with which main-stream noncausal languages such as Modelica struggle,
-as mentioned earlier.
+The breaking pendulum and half-wave rectifier examples feature only two modes
+of operation. In principle (with a suitable language design and
+implementation) it is feasible to generate code for two modes of operation
+prior to simulation. However, despite their simplicity, these are examples
+with which main-stream noncausal languages such as Modelica struggle, as
+mentioned earlier.
 
 Because of the expressivity of the |switch| combinator, in general, it is not
 possible to compile Hydra models prior to simulation. For example, given a
@@ -786,7 +789,7 @@ divide ((x0,y0),(vx0,vy0)) = [rel| ((x,y),(vx,vy)) ->
 \end{code}
 
 The model assumes that the kinetic energy is not lost and the balls divide the
-initial kinetic energy by bouncing to opposite directions. This is an example
+initial kinetic energy by bouncing in opposite directions. This is an example
 of a highly structurally dynamic system; the number of modes cannot be
 determined prior to simulation and it is not feasible to generate the code
 prior to simulation.
