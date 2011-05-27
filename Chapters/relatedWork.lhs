@@ -3,7 +3,7 @@
 
 \section{Embedded Domain Specific Languages}
 
-The deep embedding techniques used in the Hydra implementation for
+The deep-embedding techniques used in the Hydra implementation for
 domain-specific optimisations and efficient code generation draws from the
 extensive work on compiling staged domain-specific embedded languages.
 Examples include \citet{Elliott2000} and \citet{Mainland2008}. However, these
@@ -16,11 +16,11 @@ from Flask, a domain-specific embedded language for programming sensor
 networks \citep{Mainland2008}. However, we had to use a different approach to
 type checking. A Flask program is type checked by a domain-specific type
 checker after being generated, just before the subsequent compilation into the
-code to be deployed on the sensor network nodes. This happens at host language
+code to be deployed on the sensor network nodes. This happens at host-language
 run-time. Because Hydra is iteratively staged, we cannot use this approach: we
-need to move type checking back to host language compile-time. The Hydra
+need to move type checking back to host-language compile-time. The Hydra
 implementation thus translates embedded programs into typed combinators at the
-stage of quasiquoting, charging the host language type checker with checking
+stage of quasiquoting, charging the host-language type checker with checking
 the embedded terms. This ensures only well-typed programs are generated at
 run-time.
 
