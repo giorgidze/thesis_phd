@@ -38,8 +38,8 @@ most important ones are listed below:
 \begin{itemize}
 
 \item In many physical domains models are more naturally represented using
-noncausal equations and in some physical domains models can not be
-represented using only causal equations.
+noncausal equations and in some physical domains models cannot be represented
+using only causal equations.
 
 \item Noncausal languages are more declarative and approach modelling
 problems from higher level of abstraction by focusing on \emph{what} to model
@@ -182,7 +182,7 @@ simulation code for efficiency.
 
 In addition to presenting the language definition and implementation, the
 aforementioned claims are also backed up by illustrating a range of example
-physical systems that can not be modelled and simulated in current noncausal
+physical systems that cannot be modelled and simulated in current noncausal
 languages. The examples are carefully chosen to show case those language
 features of Hydra that are lacking in other noncausal modelling languages.
 

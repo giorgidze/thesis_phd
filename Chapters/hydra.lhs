@@ -787,7 +787,7 @@ divide ((x0,y0),(vx0,vy0)) = [rel| ((x,y),(vx,vy)) ->
 
 The model assumes that the kinetic energy is not lost and the balls divide the
 initial kinetic energy by bouncing to opposite directions. This is an example
-of a highly structurally dynamic system; the number of modes can not be
+of a highly structurally dynamic system; the number of modes cannot be
 determined prior to simulation and it is not feasible to generate the code
 prior to simulation.
 

@@ -12,10 +12,10 @@ more reusable. This is considered as a crucial advantage in many physical
 domains.
 
 Current, main-stream noncausal languages are not treating models as
-first-class values. That is, a model can not be parametrised on other models
-or generated at simulation runtime. This results in a very limited
-higher-order and structurally dynamic modelling capabilities, and limits the
-expressiveness and applicability of noncausal languages.
+first-class values; that is, a model cannot be parametrised on other models or
+generated at simulation runtime. This results in a very limited higher-order
+and structurally dynamic modelling capabilities, and limits the expressiveness
+and applicability of noncausal languages.
 
 This thesis is about a novel approach to the design and implementation of
 noncausal languages with first-class models supporting higher-order and
