@@ -3,9 +3,9 @@
 
 This chapter describes how Hydra is embedded in Haskell and how embedded
 noncausal models are simulated. Performance of the simulator is evaluated by
-focussing on the implementation aspects that are absent from main-stream,
-noncausal language implementations (i.e., runtime symbolic processing and JIT
-compilation).
+focussing on the implementation aspects that are absent from main-stream
+noncausal modelling language implementations (i.e., runtime symbolic
+processing and JIT compilation).
 
 \section{Embedding}
 \label{secEmbedding}
@@ -17,7 +17,7 @@ quasiquoting to generate the typed representation of Hydra models from strings
 in the concrete syntax. An opening quasiquote specifies a function (a
 so-called quasiquoter) that performs the aforementioned transformation. In
 GHC, a quasiquoter generates Haskell code using Template Haskell
-\citep{Sheard2002}, a compile-time meta programming facility implemented in
+\citep{Sheard2002}, a compile-time meta-programming facility implemented in
 GHC.
 
 GHC executes quasiquoters at Haskell compile time, before type checking. As
@@ -39,10 +39,10 @@ corresponding untyped representation is generated as an abstract syntax tree
 (AST). The BNF Converter (BNFC), a compiler front-end generator from a
 labelled BNF grammar \citep{BNFC2004}, is used to generate the parser and the
 AST data type. The labelled BNF grammar of Hydra is given in Figure
-\ref{figGrammar}. The syntax that the generated parser implements and the
-generated AST data type is exactly the same as given in the language
+\ref{figGrammar}. The generated AST data type and the syntax that the
+generated parser implements are exactly the same as given in the language
 definition in Chapter \ref{chapDefinition}. In addition, we use BNFC to
-generate Hydra's layout resolver allowing for list of equations in |rel|
+generate Hydra's layout resolver allowing for a list of equations in |rel|
 quasiquotes to be constructed without curly braces and semicolons. The layout
 rules are the same as for Haskell.
 
@@ -231,7 +231,7 @@ the |vanDerPol| signal relation.}
 
 Let us briefly overview the typed abstract syntax used in the implementation
 of Hydra. This is to highlight a minor difference from the typed abstract
-syntax presented in the language definition and to draw your attention on the
+syntax presented in the language definition and to draw your attention to the
 mixed-level embedding techniques used in the implementation.
 
 The typed abstract syntax allows for two ways to form a signal relation:
@@ -244,17 +244,17 @@ data SR a where
   Switch  ::  SR a -> SF a Bool -> (a -> SR a) -> SR a
 \end{code}
 
-The constructor |SigRel| forms a signal relation from a function that takes a
+The constructor |SR| forms a signal relation from a function that takes a
 signal and returns a list of equations constraining the given signal. This
-list of equations constitute a system of DAEs that defines the signal relation
-by expressing constraints on the signal. The system of equations is not
-necessarily a static one as the equations may refer to signal relations that
-contain switches.
+list of equations constitutes a system of DAEs that defines the signal
+relation by expressing constraints on the signal. The system of equations is
+not necessarily a static one as the equations may refer to signal relations
+that contain switches.
 
-The |switch|-combinator, which was introduced in Chapter \ref{chapHydra},
+The |switch| combinator, which was introduced in Chapter \ref{chapHydra},
 forms a signal relation by temporal composition of two signal relations.
 Internally, in the implementation of Hydra, such a temporal composition is
-represented by a signal relation fromed by the |Switch| constructor:
+represented by a signal relation formed by the |Switch| constructor:
 
 \begin{code}
 switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
@@ -274,8 +274,8 @@ The |Local| constructor forms equations that merely introduce local signals.
 As it is evident from the language definition, such signals can be constrained
 only by the equations that are returned by the function that is the first
 argument of the |Local| constructor. In contrast, equation generating
-functions in the |SigRel| constructor are allowed to be passed a signal that
-is constrained elsewhere. This distinction is enforced by the language
+functions in the |SR| constructor are allowed to be passed a signal that is
+constrained elsewhere. This distinction is enforced by the language
 implementation, as we will see later in this chapter.
 
 Initialisation equations, formed by the |Init| constructor, state initial
@@ -341,7 +341,7 @@ numerical simulation. In the second stage, this representation is JIT compiled
 into efficient machine code. In the third stage, the compiled code is passed
 to a numerical solver that simulates the system until the end of simulation or
 an event occurrence. In the case of an event occurrence, the process is
-repeated from the first stage by staring the new itearation.
+repeated from the first stage by staring the new iteration.
 
 
 \begin{figure}[t]
@@ -379,7 +379,7 @@ chapter.
 The implementation of Hydra provides the default experiment configuration that
 is given in Figure \ref{figDefaultExperiment}. Note that the last three fields
 of the experiment description record are expected to be modified by expert
-users willing to provide there own runtime symbolic processor and numerical
+users willing to provide their own runtime symbolic processor and numerical
 solvers. The behaviour of the |defaultSymbolicProcessor|,
 |defaultNumericalSolver| and |defaultTrajectoryVisualiser| are described in
 detail later in this chapter.
@@ -422,7 +422,7 @@ defaultExperiment = Experiment {
 \section{Symbolic Processing}
 \label{secSymbolicProcessing}
 
-In this section we describe the first stage performed by the simulator,
+In this section we describe the first stage performed by the simulator:
 symbolic processing. A symbolic processor is a function from a symbol table to
 a symbol table. The symbol table data type that is used in the implementation
 of Hydra is given in Figure \ref{figSymTab}. The symbol table record has five
@@ -431,20 +431,20 @@ fields.
 The |model| field is for a top-level signal relation that is active. At the
 start of the simulation, the |simulate| function places application of its
 first argument of type |SR ()| to the |Unit| signal. In other words, the
-|model| field contains a system hierarchical equations with signal relation
-applications and temporal compositions that is currently active.
+|model| field contains currently active system of hierarchical equations that
+contains signal relation applications and temporal compositions.
 
 The |equations| field is for a flat list of equations that describe an active
-mode of operation. By flat we meant that the list of equations only contain
+mode of operation. By flat we mean that the list of equations only contain
 |Init| and |Equal| equations. At the start of the simulation, the |simulate|
-functions places an empty list in this field.
+function places an empty list in this field.
 
-The |events| fieled is for a list of event occurrences. Recall the the type
-signature of the |switch| combinator. A signal function that detects events
-returns a boolean signal. The simulator places the boolean signal expressions
-that describe an event occurrence at each structural change. Initially, at the
-start of the simulation, the simulator places an empty list in the |events|
-field of the symbol table.
+The |events| field is for a list of event occurrences. Recall the the type
+signature of the |switch| combinator given in Section \ref{secEmbedding}. A
+signal function that detects events returns a boolean signal. The simulator
+places the boolean signal expressions that describe an event occurrence at
+each structural change. Initially, at the start of the simulation, the
+simulator places an empty list in the |events| field of the symbol table.
 
 The |time| field is for current time. Initially the simulator places the
 starting time given in the experiment description in this field. The |time|
@@ -620,10 +620,10 @@ systems of equations.}
 
 \end{figure}
 
-Each of the three steps of the default symbolic processor has compact and
+Each of the three steps of the default symbolic processor has a compact and
 self-explanatory definition, especially, the |flattenEquations| function. To
 my knowledge, this is the shortest formal and executable definition of the
-flattening process for noncausal modelling languages. This is partly due to
+flattening process for a noncausal modelling language. This is partly due to
 the simple abstract syntax and utilisation of shallow embedding techniques,
 specifically, embedded functions in the |SR| and |Switch| constructors.
 
@@ -669,7 +669,7 @@ conditions for Equation \ref{main-eq}; that is, the values of
 $\frac{d\vec{x}}{dt}$,$\vec{x}$ and $\vec{y}$ at the starting time of the
 active mode of operation. Equation \ref{main-eq} corresponds to the |Equal|
 equations that are placed in the |equations| field of the symbol table, and
-thus is the main DAE of the system that is integrated in time starting from
+thus is the main DAE of the system that is integrated over time starting from
 the initial conditions. Equation \ref{event-eq} corresponds to the boolean
 signals placed in the |events| field of the symbol table and specifies event
 conditions.
@@ -718,14 +718,14 @@ type Residual = FunPtr  (       CDouble
 \end{code}
 
 The first function argument is time. The second argument is a vector of real
-valued signal. The third argument is a vector of differentials of real valued
+valued signal. The third argument is a vector of differentials of real-valued
 signals. The forth argument is a vector of residuals, or in the case of the
 event specification vector of boolean signal values where |-1.0| represents
 |False| and |1.0| represents |True|. The residual functions read the first
 three arguments and write the residual values in the fourth argument. As these
 functions are passed to numerical solvers it is critical to allow for fast
-positional access of vector elements and in-place vector updates. Hence, the
-use C-style arrays.
+positional access of vector elements and in-place vector updates. Hence the
+use of C-style arrays.
 
 Figure \ref{figLLVMCodeUnopt} gives the unoptimised LLVM code that is
 generated for the parametrised van der Pol oscillator. The corresponding
@@ -913,7 +913,7 @@ software. The results would not be very meaningful.
 The implementation of Hydra provides for user-defined symbolic processors and
 numerical solvers. It does not provide for user-defined JIT compiler. In the
 following we evaluate the performance of the default symbolic processor, the
-default numerical solver and the built-in LLVM based JIT compiler.
+default numerical solver and the built-in LLVM-based JIT compiler.
 
 The evaluation setup is as follows. The numerical simulator integrates the
 system using variable-step, variable-order BDF (Backward Differentiation
@@ -1039,9 +1039,9 @@ JIT compiler to reuse the machine code from the previous mode, thus reducing
 the burden on the JIT compiler and consequently the compilation time during
 mode switches. We think it is worthwhile to investigate reusable code
 generation aspects in the context of noncausal modelling and simulation of
-structurally dynamic systems and suitability of proposed execution model for
-(soft) real-time simulation. Currently, for large structurally dynamic
-systems, the implementation is only suitable for offline simulation.
+structurally dynamic systems, and the suitability of the proposed execution
+model for (soft) real-time simulation. Currently, for large structurally
+dynamic systems, the implementation is only suitable for offline simulation.
 
 The implementation of Hydra offers new functionality in that it allows
 noncausal modelling and simulation of structurally dynamic systems that simply
