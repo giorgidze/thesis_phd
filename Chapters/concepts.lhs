@@ -1,12 +1,12 @@
 \chapter{Concepts of Hydra}
 \label{chapConcepts}
 
-This chapter introduces three central concepts of the Hydra language: signal,
-signal function and signal relation. These concepts facilitate development of
-and reasoning about Hydra models, and are used both in informal (see Chapter
-\ref{chapHydra}) and formal (see Chapter \ref{chapDefinition}) presentations
-of the language. This chapter only covers conceptual definitions; how the
-concepts of Hydra are implemented is covered in Chapter
+This chapter introduces the three central concepts of the Hydra language:
+signal, signal function and signal relation. These concepts facilitate
+development of and reasoning about Hydra models, and are used both in informal
+(see Chapter \ref{chapHydra}) and formal (see Chapter \ref{chapDefinition})
+presentations of the language. This chapter only covers conceptual
+definitions; how the concepts of Hydra are implemented is covered in Chapter
 \ref{chapImplementation}.
 
 \section{Signal}
@@ -49,8 +49,8 @@ Because a pair of signals, say |(Signal alpha,Signal beta)|, is isomorphic to
 a signal of the pair of the carried types, in this case |Signal (alpha,
 beta)|, unary signal functions suffice for handling signal functions of any
 arity; for example, the binary signal function |add| that takes two signals
-and computes sum of their values at each point in time can be given the
-following type and the conceptual definition:
+and computes the sum of their values at each point in time can be given the
+following type and conceptual definition:
 
 \begin{code}
 add :: SF (Real,Real) Real
@@ -61,8 +61,8 @@ Hydra provides a number of primitive signal functions that lift common
 mathematical operations (e.g., |+|, |*|, |sin| and |cos|) to the signal level.
 Hydra also provides the |der| signal function of type |SF Real Real|. This
 signal function differentiates the given signal. Later we will see that the
-use of the |der| signal function in noncausal equations allows for definition
-of differential equations.
+use of the |der| signal function in noncausal equations allows for the
+definition of differential equations.
 
 \section{Signal Relation}
 
