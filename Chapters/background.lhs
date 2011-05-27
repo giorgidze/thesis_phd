@@ -40,7 +40,7 @@ The first four equations describe the component behaviours. The last three
 equations describe the circuit topology. The system of equations consists of
 implicitly defined algebraic and differential equations. This mathematical
 representation is called system of implicit \emph{differential algebraic
-equations} (DAEs) \citep{Cellier2006}. More generally, system of implicit DAEs
+equations} (DAEs) \citep{Cellier2006}. More generally, a system of implicit DAEs
 can be written in the following way:
 \begin{equation}
 f(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) = 0
@@ -52,7 +52,7 @@ is an independent scalar variable. In physical modelling $t$ represents
 
 In general, it is not possible to find an exact solution of a DAE using
 analytical methods \citep{Brenan1996a}. Approximate solutions are derived by
-\emph{numerical integration}. Their are a number of methods for numerical
+\emph{numerical integration}. There are a number of methods for numerical
 integration of an implicit DAE. There are numerical solvers that directly
 operate on the implicit representation (e.g., the IDA solver from the SUNDIALS
 numerical suite \citep{Sundials2005}).
@@ -68,8 +68,8 @@ the translation using the simple electrical circuit example.
 In order to transform the implicit DAE describing the simple electrical
 circuit into an explicit one, we perform the following steps. Firstly, we
 identify \emph{known} and \emph{unknown} variables. Secondly, we decide which
-unknown variable should be solved in which equation. Thirdly, we sort
-equations in a way that no unknown variable is used before it is solved.
+unknown variable should be solved in which equation. Thirdly, we sort the
+equations in such a way that no unknown variable is used before it is solved.
 
 Time $t$ and the state variables $u_c$ and $i_2$ are assumed to be known, the
 rest of the variables are unknowns, including the state derivatives
@@ -94,7 +94,7 @@ This symbolic manipulation process is called \emph{causalisation}. Now the
 cause-effect relationship is explicitly specified which was not the case for
 the implicit DAE.
 
-Let us substitute the variables defined in the first five equations in the
+Let us substitute the variables defined in the first five equations into the
 last two equations. This effectively eliminates the algebraic equations from
 the system.
 
@@ -144,7 +144,7 @@ t_0  = 0, t_1 = t_0 + h, \ t_2 = t_1 + 2h, ...,  t_n = t_{n-1} + nh, ...
 Here, $\vec{x}_n$ is a numerical approximation of $\vec{x}(t_n)$.
 
 More accurate and efficient numerical integration methods are available based
-on different approximations and integration algorithms. More comprehensive
+on different approximations and integration algorithms. A comprehensive
 presentation of this and other more sophisticated methods can be found in the
 book by \citet{Cellier2006}.
 
@@ -172,10 +172,10 @@ state vector at the discrete points of time given in Equation
 
 In the case of the simple electrical circuit model, the algebraic variables
 can also be solved by adding so called \emph{output equations} in the function
-that numerical integrates the system of equations. Output equations are
+that numerically integrates the system of equations. Output equations are
 explicit algebraic equations where the algebraic variables are defined in
-terms of the differential variables. We refine the integration function by adding the
-output equation that solves the algebraic variable $i_1$.
+terms of the differential variables. We refine the integration function by
+adding the output equation that solves the algebraic variable $i_1$.
 
 \begin{code}
 integrateSimpleCircuit  ::  Double -> Double -> Double -> Double
@@ -198,7 +198,7 @@ evaluating the $integrateSimpleCircuit$ function.
 \caption{\label{figCircuitPlot1} Plot showing how variables $i_1$ and $i_2$ change over time.}
 \end{figure}
 
-The simple electrical circuit example highlights the three essential steps
+The simple electrical-circuit example highlights the three essential steps
 involved in the process of modelling and simulation of physical systems:
 
 \begin{itemize}
@@ -213,11 +213,13 @@ general purpose programming languages like Fortran, C, Java or Haskell is a
 common practise. However, manual translation becomes tedious and error prone
 with growing complexity. Imagine conducting the process presented in this
 section for a physical system described with hundreds of thousands of
-equations. Modelling languages and simulation tools can help with all three
-phases mentioned above. The following section overviews state-of-the-art
-representatives of causal and noncausal modelling languages. In this thesis we
-focus on modelling languages capable of simulating mathematical models without
-assuming a particular domain of physics.
+equations.
+
+Modelling languages and simulation tools can help with all three phases
+mentioned above. The following section overviews state-of-the-art
+representatives of causal and noncausal modelling languages. In this thesis,
+we focus on modelling languages capable of simulating mathematical models
+without assuming a particular domain of physics.
 
 \section{Causal Modelling in Simulink}
 \label{secSimulink}
@@ -235,10 +237,10 @@ multiplication, summation and integration.
 \caption{\label{figCircuitBlockDiagram1} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit1}.}
 \end{figure}
 
-Block-diagrams in causal languages correspond to systems of ODEs in explicit
-form; that is, the causality is explicit, the input and state variables are
+Block diagrams in causal languages correspond to systems of ODEs in explicit
+form. That is, the causality is explicit: the input and state variables are
 used to define the state derivatives and the output variables. The
-construction of a block-diagram is closely related to the process of
+construction of a block diagram is closely related to the process of
 causalisation. Derivation of simulation code from a block diagram is done much
 in the same way as described in Section \ref{secModelling}, but using more
 sophisticated numerical methods.
@@ -256,13 +258,12 @@ voltage, we should use the block that corresponds to the first equation. If we
 need to compute the voltage from the current, we should use the block that
 corresponds to the second equation.
 
-We demonstrate the aforementioned reuse problem, by causally modelling a
-modified circuit where one more resistor is added to the simple electrical
-circuit as shows in Figure \ref{figCircuit2}. The causal model is given in
-Figure \ref{figCircuitBlockDiagram2}. Note that we were not able to reuse the
-resistor model from the original circuit diagram. In addition, a simple
-addition to the physical system caused hardly obvious changes in the causal
-model.
+To demonstrate the aforementioned reuse problem, we modify the simple
+electrical circuit by adding one more resistor, as shown in Figure
+\ref{figCircuit2}, and then causally model it as shown in Figure
+\ref{figCircuitBlockDiagram2}. Note that we were unable to reuse the resistor
+model from the original circuit diagram. Furthermore, a simple addition to the
+physical system caused hardly obvious changes in the causal model.
 
 \begin{figure}
 \begin{center}
@@ -278,14 +279,14 @@ model.
 \caption{\label{figCircuitBlockDiagram2} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit2}.}
 \end{figure}
 
-Simulink can be used to model some structurally dynamic systems, special
-blocks are used two \emph{switch} between block diagrams as a response to
-discrete events. This makes Simulink very useful indeed for modelling of
-structurally dynamic systems. However, the number of configurations or modes
-must be finite and all modes must be predetermined before simulation. Thus
-Simulink does not enable modelling and simulation of highly structurally
-dynamic systems. In addition, Simulink block diagrams are first-order thus
-Simulink does not support higher-order causal modelling.
+Simulink can be used to model some structurally dynamic systems: special
+blocks are used to \emph{switch} between block diagrams as a response to
+discrete events. This makes Simulink very useful for modelling of structurally
+dynamic systems. However, the number of modes must be finite and all modes
+must be predetermined before simulation. Thus Simulink does not enable
+modelling and simulation of highly structurally dynamic systems. In addition,
+Simulink block diagrams are first order, thus Simulink does not support
+higher-order causal modelling.
 
 
 \section{Noncausal Modelling in Modelica}
@@ -515,7 +516,7 @@ model BreakingPendulum
 equation
    v_x  =  der x
    v_y  =  der y
-  if (time > t) then
+  if (time < t) then
     x   =     l  *  sin phi
     y   =  -  l  *  cos phi
     0   =  der (der phi) + (g / l) * sin phi
@@ -552,7 +553,7 @@ modelling language.
 
 Currently, the Modelica language lacks expressiveness to describe structural
 changes. The breaking pendulum example demonstrates the problems that arise
-when there is a need for change of the number of variables in the system. In
+when there is a need to change the number of variables in the system. In
 addition, the Modelica compilers carry out the symbolic processing and
 generate the simulation code all at once, prior to simulation, which
 introduces further limitations.
