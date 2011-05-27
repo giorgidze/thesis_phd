@@ -131,8 +131,8 @@ that captures the common behaviour of electrical components with two
 connectors (see Figure \ref{figTwoPin}):
 
 \begin{code}
-type Pin = (Real,Real)  
- 
+type Pin = (Real,Real)
+
 twoPin :: SR ((Pin,Pin),Real)
 twoPin = [rel| (((p_i,p_v),(n_i,n_v)),u) ->
   p_v  -  n_v  =  u

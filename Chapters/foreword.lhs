@@ -6,7 +6,7 @@
 \emph{``Unprovided with original learning, unformed in the habits of thinking,
 unskilled in the arts of composition, I resolved to write a book.''}
 \end{flushleft}
-\begin{flushright} 
+\begin{flushright}
 \large
 Edward Gibbon
 \end{flushright}

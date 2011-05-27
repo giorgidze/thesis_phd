@@ -32,7 +32,7 @@ i_1 & = & C \cdot \frac{du_C}{dt} \\
 u_L & = & L \cdot \frac{di_2}{dt} \\
 i_1 + i_2 & = & i \\
 u_R + u_C & = & u_s \\
-u_S & = & u_L 
+u_S & = & u_L
 \end{eqnarray}
 \end{subequations}
 
@@ -85,7 +85,7 @@ u_L  & = & u_S \\
 u_R  & = & u_S - u_C \\
 i_1  & = & \frac{u_R}{R} \\
 i    & = & i_1 + i_2 \\
-\frac{du_C}{dt} & = & \frac{i_1}{C} \\  
+\frac{du_C}{dt} & = & \frac{i_1}{C} \\
 \frac{di_2}{dt} & = & \frac{u_L}{L}
 \end{eqnarray}
 \end{subequations}
@@ -162,7 +162,7 @@ integrateSimpleCircuit dt r c l = go 0 0 0
   where
   go t uc i2 =  let  di2  =  (sin(2 * pi * t) / l) * dt
                      duc  =  ((sin(2 * pi * t) - uc) / (r * c)) * dt
-                in   (t, i2, uc) : go (t + dt) (uc + duc) (i2 + di2) 
+                in   (t, i2, uc) : go (t + dt) (uc + duc) (i2 + di2)
 \end{code}
 
 Given the numerical integration time step and the circuit parameters, this
@@ -185,7 +185,7 @@ integrateSimpleCircuit dt r c l = go 0 0 0
   go t uc i2 =  let   di2  =  (sin(2 * pi * t) / l) * dt
                       duc  =  ((sin(2 * pi * t) - uc) / (r * c)) * dt
                       i1   =  (sin (2 * pi * t) - uc) / r
-                in    (t, i2, uc, i1) : go (t + dt) (uc + duc) (i2 + di2) 
+                in    (t, i2, uc, i1) : go (t + dt) (uc + duc) (i2 + di2)
 \end{code}
 
 Figure \ref{figCircuitPlot1} shows the simulation result obtained by
@@ -512,7 +512,7 @@ model BreakingPendulum
   parameter Real l = 1, phi_0 = pi / 4, t = 10;
   Real x, y, v_x, v_y;
   protected Real phi(start = pi / 2);
-equation 
+equation
    v_x  =  der x
    v_y  =  der y
   if (time > t) then

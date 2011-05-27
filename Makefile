@@ -4,7 +4,7 @@ BIBTEX   = bibtex main
 
 all: clean
 	$(LHS2TEX)
-	$(LATEX) 
+	$(LATEX)
 	$(BIBTEX)
 	$(LATEX)
 	$(LATEX)
