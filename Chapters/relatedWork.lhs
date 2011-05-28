@@ -39,8 +39,8 @@ than what is the case for Hydra. That said, in Yampa, program fragments are
 generated and then optimised dynamically \citep{Nilsson2005a}. It would be
 interesting to try to apply the implementation approaches described in this
 thesis (i.e., runtime symbolic processing and JIT compilation) to a version of
-FRP, especially in the context of recently proposed FRP related optimisations
-\citep{Liu2009a,Sculthorpe2008a,Sculthorpe2009a}.
+FRP, especially in the context of the recently proposed optimisations by
+\citet{Liu2009a} and \citet{Sculthorpe2011a}.
 
 \section{Noncausal Modelling and Simulation Languages}
 \subsection{Sol}
