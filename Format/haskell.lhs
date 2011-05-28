@@ -8,37 +8,38 @@
 %format ~= = "\approx"
 
 %format Real = "\mathbb{R}"
-%format Bool = "\mathbb{B}"
 
 %format plus_sf = "+_{SF}"
 
 %format (lim (a) (b)) = "\displaystyle\lim_{" a "\to" b "}"
 %format (frac (a) (b)) = "\frac{" a "}{" b "}"
 
-%format (translateSR  (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"
-%format (translateSF  (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
-%format (translatePat (a)) = "{\llbracket}" a "{\rrbracket}_{pat}"
-%format (translateEqs (a)) = "{\llbracket}" a "{\rrbracket}_{eqs}"
-%format (translateExp (a)) = "{\llbracket}" a "{\rrbracket}_{exp}"
-%format (translateHs  (a)) = "{\llbracket}" a "{\rrbracket}_{hs}"
-%format (translateIdent  (a)) = "{\llbracket}" a "{\rrbracket}_{ident}"
+%format (translateSR  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{sr}}"
+%format (translateSF  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{sf}}"
+%format (translatePat (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{pat}}"
+%format (translateEqs (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"
+%format (translateExp (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{exp}}"
+%format (translateHs  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{hs}}"
+%format (translateIdent  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{ident}}"
 
 %format (desugar  (a)) = "{\llbracket}" a "{\rrbracket}"
 
 %format (desugarPairSigRel   (a)) = "{\llbracket}" a "{\rrbracket}"
-%format (desugarPairEquation (a)) = "{\llbracket}" a "{\rrbracket}_{eq}"
+%format (desugarPairEquation (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{eq}}"
 
 %format (sem     (a)) = "{\llbracket}" a "{\rrbracket}"
-%format (semSR   (a)) = "{\llbracket}" a "{\rrbracket}_{sr}"
-%format (semSF   (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
-%format (semEqs  (a)) = "{\llbracket}" a "{\rrbracket}_{eqs}"
-%format (semSig  (a)) = "{\llbracket}" a "{\rrbracket}_{sig}"
+%format (semSR   (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{sr}}"
+%format (semSF   (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{sf}}"
+%format (semEqs  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"
+%format (semSig  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{sig}}"
 
-%format (handleEvs  a) = "{\llbracket}" a "{\rrbracket}_{eqs}"
-%format (buildEvs   a) = "{\llbracket}" a "{\rrbracket}_{eqs}"
-%format (flattenEqs a) = "{\llbracket}" a "{\rrbracket}_{eqs}"
-%format (eval       a) = "{\llbracket}" a "{\rrbracket}_{sig}"
-%format (evalPrimSF (a)) = "{\llbracket}" a "{\rrbracket}_{sf}"
+%format (semZC      a) = "{\llbracket}" a "{\rrbracket}_{\Varid{zc}}"
+%format (handleEvs  a) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"
+%format (buildEvs   a) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"
+%format (flattenEqs a) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"
+%format (eval       a) = "{\llbracket}" a "{\rrbracket}_{\Varid{sig}}"
+
+%format (evalPrimSF (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{sf}}"
 
 %format alpha   = "\alpha"
 %format beta    = "\beta"

@@ -26,11 +26,10 @@ flowing in a certain electrical circuit over time, or a signal of type |Signal
 (Real,Real)| can represent a change of position of a certain object in a two
 dimensional space over time.
 
-The basic signal types of Hydra are real signals (i.e., |Signal Real|) and
-boolean signals (i.e., |Signal Bool|). Hydra also allows for signals of
-arbitrarily nested pairs of the basic types. Nested pairs of signals are
-useful for grouping of related signals. As an example of a signal that carries
-nested pairs, consider a signal of type |Signal ((Real,Real),(Real,Real))|.
+Hydra features signals of reals (i.e., |Signal Real|) and signals of
+arbitrarily nested pairs of reals. Signals of nested pairs are useful for
+grouping of related signals. As an example of a signal that carries nested
+pairs of reals, consider a signal of type |Signal ((Real,Real),(Real,Real))|.
 This signal can represent current and voltage pairs at the positive and
 negative pins of a two-pin electrical component, for example.
 

@@ -35,86 +35,68 @@ terminals.
 
 \begin{tabular}{lll}
 {\nonterminal{SigRel}} & {\arrow}  &{\nonterminal{Pattern}} {\terminal{{$-$}{$>$}}} {\terminal{\{}} {\nonterminal{ListEquation}} {\terminal{\}}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
 {\nonterminal{SigFun}} & {\arrow}  &{\nonterminal{Pattern}} {\terminal{{$-$}{$>$}}} {\terminal{\{}} {\nonterminal{Expr}} {\terminal{\}}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
 {\nonterminal{Pattern}} & {\arrow}  &{\terminal{\_}}  \\
  & {\delimit}  &{\nonterminal{Ident}}  \\
  & {\delimit}  &{\terminal{()}}  \\
  & {\delimit}  &{\terminal{(}} {\nonterminal{Pattern}} {\terminal{,}} {\nonterminal{Pattern}} {\terminal{)}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
 {\nonterminal{Equation}} & {\arrow}  &{\nonterminal{Expr}} {\terminal{{$=$}}} {\nonterminal{Expr}}  \\
  & {\delimit}  &{\terminal{init}} {\nonterminal{Expr}} {\terminal{{$=$}}} {\nonterminal{Expr}}  \\
  & {\delimit}  &{\terminal{local}} {\nonterminal{Ident}}  \\
  & {\delimit}  &{\nonterminal{HsExpr}} {\terminal{{$<$}{$>$}}} {\nonterminal{Expr}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr1}} & {\arrow}  &{\nonterminal{Expr1}} {\terminal{{$||$}{$||$}}} {\nonterminal{Expr2}}  \\
+{\nonterminal{Expr1}} & {\arrow}  &{\nonterminal{Expr1}} {\terminal{{$+$}}} {\nonterminal{Expr2}}  \\
+ & {\delimit}  &{\nonterminal{Expr1}} {\terminal{{$-$}}} {\nonterminal{Expr2}}  \\
  & {\delimit}  &{\nonterminal{Expr2}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr2}} & {\arrow}  &{\nonterminal{Expr2}} {\terminal{\&\&}} {\nonterminal{Expr3}}  \\
+{\nonterminal{Expr2}} & {\arrow}  &{\nonterminal{Expr2}} {\terminal{/}} {\nonterminal{Expr3}}  \\
+ & {\delimit}  &{\nonterminal{Expr2}} {\terminal{*}} {\nonterminal{Expr3}}  \\
  & {\delimit}  &{\nonterminal{Expr3}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr3}} & {\arrow}  &{\nonterminal{Expr4}} {\terminal{{$<$}}} {\nonterminal{Expr4}}  \\
- & {\delimit}  &{\nonterminal{Expr4}} {\terminal{{$<$}{$=$}}} {\nonterminal{Expr4}}  \\
- & {\delimit}  &{\nonterminal{Expr4}} {\terminal{{$>$}}} {\nonterminal{Expr4}}  \\
- & {\delimit}  &{\nonterminal{Expr4}} {\terminal{{$>$}{$=$}}} {\nonterminal{Expr4}}  \\
+{\nonterminal{Expr3}} & {\arrow}  &{\nonterminal{Expr3}} {\terminal{\^}} {\nonterminal{Expr4}}  \\
+ & {\delimit}  &{\terminal{{$-$}}} {\nonterminal{Expr4}}  \\
  & {\delimit}  &{\nonterminal{Expr4}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr4}} & {\arrow}  &{\nonterminal{Expr4}} {\terminal{{$+$}}} {\nonterminal{Expr5}}  \\
- & {\delimit}  &{\nonterminal{Expr4}} {\terminal{{$-$}}} {\nonterminal{Expr5}}  \\
+{\nonterminal{Expr4}} & {\arrow}  &{\nonterminal{Expr4}} {\nonterminal{Expr5}}  \\
  & {\delimit}  &{\nonterminal{Expr5}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Expr5}} & {\arrow}  &{\nonterminal{Expr5}} {\terminal{/}} {\nonterminal{Expr6}}  \\
- & {\delimit}  &{\nonterminal{Expr5}} {\terminal{*}} {\nonterminal{Expr6}}  \\
- & {\delimit}  &{\nonterminal{Expr6}}  \\
-\end{tabular}
-
-\begin{tabular}{lll}
-{\nonterminal{Expr6}} & {\arrow}  &{\nonterminal{Expr6}} {\terminal{\^}} {\nonterminal{Expr7}}  \\
- & {\delimit}  &{\terminal{{$-$}}} {\nonterminal{Expr7}}  \\
- & {\delimit}  &{\nonterminal{Expr7}}  \\
-\end{tabular}
-
-\begin{tabular}{lll}
-{\nonterminal{Expr7}} & {\arrow}  &{\nonterminal{Expr7}} {\nonterminal{Expr8}}  \\
- & {\delimit}  &{\nonterminal{Expr8}}  \\
-\end{tabular}
-
-\begin{tabular}{lll}
-{\nonterminal{Expr8}} & {\arrow}  &{\nonterminal{Ident}}  \\
+{\nonterminal{Expr5}} & {\arrow}  &{\nonterminal{Ident}}  \\
  & {\delimit}  &{\nonterminal{HsExpr}}  \\
  & {\delimit}  &{\nonterminal{Integer}}  \\
  & {\delimit}  &{\nonterminal{Double}}  \\
  & {\delimit}  &{\terminal{()}}  \\
  & {\delimit}  &{\terminal{(}} {\nonterminal{Expr}} {\terminal{,}} {\nonterminal{Expr}} {\terminal{)}}  \\
  & {\delimit}  &{\terminal{(}} {\nonterminal{Expr}} {\terminal{)}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
 {\nonterminal{Expr}} & {\arrow}  &{\nonterminal{Expr1}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \begin{tabular}{lll}
 {\nonterminal{ListEquation}} & {\arrow}  &{\emptyP} \\
  & {\delimit}  &{\nonterminal{Equation}}  \\
  & {\delimit}  &{\nonterminal{Equation}} {\terminal{;}} {\nonterminal{ListEquation}}  \\
-\end{tabular}
+\end{tabular}\\
 
 \caption{\label{figSyntax} Syntactic structure of Hydra.}
 \end{figure}
@@ -146,9 +128,7 @@ are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
 {\symb{{$-$}{$>$}}} &{\symb{\{}} &{\symb{\}}} \\
 {\symb{\_}} &{\symb{()}} &{\symb{(}} \\
 {\symb{,}} &{\symb{)}} &{\symb{{$=$}}} \\
-{\symb{{$<$}{$>$}}} &{\symb{{$||$}{$||$}}} &{\symb{\&\&}} \\
-{\symb{{$<$}}} &{\symb{{$<$}{$=$}}} &{\symb{{$>$}}} \\
-{\symb{{$>$}{$=$}}} &{\symb{{$+$}}} &{\symb{{$-$}}} \\
+{\symb{{$<$}{$>$}}} &{\symb{{$+$}}} &{\symb{{$-$}}} \\
 {\symb{/}} &{\symb{*}} &{\symb{\^}} \\
 {\symb{;}} & & \\
 \end{tabular}
@@ -188,13 +168,7 @@ data Equation   =  EquEqual      Expr    Expr
 \end{code}
 
 \begin{code}
-data Expr  =  ExprOr        Expr    Expr
-           |  ExprAnd       Expr    Expr
-           |  ExprLt        Expr    Expr
-           |  ExprLte       Expr    Expr
-           |  ExprGt        Expr    Expr
-           |  ExprGte       Expr    Expr
-           |  ExprAdd       Expr    Expr
+data Expr  =  ExprAdd       Expr    Expr
            |  ExprSub       Expr    Expr
            |  ExprDiv       Expr    Expr
            |  ExprMul       Expr    Expr
@@ -288,7 +262,7 @@ generalised algebraic data type notation for consistency.
 \begin{code}
 data SR alpha where
   SR      ::  (Signal alpha -> [Equation]) -> SR alpha
-  Switch  ::  SR alpha -> SF alpha Bool -> (alpha -> SR alpha) -> SR alpha
+  Switch  ::  SR alpha -> SF alpha Real -> (alpha -> SR alpha) -> SR alpha
 
 data SF alpha beta where
   SF :: (Signal alpha -> Signal beta) -> SF alpha beta
@@ -308,13 +282,6 @@ data Signal alpha where
 
 data PrimSF alpha beta where
   Der    ::  PrimSF Real Real
-  Or     ::  PrimSF (Bool,Bool) Bool
-  And    ::  PrimSF (Bool,Bool) Bool
-  Not    ::  PrimSF Bool Bool
-  Lt     ::  PrimSF Real Bool
-  Lte    ::  PrimSF Real Bool
-  Gt     ::  PrimSF Real Bool
-  Gte    ::  PrimSF Real Bool
   Exp    ::  PrimSF Real Real
   Sqrt   ::  PrimSF Real Real
   Log    ::  PrimSF Real Real
@@ -356,7 +323,7 @@ the typed abstract syntax. Specifically, the |switch| combinator is defined as
 follows.
 
 \begin{code}
-switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
+switch :: SR a -> SF a Real -> (a -> SR a) -> SR a
 switch = Switch
 \end{code}
 
@@ -422,19 +389,10 @@ translateExp (ExprInteger i1)                   =  Const (fromIntegral i1)
 translateExp (ExprDouble d1)                    =  Const d1
 translateExp (ExprUnit)                         =  Unit
 translateExp (ExprPair e1 e2)                   =  Pair  (translateExp e1) (translateExp e2)
-translateExp (ExprOr  e1 e2)                    =  PrimApp Or   (translateExp e1, translateExp e2)
-translateExp (ExprAnd e1 e2)                    =  PrimApp And  (translateExp e1, translateExp e2)
-translateExp (ExprLt  e1  e2)                   =  PrimApp Lt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprLte e1  e2)                   =  PrimApp Lte  ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprGt  e1  e2)                   =  PrimApp Gt   ((translateExp e1)  -  (translateExp e2))
-translateExp (ExprGte e1  e2)                   =  PrimApp Gte  ((translateExp e1)  -  (translateExp e2))
 \end{code}
 
 \begin{code}
 translateIdent (Ident "time")    =  Time
-translateIdent (Ident "true")    =  Const True
-translateIdent (Ident "false")   =  Const False
-translateIdent (Ident "not")     =  PrimApp Not
 translateIdent (Ident "der")     =  PrimApp Der
 translateIdent (Ident "exp")     =  PrimApp Exp
 translateIdent (Ident "sqrt")    =  PrimApp Sqrt
@@ -537,14 +495,19 @@ of signals that satisfy the given constraints (see Figure
 
 \begin{figure}
 \begin{code}
-semSR (SR f)            =   \t0 s -> semEqs ((0,t0,f s))
-semSR (Switch sr sf f)  =   \t0 s -> {-" \forall \, t \in \mathbb{R} . \, "-} t >= t0 =>
-    ((semSR sr) t0 s) && ((semSF sf) s t) == ((semSF sf) s t0)
+semSR (SR f)            =   \t1 t2 s -> semEqs ((0,t1,t2,f s))
+semSR (Switch sr sf f)  =   \t1 t2 s ->
+    ((semSR sr) t1 t2 s) && ({-" \forall \, t \in \mathbb{R} . \, "-} t1 < t <= t2  => not (semZC (sf,s,t)))
     ||
-    ({-" \exists \, t_{e} \in \mathbb{R} . \, "-}   (t < t_e   =>  ((semSR sr) t0 s)            &&  ((semSF sf) s t)    ==  ((semSF sf) s t0))
+    ({-" \exists \, t_{e} \in \mathbb{R} . \, "-}   (t1 < t_e <= t2)
                                                     &&
-                                                    (t >= t_e  =>  ((semSR (f (s t_e))) t_e s)  &&  ((semSF sf) s t_e)  /=  ((semSF sf) s t0)))
+                                                    ((semSR sr) t1 t_e s) && (semZC (sf,s,t_e)) && ({-" \forall \, t \in \mathbb{R} . \, "-} t1 < t < t_e  => not (semZC (sf,s,t)))
+                                                    &&
+                                                    ((semSR (f (s t_e))) t_e t2 s))
+\end{code}
 
+\begin{code}
+semZC (sf,s,t) = (semSF (sf)) s t == 0 && {-" \frac{d_{ - }}{dt} "-} ((semSF (sf)) s) t /= 0
 \end{code}
 
 \begin{code}
@@ -552,11 +515,13 @@ semSF (SF sf)   =   sf
 \end{code}
 
 \begin{code}
-semEqs  (_  ,  _   ,  []                     )  =   {-" \top "-}
-semEqs  (i  ,  t0  ,  (Local f)      :  eqs  )  =   ({-" \exists \, s_{i} \in \mathbb{R} \rightarrow \mathbb{R} . \, "-} (semEqs (i + 1,t0,f s_i ++ eqs)))
-semEqs  (i  ,  t0  ,  (Equal s1 s2)  :  eqs  )  =   ({-" \forall \, t \in \mathbb{R} . \, "-}  t >= t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
-semEqs  (i  ,  t0  ,  (Init  s1 s2)  :  eqs  )  =   ({-" \forall \, t \in \mathbb{R} . \, "-}  t == t0  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
-semEqs  (i  ,  t0  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t0 s)                         &&  semEqs  (i,t0,eqs)
+semEqs  (_  ,  _   ,  _   ,  []                     )  =   {-" \top "-}
+semEqs  (i  ,  t1  ,  t2  ,  (Local f)      :  eqs  )  =   ({-" \exists \, s_{i} \in \mathbb{R} \rightarrow \mathbb{R} . \, "-} (semEqs (i + 1,t0,f s_i ++ eqs)))
+semEqs  (i  ,  t1  ,  t2  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t0 s)                         &&  semEqs  (i,t0,eqs)
+semEqs  (i  ,  t1  ,  t2  ,  (Equal s1 s2)  :  eqs  )  =
+  ({-" \forall \, t \in \mathbb{R} . \, "-}  (t >= t1 && t <= t2)  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
+semEqs  (i  ,  t1  ,  t2  ,  (Init  s1 s2)  :  eqs  )  =
+  ({-" \forall \, t \in \mathbb{R} . \, "-}  (t == t1)             =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
 \end{code}
 \caption{\label{figSigRelSigFunSem} Denotations for signal relations, signal functions and equations.}
 \end{figure}
@@ -567,7 +532,7 @@ semSig (Unit)                       =   \ _  ->  ()
 semSig (Time)                       =   \ t  ->  t
 semSig (Const d)                    =   \ _  ->  d
 semSig (Pair s1 s2)                 =   \ t  ->  ((semSig s1) t,(semSig s2) t)
-semSig (PrimApp Der s)              =   \ t  ->  {-" \displaystyle\lim_{\Delta t \to 0} \frac{ "-} (semSig s) {-" (t + \Delta t) - "-} (semSig s) {-" (t)}{\Delta t} "-}
+semSig (PrimApp Der s)              =   \ t  ->  {-" \frac{d}{dt} "-} (semSig s) t
 semSig (PrimApp Exp s)              =   \ t  ->  exp      ((semSig s)  t)
 semSig (PrimApp Sqrt s)             =   \ t  ->  sqrt     ((semSig s)  t)
 semSig (PrimApp Log s)              =   \ t  ->  log      ((semSig s)  t)
@@ -589,13 +554,6 @@ semSig (PrimApp Add  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  +            
 semSig (PrimApp Mul  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  *             ((semSig s2) t)
 semSig (PrimApp Div  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  /             ((semSig s2) t)
 semSig (PrimApp Pow  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  ^             ((semSig s2) t)
-semSig (PrimApp Or   (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  ||            ((semSig s2) t)
-semSig (PrimApp And  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  &&            (semSig s2) t
-semSig (PrimApp Not s1)             =   \ t  ->  not ((semSig s1)  t)
-semSig (PrimApp Lt s)               =   \ t  ->  ((semSig s)   t)  <   0
-semSig (PrimApp Lte s)              =   \ t  ->  ((semSig s)   t)  <=  0
-semSig (PrimApp Gt s)               =   \ t  ->  ((semSig s)   t)  >   0
-semSig (PrimApp Gte s)              =   \ t  ->  ((semSig s)   t)  >=  0
 \end{code}
 \caption{\label{figSigSem} Denotations for signals.}
 \end{figure}

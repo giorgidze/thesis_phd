@@ -97,20 +97,21 @@ section we introduce one more built-in (higher-order) signal relation that
 allows for description of structurally dynamic signal relations.
 
 \begin{code}
-switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
+switch :: SR a -> SF a Real -> (a -> SR a) -> SR a
 \end{code}
 
 The |switch| combinator forms a signal relation by temporal composition. The
 combinator takes three arguments and returns the composite signal relation (of
 type |SR a|). The first argument (of type |SR a|) is a signal relation that is
 initially active. The second argument is a signal function (of type |SF a
-Bool|). Starting from the first point in time when the boolean signal that is
-computed by applying the signal function to the signal constrained by the
-composite signal relation changes (from |True| to |False| or from |False| to
-|True|), the composite behaviour is defined by the signal relation that is
-computed by applying the third argument (a function of type |a -> SR a|) to
-the instantaneous value of the constrained signal. A formally defined meaning
-of the |switch| combinator is given in Chapter \ref{chapDefinition}.
+Real|). Starting from the first point in time when the signal (of type |Signal
+Real|) that is computed by applying the signal function to the signal
+constrained by the composite signal relation crosses zero (i.e., changes its
+sign from negative to positive or from positive to negative), the composite
+behaviour is defined by the signal relation that is computed by applying the
+third argument (a function of type |a -> SR a|) to the instantaneous value of
+the constrained signal. A formally defined meaning of the |switch| combinator
+is given in Chapter \ref{chapDefinition}.
 
 The |switch| combinator allows for definition of a signal relation whose
 equational description changes over time. In addition, the |switch| combinator
@@ -504,7 +505,10 @@ wire `serial` sr = sr `serial` wire = sr
 
 \begin{figure}
 \includegraphics[width=\textwidth]{Graphics/serialWire}
-\caption{\label{figSerialWire} The |wire| signal relation as a left and right identity of the |serial| higher-order signal relation.}
+
+\caption{\label{figSerialWire} The |wire| signal relation as a left and right
+identity of the |serial| higher-order signal relation.}
+
 \end{figure}
 
 Here by the equality of the signal relations we mean that the signal relations
@@ -544,7 +548,10 @@ noWire `parallel` sr = sr `parallel` noWire = sr
 
 \begin{figure}
 \includegraphics[width=\textwidth]{Graphics/parallelNoWire}
-\caption{\label{figParallelNoWire} The |noWire| signal relation as a left and right identity of the |parallel| higher-order signal relation.}
+
+\caption{\label{figParallelNoWire} The |noWire| signal relation as a left and
+right identity of the |parallel| higher-order signal relation.}
+
 \end{figure}
 
 In addition to demonstrating higher-order modelling capabilities of Hydra,
@@ -620,7 +627,7 @@ To this end, the |switch| combinator is used:
 \begin{code}
 breakingPendulum :: Real -> Real -> Real -> SR Body
 breakingPendulum t l phi0 =
-  switch (pendulum l phi0) [fun| \ _ -> time >= $t$ |] (\b -> freeFall b)
+  switch (pendulum l phi0) [fun| \ _ -> time - $t$ |] (\b -> freeFall b)
 \end{code}
 
 In this signal relation, the switch happens at an \emph{a priori} specified
@@ -634,7 +641,10 @@ in Figure \ref{figPendulumPlot}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/pendulumPlot.pdf}
 \end{center}
-\caption{\label{figPendulumPlot} Plot showing how |x| and |y| coordinates of the body on the breaking pendulum change over time.}
+
+\caption{\label{figPendulumPlot} Plot showing how |x| and |y| coordinates of
+the body on the breaking pendulum change over time.}
+
 \end{figure}
 
 We have already demonstrated how the |switch| combinator can be used to
@@ -687,9 +697,9 @@ relations to switch into each other.
 
 \begin{code}
 ioDiode  ::  SR (Pin,Pin)
-ioDiode  =   switch   nowire  [fun| ((_,p_v),(_,n_v))  ->  p_v - n_v > 0 |]  ( \ _ -> icDiode)
+ioDiode  =   switch   nowire  [fun| ((_,p_v),(_,n_v))  ->  p_v - n_v  |]  ( \ _ -> icDiode)
 icDiode  ::  SR (Pin,Pin)
-icDiode  =   switch   wire    [fun| ((p_i,_),(_,_))    ->  p_i < 0 |]        ( \ _ -> ioDiode)
+icDiode  =   switch   wire    [fun| ((p_i,_),(_,_))    ->  p_i        |]  ( \ _ -> ioDiode)
 \end{code}
 
 The switches are controlled by the polarity of the voltage and the current
@@ -717,14 +727,20 @@ by using the |simulate| function are presented in Figure
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/rectifierCapVol.pdf}
 \end{center}
-\caption{\label{figRectifiedCapVol} Voltage across the capacitor in the half-wave rectifier circuit with in-line inductor.}
+
+\caption{\label{figRectifiedCapVol} Voltage across the capacitor in the
+half-wave rectifier circuit with in-line inductor.}
+
 \end{figure}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/rectifierIndCur.pdf}
 \end{center}
-\caption{\label{figRectifierIndCur} Current through the inductor in the half-wave rectifier circuit with in-line inductor.}
+
+\caption{\label{figRectifierIndCur} Current through the inductor in the
+half-wave rectifier circuit with in-line inductor.}
+
 \end{figure}
 
 
@@ -740,7 +756,7 @@ mentioned earlier.
 Because of the expressivity of the |switch| combinator, in general, it is not
 possible to compile Hydra models prior to simulation. For example, given a
 parametrised signal relation |sr' :: Real -> SR Real)| and a signal function
-|sf :: SF Real Bool| one can recursively define a signal relation |sr| that
+|sf :: SF Real Real| one can recursively define a signal relation |sr| that
 describes an overall behaviour by ``stringing together'' the behaviours
 described by |sr'|:
 
@@ -762,7 +778,7 @@ the bouncing ball system can be modelled in Hydra as follows.
 \begin{code}
 bouncingBall :: Body -> SR Body
 bouncingBall b = switch   (freeFall b)
-                          [fun| ((_,y),_) -> y < 0 |]
+                          [fun| ((_,y),_) -> y |]
                           (\(p,(vx,vy)) -> bouncingBall (p,(vx, - vy))
 \end{code}
 
@@ -777,7 +793,7 @@ ball breaks at every collision with the floor.
 \begin{code}
 bouncingBall' :: Body -> SR Body
 bouncingBall' b = switch  (freeFall b)
-                          [fun| ((_,y),_) -> y < 0 |]
+                          [fun| ((_,y),_) -> y |]
                           (\(p,v) -> divide (p,v))
 
 divide :: Body -> SR Body

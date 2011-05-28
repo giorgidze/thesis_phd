@@ -47,52 +47,42 @@ quasiquotes to be constructed without curly braces and semicolons. The layout
 rules are the same as for Haskell.
 
 \begin{figure}
-\small
 \begin{verbatim}
 entrypoints SigRel, SigFun;
 
-SigRel.         SigRel    ::= Pattern "->" "{" [Equation] "}" ;
+SigRel. SigRel ::= Pattern "->" "{" [Equation] "}" ;
 
-SigFun.         SigFun    ::= Pattern "->" "{" Expr       "}" ;
+SigFun. SigFun ::= Pattern "->" "{" Expr       "}" ;
 
-PatWild.        Pattern   ::= "_" ;
-PatName.        Pattern   ::= Ident ;
-PatUnit.        Pattern   ::= "()" ;
-PatPair.        Pattern   ::= "(" Pattern "," Pattern ")" ;
+PatWild. Pattern ::= "_" ;
+PatName. Pattern ::= Ident ;
+PatUnit. Pattern ::= "()" ;
+PatPair. Pattern ::= "(" Pattern "," Pattern ")" ;
 
-EquEqual.       Equation  ::=        Expr "=" Expr ;
-EquInit.        Equation  ::= "init" Expr "=" Expr ;
-EquLocal.       Equation  ::= "local" Ident;
-EquSigRelApp.   Equation  ::= HsExpr "<>" Expr ;
+EquEqual.     Equation ::=        Expr "=" Expr ;
+EquInit.      Equation ::= "init" Expr "=" Expr ;
+EquLocal.     Equation ::= "local" Ident;
+EquSigRelApp. Equation ::= HsExpr "<>" Expr ;
 
-ExprOr.         Expr1     ::= Expr1 "||" Expr2 ;
-ExprAnd.        Expr2     ::= Expr2 "&&" Expr3 ;
-ExprLt.         Expr3     ::= Expr4 "<"  Expr4 ;
-ExprLte.        Expr3     ::= Expr4 "<=" Expr4 ;
-ExprGt.         Expr3     ::= Expr4 ">"  Expr4 ;
-ExprGte.        Expr3     ::= Expr4 ">=" Expr4 ;
-ExprAdd.        Expr4     ::= Expr4 "+"  Expr5 ;
-ExprSub.        Expr4     ::= Expr4 "-"  Expr5 ;
-ExprDiv.        Expr5     ::= Expr5 "/"  Expr6 ;
-ExprMul.        Expr5     ::= Expr5 "*"  Expr6 ;
-ExprPow.        Expr6     ::= Expr6 "^"  Expr7 ;
-ExprNeg.        Expr6     ::= "-" Expr7 ;
-ExprApp.        Expr7     ::= Expr7 Expr8 ;
-ExprVar.        Expr8     ::= Ident ;
-ExprAnti.       Expr8     ::= HsExpr ;
-ExprInteger.    Expr8     ::= Integer ;
-ExprDouble.     Expr8     ::= Double ;
-ExprUnit.       Expr8     ::= "()" ;
-ExprPair.       Expr8     ::= "(" Expr "," Expr ")" ;
-_.              Expr      ::= Expr1 ;
-_.              Expr1     ::= Expr2 ;
-_.              Expr2     ::= Expr3 ;
-_.              Expr3     ::= Expr4 ;
-_.              Expr4     ::= Expr5 ;
-_.              Expr5     ::= Expr6 ;
-_.              Expr6     ::= Expr7 ;
-_.              Expr7     ::= Expr8 ;
-_.              Expr8     ::= "(" Expr ")" ;
+ExprAdd.     Expr1 ::= Expr1 "+"  Expr2 ;
+ExprSub.     Expr1 ::= Expr1 "-"  Expr2 ;
+ExprDiv.     Expr2 ::= Expr2 "/"  Expr3 ;
+ExprMul.     Expr2 ::= Expr2 "*"  Expr3 ;
+ExprPow.     Expr3 ::= Expr3 "^"  Expr4 ;
+ExprNeg.     Expr3 ::= "-" Expr4 ;
+ExprApp.     Expr4 ::= Expr4 Expr5 ;
+ExprVar.     Expr5 ::= Ident ;
+ExprAnti.    Expr5 ::= HsExpr ;
+ExprInteger. Expr5 ::= Integer ;
+ExprDouble.  Expr5 ::= Double ;
+ExprUnit.    Expr5 ::= "()" ;
+ExprPair.    Expr5 ::= "(" Expr "," Expr ")" ;
+_.           Expr  ::= Expr1 ;
+_.           Expr1 ::= Expr2 ;
+_.           Expr2 ::= Expr3 ;
+_.           Expr3 ::= Expr4 ;
+_.           Expr4 ::= Expr5 ;
+_.           Expr5 ::= "(" Expr ")" ;
 
 separator Equation ";" ;
 
@@ -241,7 +231,7 @@ signal relations temporally:
 \begin{code}
 data SR a where
   SR      ::  (Signal a -> [Equation]) -> SR a
-  Switch  ::  SR a -> SF a Bool -> (a -> SR a) -> SR a
+  Switch  ::  SR a -> SF a Real -> (a -> SR a) -> SR a
 \end{code}
 
 The constructor |SR| forms a signal relation from a function that takes a
@@ -257,7 +247,7 @@ Internally, in the implementation of Hydra, such a temporal composition is
 represented by a signal relation formed by the |Switch| constructor:
 
 \begin{code}
-switch :: SR a -> SF a Bool -> (a -> SR a) -> SR a
+switch :: SR a -> SF a Real -> (a -> SR a) -> SR a
 switch = Switch
 \end{code}
 
@@ -439,12 +429,13 @@ mode of operation. By flat we mean that the list of equations only contain
 |Init| and |Equal| equations. At the start of the simulation, the |simulate|
 function places an empty list in this field.
 
-The |events| field is for a list of event occurrences. Recall the the type
-signature of the |switch| combinator given in Section \ref{secEmbedding}. A
-signal function that detects events returns a boolean signal. The simulator
-places the boolean signal expressions that describe an event occurrence at
-each structural change. Initially, at the start of the simulation, the
-simulator places an empty list in the |events| field of the symbol table.
+The |events| field is for a list of zero-crossing signals defining the event
+occurrences. Recall the the type signature of the |switch| combinator given in
+Section \ref{secEmbedding}. A signal function that detects events returns a
+real valued signal. The simulator places the signal expressions that describe
+an event occurrence at each structural change. Initially, at the start of the
+simulation, the simulator places an empty list in the |events| field of the
+symbol table.
 
 The |time| field is for current time. Initially the simulator places the
 starting time given in the experiment description in this field. The |time|
@@ -463,7 +454,7 @@ differentials.
 data SymTab = SymTab {
      model         :: [Equation]
   ,  equations     :: [Equation]
-  ,  events        :: [(Signal Bool)]
+  ,  events        :: [(Signal Real)]
   ,  time          :: Double
   ,  instants      :: Array Integer (Real,Real)
   }
@@ -489,17 +480,17 @@ defaultSymbolicProcessor  =   flattenEquations . flattenEvents . handleEvents
 The default symbolic processor is defined as a composition of three symbolic
 processing steps. The first step handles occurred events by modifying the
 |model| field of the symbol table. The event handler is defined in Figure
-\ref{figHandleEvents}. The second step generates a list of boolean signal
-expression representing the list of possible events in the active mode of
-operation as defined in Figure \ref{figFlattenEvents}. Note that this step
-involves evaluation of the instantaneous signal values by using the |eval|
-function. The |eval| function is defined in Figure \ref{figEval}. The third
-step flattens the hierarchical system of equations placed in the |model| field
-of the symbol table into the |equations| field of the symbol table. The flat
-list only contains |Init| and |Equal| equations. The |Equal| equations define
-the DAE that describes the active mode of operation. The |Init| equations
-describe the initial conditions for the DAE. The flattening transformation is
-given in Figure \ref{figFlattenEquations}.
+\ref{figHandleEvents}. The second step generates a list of signal expressions
+representing the list of possible events in the active mode of operation as
+defined in Figure \ref{figFlattenEvents}. Note that this step involves
+evaluation of the instantaneous signal values by using the |eval| function.
+The |eval| function is defined in Figure \ref{figEval}. The third step
+flattens the hierarchical system of equations placed in the |model| field of
+the symbol table into the |equations| field of the symbol table. The flat list
+only contains |Init| and |Equal| equations. The |Equal| equations define the
+DAE that describes the active mode of operation. The |Init| equations describe
+the initial conditions for the DAE. The flattening transformation is given in
+Figure \ref{figFlattenEquations}.
 
 \begin{figure}
 
@@ -509,7 +500,7 @@ handleEvents st  =   st {model = handleEvs (symtab, events st, model st)}
 \end{code}
 
 \begin{code}
-handleEvs :: (SymTab,[Signal Bool],[Equation]) -> [Equation]
+handleEvs :: (SymTab,[Signal Real],[Equation]) -> [Equation]
 handleEvs (_,_,[])                                          =  []
 handleEvs (st,evs,(Equal  _ _) : eqs)                       =  eq : handleEvs (st,evs,eqs)
 handleEvs (st,evs,(Init   _ _) : eqs)                       =  handleEvs (st,evs,eqs)
@@ -660,8 +651,8 @@ e(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) & = & \vec{r_e} \label{event-eq}
 Here, $\vec{x}$ is a vector of differential variables, $\vec{y}$ is a vector
 of algebraic variables, $t$ is time, $\vec{r_i}$ is a residual vector of
 initialisation equations, $\vec{r_f}$ is a residual vector of differential
-algebraic equations, and $\vec{r_e}$ is a vector of boolean signal values. The
-aforementioned vectors are signals; that is, time-varying vectors.
+algebraic equations, and $\vec{r_e}$ is a vector of zero-crossing signal
+values. The aforementioned vectors are signals; that is, time-varying vectors.
 
 Equation \ref{init-eq} corresponds to the |Init| equations that are placed in
 the |equations| field of the symbol table and determines the initial
@@ -670,9 +661,9 @@ $\frac{d\vec{x}}{dt}$,$\vec{x}$ and $\vec{y}$ at the starting time of the
 active mode of operation. Equation \ref{main-eq} corresponds to the |Equal|
 equations that are placed in the |equations| field of the symbol table, and
 thus is the main DAE of the system that is integrated over time starting from
-the initial conditions. Equation \ref{event-eq} corresponds to the boolean
-signals placed in the |events| field of the symbol table and specifies event
-conditions.
+the initial conditions. Equation \ref{event-eq} corresponds to the
+zero-crossing signals placed in the |events| field of the symbol table and
+specifies event conditions.
 
 The task of a DAE solver is to find time varying valuations of $\vec{x}$ and
 $\vec{y}$ such that the residual vectors are zero. In addition a DAE solver is
@@ -720,12 +711,11 @@ type Residual = FunPtr  (       CDouble
 The first function argument is time. The second argument is a vector of real
 valued signal. The third argument is a vector of differentials of real-valued
 signals. The forth argument is a vector of residuals, or in the case of the
-event specification vector of boolean signal values where |-1.0| represents
-|False| and |1.0| represents |True|. The residual functions read the first
-three arguments and write the residual values in the fourth argument. As these
-functions are passed to numerical solvers it is critical to allow for fast
-positional access of vector elements and in-place vector updates. Hence the
-use of C-style arrays.
+event specification vector of zero-crossing signal values. The residual
+functions read the first three arguments and write the residual values in the
+fourth argument. As these functions are passed to numerical solvers it is
+critical to allow for fast positional access of vector elements and in-place
+vector updates. Hence the use of C-style arrays.
 
 Figure \ref{figLLVMCodeUnopt} gives the unoptimised LLVM code that is
 generated for the parametrised van der Pol oscillator. The corresponding
