@@ -402,10 +402,9 @@ relation that needs to be simulated. The second argument describes the
 \emph{experiment}, essentially a description of what needs to happen during
 the simulation. Using the second argument the modeller can set the simulation
 starting and ending times, desired time step, symbolic processor, numerical
-solver, whether to use JIT compilation or interpretation, or how to visualise
-the trajectories of the constrained signals. The definition of the
-|Experiment| data type and the default experiment description are given in
-Chapter \ref{chapImplementation}.
+solver, or how to visualise the trajectories of the constrained signals. The
+definition of the |Experiment| data type and the default experiment
+description are given in Chapter \ref{chapImplementation}.
 
 The simple circuit model can be simulated using the default experiment
 description as follows:
@@ -418,11 +417,11 @@ With the |defaultExperiment| parameter the |simpleCircuit| signal relation is
 simulated for 10 seconds of simulation time starting from the time point of
 zero. The time step is set to |0.001| and the trajectories of the constrained
 signals are printed to the standard output in the
-gnuplot\footnote{url{http://www.gnuplot.info/}} compatible format. By default
-the simulation code is JIT compiled. The default numerical solver is SUNDIALS
-\citep{Sundials2005}, but users allowed to provide their own symbolic
-processors and numerical solvers. This and other implementation aspects are
-described in detail in Chapter \ref{chapImplementation}.
+gnuplot\footnote{url{http://www.gnuplot.info/}} compatible format. The default
+numerical solver is SUNDIALS \citep{Sundials2005}, but users allowed to
+provide their own symbolic processors and numerical solvers. This and other
+implementation aspects are described in detail in Chapter
+\ref{chapImplementation}.
 
 The earlier sections of this chapter introduced the Hydra language using the
 simple electrical-circuit example. This example allows readers familiar with

@@ -11,8 +11,9 @@ processing and JIT compilation).
 \label{secEmbedding}
 
 Hydra is implemented as a Haskell embedded DSL. We use quasiquoting, a recent
-Haskell extension implemented in Glasgow Haskell Compiler (GHC), to provide a
-convenient surface (i.e., concrete) syntax for Hydra. The implementation uses
+Haskell extension implemented in Glasgow Haskell Compiler
+(GHC)\footnote{\url{http://www.haskell.org/ghc}}, to provide a convenient
+surface (i.e., concrete) syntax for Hydra. The implementation uses
 quasiquoting to generate the typed representation of Hydra models from strings
 in the concrete syntax. An opening quasiquote specifies a function (a
 so-called quasiquoter) that performs the aforementioned transformation. In
@@ -120,7 +121,7 @@ we get the typed AST that is given in Figure \ref{figVanDerPolAstTyped}.
 \begin{figure}
 
 \begin{code}
-vanDerPol :: Double -> SR ()
+vanDerPol :: Real -> SR ()
 vanDerPol mu = [rel| () ->
     local x y
     init (x,y) = (1,1)
@@ -251,13 +252,17 @@ switch :: SR a -> SF a Real -> (a -> SR a) -> SR a
 switch = Switch
 \end{code}
 
+Note that, in the implementation of Hydra, the type |Real| is a type synonym
+of |Double|, which is a standard double-precision floating-point type of
+Haskell.
+
 There are four kinds of equations:
 \begin{code}
 data Equation where
-  Local :: (Signal Double -> [Equation]) -> Equation
-  Equal :: Signal Double -> Signal Double -> Equation
-  Init  :: Signal Double -> Signal Double -> Equation
-  App   :: SR a -> Signal a -> Equation
+  Local  ::  (Signal Real -> [Equation]) -> Equation
+  Equal  ::  Signal Real -> Signal Real -> Equation
+  Init   ::  Signal Real -> Signal Real -> Equation
+  App    ::  SR a -> Signal a -> Equation
 \end{code}
 
 The |Local| constructor forms equations that merely introduce local signals.
@@ -286,11 +291,11 @@ implementation of Hydra:
 \begin{code}
 data Signal a where
   Unit     ::  Signal ()
-  Time     ::  Signal Double
+  Time     ::  Signal Real
   Const    ::  a -> Signal a
   Pair     ::  Signal a -> Signal b -> Signal (a,b)
   PrimApp  ::  PrimSF a b -> Signal a -> Signal b
-  Var      ::  Integer -> Signal Double
+  Var      ::  Integer -> Signal Real
 \end{code}
 
 As you can see, this data type definition contains one constructor that is not
@@ -354,25 +359,20 @@ The function takes a signal relation and an experiment description and
 simulates the system. The |Experiment| data type is defined in Figure
 \ref{figExperiment}. The |timeStart| field specifies the simulation starting
 time. The |timeStop| field specifies the simulation stopping time. The
-|timeStep| field specifies the simulation time step. When the |jitCompile|
-field is set to |True|, the simulator JIT compiles signal relations down to
-machine code for the architecture that the simulation is running on (even for
-dynamically generated signal relations). When the |jitCompile| field is set to
-|False|, the simulator makes use of interpretation instead of JIT compilation.
-The |symbolicProcessor| specifies the simulator's runtime symbolic processor.
-The |numericalSolver| specifies the simulator's numerical solver. The
-|trajectoryVisualiser| specifies how to visualise the simulation results
-(i.e., change of signal values over time). The data type definitions for
-|SymTab|, |NumericalSover| and |TrajectoryVisualiser| are given later in this
-chapter.
+|timeStep| field specifies the simulation time step. The |symbolicProcessor|
+specifies the simulator's runtime symbolic processor. The |numericalSolver|
+specifies the simulator's numerical solver. The |trajectoryVisualiser|
+specifies how to visualise the simulation results (i.e., change of signal
+values over time). The data type definitions for |SymTab|, |NumericalSover|
+and |TrajectoryVisualiser| are given later in this chapter.
 
 The implementation of Hydra provides the default experiment configuration that
 is given in Figure \ref{figDefaultExperiment}. Note that the last three fields
 of the experiment description record are expected to be modified by expert
-users willing to provide their own runtime symbolic processor and numerical
-solvers. The behaviour of the |defaultSymbolicProcessor|,
-|defaultNumericalSolver| and |defaultTrajectoryVisualiser| are described in
-detail later in this chapter.
+users willing to provide their own runtime symbolic processor, numerical
+solvers, or trajectory visualisers. The behaviour of the
+|defaultSymbolicProcessor|, |defaultNumericalSolver| and
+|defaultTrajectoryVisualiser| are described in detail later in this chapter.
 
 \begin{figure}
 \begin{code}
@@ -380,7 +380,6 @@ data Experiment = Experiment {
      timeStart             :: Real
   ,  timeStop              :: Real
   ,  timeStep              :: Real
-  ,  jitCompile            :: Bool
   ,  symbolicProcessor     :: SymTab -> SymTab
   ,  numericalSolver       :: NumericalSolver
   ,  trajectoryVisualiser  :: TrajectoryVisualiser
@@ -398,7 +397,6 @@ defaultExperiment = Experiment {
      timeStart              = 0
   ,  timeStop               = 10
   ,  timeStep               = 0.001
-  ,  jitCompile             = True
   ,  symbolicProcessor      = defaultSymbolicProcessor
   ,  numericalSolver        = defaultNumericalSolver
   ,  trajectoryVisualiser   = defaultTrajectoryVisualiser
@@ -455,7 +453,7 @@ data SymTab = SymTab {
      model         :: [Equation]
   ,  equations     :: [Equation]
   ,  events        :: [(Signal Real)]
-  ,  time          :: Double
+  ,  time          :: Real
   ,  instants      :: Array Integer (Real,Real)
   }
 \end{code}
@@ -543,7 +541,7 @@ events that may occur in the active mode of operation.}
 
 \begin{figure}
 \begin{code}
-eval :: (Double,Array Integer (Double,Double),Signal a) -> a
+eval :: (Real,Array Integer (Real,Real),Signal a) -> a
 eval (_,_,Unit)                 = ()
 eval (t,_,Time)                 = t
 eval (_,_,Const c)              = c
@@ -701,10 +699,10 @@ The function pointers have the following Haskell type:
 \begin{code}
 data Void
 
-type Residual = FunPtr  (       CDouble
-                            ->  Ptr CDouble
-                            ->  Ptr CDouble
-                            ->  Ptr CDouble
+type Residual = FunPtr  (       Real
+                            ->  Ptr Real
+                            ->  Ptr Real
+                            ->  Ptr Real
                             ->  IO Void)
 \end{code}
 
@@ -832,17 +830,17 @@ that is written in C.
 type SolverHandle = Ptr Void
 
 data NumericalSolver = NumericalSolver {
-      createSolver    :: CDouble      -- Starting time
-                      -> CDouble      -- Stopping time
-                      -> Ptr CDouble  -- Current time
-                      -> CDouble      -- Absolute tolerance
-                      -> CDouble      -- Relative tolerance
-                      -> CInt         -- Number of variables
-                      -> Ptr CDouble  -- Variables
-                      -> Ptr CDouble  -- Differentials
-                      -> Ptr CInt     -- Constrained differentials
-                      -> CInt         -- Number of events
-                      -> Ptr CInt     -- Events
+      createSolver    :: Real         -- Starting time
+                      -> Real         -- Stopping time
+                      -> Ptr Real     -- Current time
+                      -> Real         -- Absolute tolerance
+                      -> Real         -- Relative tolerance
+                      -> Int          -- Number of variables
+                      -> Ptr Real     -- Variables
+                      -> Ptr Real     -- Differentials
+                      -> Ptr Int      -- Constrained differentials
+                      -> Int          -- Number of events
+                      -> Ptr Int      -- Events
                       -> Residual     -- Initialisation equations
                       -> Residual     -- Main equations
                       -> Residual     -- Event Equations
@@ -867,9 +865,9 @@ visualiser of the following type:
 
 \begin{samepage}
 \begin{code}
-type TrajectoryVisualiser   =   CDouble       -- Time
-                            ->  CInt          -- Variable number
-                            ->  Ptr CDouble   -- Variables
+type TrajectoryVisualiser   =   Real       -- Time
+                            ->  Int        -- Variable number
+                            ->  Ptr Real   -- Variables
                             ->  IO ()
 \end{code}
 \end{samepage}
