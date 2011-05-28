@@ -195,7 +195,10 @@ evaluating the $integrateSimpleCircuit$ function.
 \begin{center}
 \includegraphics[width=\textwidth]{Graphics/circuitPlot1}
 \end{center}
-\caption{\label{figCircuitPlot1} Plot showing how variables $i_1$ and $i_2$ change over time.}
+
+\caption{\label{figCircuitPlot1} Plot showing how variables $i_1$ and $i_2$
+change over time.}
+
 \end{figure}
 
 The simple electrical-circuit example highlights the three essential steps
@@ -234,7 +237,10 @@ multiplication, summation and integration.
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/circuitBlockDiagram1}
 \end{center}
-\caption{\label{figCircuitBlockDiagram1} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit1}.}
+
+\caption{\label{figCircuitBlockDiagram1} Block diagram modelling electrical
+circuit depicted in Figure \ref{figCircuit1}.}
+
 \end{figure}
 
 Block diagrams in causal languages correspond to systems of ODEs in explicit
@@ -269,14 +275,19 @@ physical system caused hardly obvious changes in the causal model.
 \begin{center}
 \includegraphics[width = 0.5\textwidth]{Graphics/circuit2}
 \end{center}
+
 \caption{\label{figCircuit2} Simple electrical circuit with two resistors.}
+
 \end{figure}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/circuitBlockDiagram2}
 \end{center}
-\caption{\label{figCircuitBlockDiagram2} Block diagram modelling electrical circuit depicted in Figure \ref{figCircuit2}.}
+
+\caption{\label{figCircuitBlockDiagram2} Block diagram modelling electrical
+circuit depicted in Figure \ref{figCircuit2}.}
+
 \end{figure}
 
 Simulink can be used to model some structurally dynamic systems: special

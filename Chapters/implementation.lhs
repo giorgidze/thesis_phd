@@ -568,8 +568,6 @@ evalPrimSF  Cosh   = cosh
 evalPrimSF  Asinh  = asinh
 evalPrimSF  Atanh  = atanh
 evalPrimSF  Acosh  = acosh
-evalPrimSF  Abs    = abs
-evalPrimSF  Sgn    = signum
 evalPrimSF  Add    = uncurry (+)
 evalPrimSF  Mul    = uncurry (*)
 evalPrimSF  Div    = uncurry (/)
@@ -953,8 +951,10 @@ the circuit.
   Numerical \mbox{Simulation} &  \ 9.273  \ &  \ 89.2  \  &  \ 23.228 \  & \ 91.1  \  &  \ 45.140 \  &  \ 92.9  \  \\ \hline \hline
   Total                       &  \ 10.397 \ &  \ 100.0 \  &  \ 25.501 \  & \ 100.0 \  &  \ 48.598 \  &  \ 100.0 \  \\ \hline
 \end{tabular}
-\caption{\label{table:larger-system-1} Time profile of structurally dynamic RLC circuit simulation (part I).
-}
+
+\caption{\label{table:larger-system-1} Time profile of structurally dynamic
+RLC circuit simulation (part I).}
+
 \end{table}
 
 \begin{table}
@@ -989,8 +989,10 @@ the circuit.
   Numerical \mbox{Simulation} &  \ 86.471 \ &  \ 94.7   \ &  \ 105.066 \ &  \ 94.5   \ &  \ 152.250 \ &  \ 95.4   \ \\ \hline \hline
   Total                       &  \ 91.317 \ &  \ 100.0  \ &  \ 111.179 \ &  \ 100.0  \ &  \ 159.624 \ &  \ 100.0  \ \\ \hline
 \end{tabular}
-\caption{\label{table:larger-system-2} Time profile of structurally dynamic RLC circuit simulation (part II).
-}
+
+\caption{\label{table:larger-system-2} Time profile of structurally dynamic
+RLC circuit simulation (part II).}
+
 \end{table}
 
 Tables \ref{table:larger-system-1} and \ref{table:larger-system-2} show the
@@ -1012,9 +1014,11 @@ terms) and grows slowly as model complexity increases.
 \begin{center}
 %include ../Graphics/benchmark.tex
 \end{center}
+
 \caption{\label{fig:benchmark} Plot demonstrating how CPU time spent on mode
 switches grows as number of equations increase in structurally dynamic RLC
 circuit simulation.}
+
 \end{figure}
 
 In the current implementation of Hydra, a new flat system of equations is

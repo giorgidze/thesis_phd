@@ -301,14 +301,15 @@ data PrimSF alpha beta where
   Asinh  ::  PrimSF Real Real
   Atanh  ::  PrimSF Real Real
   Acosh  ::  PrimSF Real Real
-  Abs    ::  PrimSF Real Real
-  Sgn    ::  PrimSF Real Real
   Add    ::  PrimSF (Real,Real) Real
   Mul    ::  PrimSF (Real,Real) Real
   Div    ::  PrimSF (Real,Real) Real
   Pow    ::  PrimSF (Real,Real) Real
 \end{code}
-\caption{\label{figTypedRepresentation} Typed intermediate representation of Hydra.}
+
+\caption{\label{figTypedRepresentation} Typed intermediate representation of
+Hydra.}
+
 \end{figure}
 
 \section{From Untyped to Typed Abstract Syntax}
@@ -413,11 +414,12 @@ translateIdent (Ident "cosh")    =  PrimApp Cosh
 translateIdent (Ident "asinh")   =  PrimApp Asinh
 translateIdent (Ident "atanh")   =  PrimApp Atanh
 translateIdent (Ident "acosh")   =  PrimApp Acosh
-translateIdent (Ident "abs")     =  PrimApp Abs
-translateIdent (Ident "signum")  =  PrimApp Sgn
 translateIdent (Ident s)         =  translateHs (s)
 \end{code}
-\caption{\label{figSigTrans} Translation of untyped signal expressions into typed signal expressions.}
+
+\caption{\label{figSigTrans} Translation of untyped signal expressions into
+typed signal expressions.}
+
 \end{figure}
 
 \section{Ideal Denotational Semantics}
@@ -527,7 +529,10 @@ semEqs  (i  ,  t1  ,  t2  ,  (Equal s1 s2)  :  eqs  )  =
 semEqs  (i  ,  t1  ,  t2  ,  (Init  s1 s2)  :  eqs  )  =
   ({-" \forall \, t \in \mathbb{R} . \, "-}  (t == t1)             =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
 \end{code}
-\caption{\label{figSigRelSigFunSem} Denotations for signal relations, signal functions and equations.}
+
+\caption{\label{figSigRelSigFunSem} Denotations for signal relations, signal
+functions and equations.}
+
 \end{figure}
 
 \begin{figure}
@@ -552,12 +557,12 @@ semSig (PrimApp Cosh s)             =   \ t  ->  cosh     ((semSig s)  t)
 semSig (PrimApp Asinh s)            =   \ t  ->  asinh    ((semSig s)  t)
 semSig (PrimApp Atanh s)            =   \ t  ->  atanh    ((semSig s)  t)
 semSig (PrimApp Acosh s)            =   \ t  ->  acosh    ((semSig s)  t)
-semSig (PrimApp Abs s)              =   \ t  ->  abs      ((semSig s)  t)
-semSig (PrimApp Sgn s)              =   \ t  ->  signum   ((semSig s)  t)
 semSig (PrimApp Add  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  +             ((semSig s2) t)
 semSig (PrimApp Mul  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  *             ((semSig s2) t)
 semSig (PrimApp Div  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  /             ((semSig s2) t)
 semSig (PrimApp Pow  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  ^             ((semSig s2) t)
 \end{code}
+
 \caption{\label{figSigSem} Denotations for signals.}
+
 \end{figure}

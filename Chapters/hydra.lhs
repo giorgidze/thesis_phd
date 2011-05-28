@@ -152,7 +152,9 @@ drop across the electrical component.
 \begin{center}
 \includegraphics{Graphics/twoPin}
 \end{center}
+
 \caption{\label{figTwoPin} Electrical component with two connectors.}
+
 \end{figure}
 
 We can now use the |twoPin| signal relation to define a signal relation that
@@ -294,7 +296,9 @@ serial sr1 sr2 = [rel| ((p_i, p_v),(n_i, n_v)) ->
 \begin{figure}
 \centering
 \includegraphics[scale=1.5]{Graphics/serial}
-\caption{\label{figSerial} Serial connection of two electrical components}
+
+\caption{\label{figSerial} Serial connection of two electrical components.}
+
 \end{figure}
 
 Secondly, we define a higher-order signal relation that takes two signal
@@ -324,7 +328,9 @@ parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
 \begin{figure}
 \centering
 \includegraphics[scale=1.5]{Graphics/parallel}
-\caption{\label{figParallel} Parallel connection of two electrical components}
+
+\caption{\label{figParallel} Parallel connection of two electrical components.}
+
 \end{figure}
 
 Finally, we define a higher-order signal relation that takes two
@@ -357,7 +363,10 @@ groundedCircuit sr1 sr2 = [rel| () ->
 \begin{figure}
 \centering
 \includegraphics[scale=1.5]{Graphics/groundedCircuit}
-\caption{\label{figGroundedCircuit} Grounded circuit involving two electrical components}
+
+\caption{\label{figGroundedCircuit} Grounded circuit involving two electrical
+components.}
+
 \end{figure}
 
 Now we can assemble the models of the electrical components into the simple
@@ -478,7 +487,9 @@ function.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{Graphics/serialise}
-\caption{\label{figSerialise} Serial connection of electrical components}
+
+\caption{\label{figSerialise} Serial connection of electrical components.}
+
 \end{figure}
 
 The |wire| signal relation models an electrical wire and is defined as follows.
