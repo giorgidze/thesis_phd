@@ -2,17 +2,22 @@
 \label{chapDefinition}
 
 This is a highly technical chapter giving a formal definition of the Hydra
-language. The definition is given in four steps. Firstly, we define Hydra's
+language. Note that this chapters defines Hydra's signal-level sublanguage.
+The functional-level sublanguage is provided by Haskell. The definition of
+Haskell is given in the book by \cite{Haskell98}.
+
+The language definition is given in four steps. Firstly, we define Hydra's
 lexical structure and concrete syntax by using regular expression and BNF
 notations, respectively. Secondly, we give Hydra's untyped abstract syntax as
-a Haskell algebraic data type definition. Thirdly, we define Hydra's typed
-abstract syntax as a Haskell generalised algebraic data type definition and
-give a translation from the untyped abstract syntax to the typed abstract
-syntax. The typed representation fully embodies Hydra's type system and can be
-seen as a definition of Hydra's type system in terms of the Haskell type
-system. In other words, Hydra's type system is embedded into Haskell's type
-system. Finally, we give ideal denotational semantics of Hydra by giving
-meaning to the typed abstract syntax in terms of second-order logic.
+a Haskell algebraic data type (ADT) definition. Thirdly, we define Hydra's
+typed abstract syntax as a Haskell generalised algebraic data type (GADT)
+\citep{PeytonJones2006a} definition and give a translation from the untyped
+abstract syntax to the typed abstract syntax. The typed representation fully
+embodies Hydra's type system and can be seen as a definition of Hydra's type
+system in terms of the Haskell type system. In other words, Hydra's type
+system is embedded into Haskell's type system. Finally, we give ideal
+denotational semantics of Hydra by giving meaning to the typed abstract syntax
+in terms of second-order logic.
 
 \section{Concrete Syntax}
 
@@ -137,10 +142,10 @@ are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
 
 \section{Abstract Syntax}
 
-Hydra's abstract syntax is given in Figure \ref{figAbstractSyntax}. The
-Haskell algebraic data type definition is derived from the concrete syntax
-defined in previous section. The representation is untyped; that is, it allows
-for terms that are syntactically correct but not necessarily type correct.
+Hydra's abstract syntax is given in Figure \ref{figAbstractSyntax}. The ADT
+definition is derived from the concrete syntax defined in previous section.
+The representation is untyped; that is, it allows for terms that are
+syntactically correct but not necessarily type correct.
 
 \begin{figure}
 \begin{code}
@@ -252,11 +257,10 @@ desugarPairEquation (eq)                                    =   [eq]
 \section{Typed Abstract Syntax}
 
 The typed abstract syntax that embodies the type system of Hydra is given in
-Figure \ref{figTypedRepresentation} as a Haskell generalised algebraic data
-type definition. Note that the types |Signal alpha| and |PrimSF alpha beta|
-are genuine generalised algebraic data types, while the data types |SR alpha|,
-|SF alpha beta| and |Equation| are algebraic data types that use the
-generalised algebraic data type notation for consistency.
+Figure \ref{figTypedRepresentation} as a GADT definition. Note that the types
+|Signal alpha| and |PrimSF alpha beta| are genuine GADTs, while the data types
+|SR alpha|, |SF alpha beta| and |Equation| are ADTs that use the GADT notation
+for consistency.
 
 \begin{figure}[H]
 \begin{code}
@@ -432,7 +436,7 @@ machine. A denotational semantics formally defines translation of the language
 terms into terms in a formalism that is well understood (often a field of
 mathematics).
 
-One characteristic of noncausal, modelling languages setting them apart from
+One characteristic of noncausal modelling languages setting them apart from
 traditional programming languages is that concrete implementations of
 noncausal languages only aim to approximate the model defined at the source
 level. For example, consider the system of equations modelling the simple
@@ -442,7 +446,7 @@ continuous real numbers were approximated using the double-precision machine
 floating-point numbers and the system of equations was approximated using the
 Haskell code implementing the forward Euler method.
 
-Implementations of noncausal, modelling languages allow modellers to choose
+Implementations of noncausal modelling languages allow modellers to choose
 floating-point representations (e.g., single or double precision), symbolic
 processing methods and numerical simulation methods that needs to be used
 during the simulation. This amounts to allowing modellers to choose a
