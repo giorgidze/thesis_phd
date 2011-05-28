@@ -71,8 +71,8 @@ identify \emph{known} and \emph{unknown} variables. Secondly, we decide which
 unknown variable should be solved in which equation. Thirdly, we sort the
 equations in such a way that no unknown variable is used before it is solved.
 
-Time $t$ and the state variables $u_c$ and $i_2$ are assumed to be known, the
-rest of the variables are unknowns, including the state derivatives
+Time $t$ and the differential variables $u_c$ and $i_2$ are assumed to be
+known, the rest of the variables are unknowns, including the derivatives
 ($\frac{du_c}{dt}$ and $\frac{di_2}{dt}$). The equations that contain only one
 unknown are solved for it. After that, the solved variables are assumed to be
 known and rest of the variables are solved. In this case this technique
@@ -150,9 +150,9 @@ book by \citet{Cellier2006}.
 
 \subsection{Simulation}
 
-Once an initial condition (i.e., a value of the state vector at time zero) is
-given it is possible to numerically integrate the ODE. The following Haskell
-function defines numerically integrates the ODE given in Equation
+Once an initial condition (i.e., a value of the differential vector at time
+zero) is given it is possible to numerically integrate the ODE. The following
+Haskell function defines numerically integrates the ODE given in Equation
 \ref{eqSimpleCircuitODE} using the forward Euler method.
 
 \begin{code}
@@ -167,7 +167,7 @@ integrateSimpleCircuit dt r c l = go 0 0 0
 
 Given the numerical integration time step and the circuit parameters, this
 function computes the approximate solution and delivers the values of the
-state vector at the discrete points of time given in Equation
+differential vector at the discrete points of time given in Equation
 \ref{eqStateVectorDiscreteSeq} as a list.
 
 In the case of the simple electrical circuit model, the algebraic variables
@@ -238,12 +238,12 @@ multiplication, summation and integration.
 \end{figure}
 
 Block diagrams in causal languages correspond to systems of ODEs in explicit
-form. That is, the causality is explicit: the input and state variables are
-used to define the state derivatives and the output variables. The
-construction of a block diagram is closely related to the process of
-causalisation. Derivation of simulation code from a block diagram is done much
-in the same way as described in Section \ref{secModelling}, but using more
-sophisticated numerical methods.
+form. That is, the causality is explicit: the input and differential variables
+are used to define the derivatives and the output variables. The construction
+of a block diagram is closely related to the process of causalisation.
+Derivation of simulation code from a block diagram is done much in the same
+way as described in Section \ref{secModelling}, but using more sophisticated
+numerical methods.
 
 Structurally, the block diagram in Figure \ref{figCircuitBlockDiagram1} is
 quite far removed from the circuit it models. Because of this, construction of
@@ -541,15 +541,15 @@ simulate the system. This example was tried using OpenModelica
 
 One of the difficulties of this example is that causality changes during the
 switch between the two modes. In the first mode position is calculated from
-the state variable |phi|, which is not the case after the switch. This makes
-the job of the simulation code generator a lot harder and as it turns out the
-Modelica tools are not able to handle it. Specifically, the tools commit to a
-certain causality before they generate the simulation code. This and related
-issues are covered in greater detail in \citep[2000]{ModelicaTutorial}. The
-suggested Modelica solution is more involved and requires reformulation of the
-model by making it causal. The need of manual reformulation to conform to a
-certain causality eliminates the advantages of working in a noncausal
-modelling language.
+the differential variable |phi|, which is not the case after the switch. This
+makes the job of the simulation code generator a lot harder and as it turns
+out the Modelica tools are not able to handle it. Specifically, the tools
+commit to a certain causality before they generate the simulation code. This
+and related issues are covered in greater detail in
+\citep[2000]{ModelicaTutorial}. The suggested Modelica solution is more
+involved and requires reformulation of the model by making it causal. The need
+of manual reformulation to conform to a certain causality eliminates the
+advantages of working in a noncausal modelling language.
 
 Currently, the Modelica language lacks expressiveness to describe structural
 changes. The breaking pendulum example demonstrates the problems that arise

@@ -246,7 +246,7 @@ signal relation becomes active. In this example, the |init| equations are used
 to initialise the differential variables involved in the inductor and the
 capacitor signal relations.
 
-Modelica implicitly initialises state variables to zero. That is why
+Modelica implicitly initialises differential variables to zero. That is why
 initialisation equations were not considered in the corresponding Modelica
 models given in Chapter \ref{chapBackground}. Hydra does not allow for
 implicit initialisation; that is, all initialisation equations must be
