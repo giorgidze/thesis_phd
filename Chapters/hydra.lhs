@@ -561,15 +561,12 @@ modelling.
 
 \section{Structurally Dynamic Modelling}
 
-To introduce structurally dynamic modelling in Hydra, let us model a physical
-system whose structural configuration changes abruptly during simulation: a
-simple pendulum that can break at a specified point in time; see Figure
-\ref{figPendulum}. The pendulum is modelled as a body represented by a point
-mass $m$ at the end of a rigid, mass-less rod, subject to gravity $m \vec{g}$.
-If the rod breaks, the body will fall freely. This makes the differences
-between the two configurations sufficiently large that, for example, Modelica
-does not support noncausal modelling of this system, as we discussed in
-Chapter \ref{chapBackground}.
+To introduce structurally dynamic modelling in Hydra, let us model the
+breaking-pendulum system described in Section \ref{secHybridModelling}. The
+system system has two modes of operation. The differences between the two
+modes are sufficiently large that, for example, Modelica does not support
+noncausal modelling of this system, as we discussed in Section
+\ref{secHybridModelling}.
 
 The following code shows how to model the two modes of the pendulum in Hydra.
 
