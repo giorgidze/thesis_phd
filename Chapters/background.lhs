@@ -50,18 +50,18 @@ Here, $\vec{x}$ is a vector of \emph{differential variables}, also known as
 is an independent scalar variable. In physical modelling $t$ represents
 \emph{time}.
 
-In general, it is not possible to find an exact solution of a DAE using
-analytical methods \citep{Brenan1996a}. Approximate solutions are derived by
-\emph{numerical integration}. There are a number of methods for numerical
-integration of an implicit DAE. There are numerical solvers that directly
-operate on the implicit representation (e.g., the IDA solver from the SUNDIALS
-numerical suite \citep{Sundials2005}).
 
-In some cases, it is possible to translate a DAE into a system of explicit
-\emph{ordinary differential equations} (ODEs), which makes it possible to
-simulate the system using an ODE solver (e.g., the CVODE solver from the
-SUNDIALS numerical suite \citep{Sundials2005}). In the following we illustrate
-the translation using the simple electrical circuit example.
+Numerical integration is a widely used approach for deriving approximate
+solutions of systems of DAEs. This is partly because, in general, exact
+symbolic methods do not suffice for solving systems of DAEs
+\citep{Brenan1996a}. There are a number of methods for numerical integration
+of an implicit DAE. For example, there are numerical solvers that directly
+operate on the implicit representation (e.g., the IDA solver from the SUNDIALS
+numerical suite \citep{Sundials2005}), but in some cases it is possible to
+translate a DAE into a system of explicit \emph{ordinary differential
+equations} (ODEs), which makes it possible to simulate the system using an ODE
+solver (e.g., the CVODE solver from the SUNDIALS numerical suite
+\citep{Sundials2005}). In the following we illustrate the latter approach.
 
 \subsection{Symbolic Manipulation}
 
