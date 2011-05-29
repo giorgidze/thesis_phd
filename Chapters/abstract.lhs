@@ -1,6 +1,6 @@
 \chapter*{Abstract}
 
-The field of physical modelling and simulation plays vital role in advancing
+The field of physical modelling and simulation plays a vital role in advancing
 numerous scientific and engineering disciplines. To cope with the increasing
 size and complexity of physical models, a number of modelling and simulation
 languages have been developed. These languages can be divided in two broad

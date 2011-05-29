@@ -828,23 +828,23 @@ that is written in C.
 type SolverHandle = Ptr Void
 
 data NumericalSolver = NumericalSolver {
-      createSolver    :: Real         -- Starting time
-                      -> Real         -- Stopping time
-                      -> Ptr Real     -- Current time
-                      -> Real         -- Absolute tolerance
-                      -> Real         -- Relative tolerance
-                      -> Int          -- Number of variables
-                      -> Ptr Real     -- Variables
-                      -> Ptr Real     -- Differentials
-                      -> Ptr Int      -- Constrained differentials
-                      -> Int          -- Number of events
-                      -> Ptr Int      -- Events
-                      -> Residual     -- Initialisation equations
-                      -> Residual     -- Main equations
-                      -> Residual     -- Event Equations
-                      -> IO SolverHandle
-  ,   destroySolver   :: SolverHandle -> IO ()
-  ,   solve           :: SolverHandle -> IO CInt
+      createSolver    ::  Real         -- Starting time
+                      ->  Real         -- Stopping time
+                      ->  Ptr Real     -- Current time
+                      ->  Real         -- Absolute tolerance
+                      ->  Real         -- Relative tolerance
+                      ->  Int          -- Number of variables
+                      ->  Ptr Real     -- Variables
+                      ->  Ptr Real     -- Differentials
+                      ->  Ptr Int      -- Constrained differentials
+                      ->  Int          -- Number of events
+                      ->  Ptr Int      -- Events
+                      ->  Residual     -- Initialisation equations
+                      ->  Residual     -- Main equations
+                      ->  Residual     -- Event Equations
+                      ->  IO SolverHandle
+  ,   destroySolver   ::  SolverHandle -> IO ()
+  ,   solve           ::  SolverHandle -> IO CInt
       -- Return value  0: Soulution has been obtained succesfully
       -- Return value  1: Event occurence
       -- Return value  2: Stopping time has been reached

@@ -426,7 +426,7 @@ With the |defaultExperiment| parameter the |simpleCircuit| signal relation is
 simulated for 10 seconds of simulation time starting from the time point of
 zero. The time step is set to |0.001| and the trajectories of the constrained
 signals are printed to the standard output in the
-gnuplot\footnote{url{http://www.gnuplot.info/}} compatible format. The default
+gnuplot\footnote{\url{http://www.gnuplot.info/}} compatible format. The default
 numerical solver is SUNDIALS \citep{Sundials2005}, but users allowed to
 provide their own symbolic processors and numerical solvers. This and other
 implementation aspects are described in detail in Chapter
