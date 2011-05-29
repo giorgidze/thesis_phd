@@ -151,10 +151,12 @@ book by \citet{Cellier2006}.
 \subsection{Simulation}
 
 Once an initial condition (i.e., a value of the differential vector at time
-zero) is given it is possible to numerically integrate the ODE. The following
-Haskell function defines numerically integrates the ODE given in Equation
-\ref{eqSimpleCircuitODE} using the forward Euler method.
+zero) is given it is possible to numerically integrate the ODE. The Haskell
+code that is given in Figure \ref{figIntegrateSimpleCircuit} numerically
+integrates the ODE given in Equation \ref{eqSimpleCircuitODE} using the
+forward Euler method.
 
+\begin{figure}
 \begin{code}
 integrateSimpleCircuit  ::  Double -> Double -> Double -> Double
                         ->  [(Double, Double, Double)]
@@ -165,6 +167,12 @@ integrateSimpleCircuit dt r c l = go 0 0 0
                 in   (t, i2, uc) : go (t + dt) (uc + duc) (i2 + di2)
 \end{code}
 
+\caption{\label{figIntegrateSimpleCircuit} Function that numerically
+integrates the ODE given in Equation \ref{eqSimpleCircuitODE} using the
+forward Euler method.}
+
+\end{figure}
+
 Given the numerical integration time step and the circuit parameters, this
 function computes the approximate solution and delivers the values of the
 differential vector at the discrete points of time given in Equation
@@ -174,8 +182,13 @@ In the case of the simple electrical circuit model, the algebraic variables
 can also be solved by adding so called \emph{output equations} in the function
 that numerically integrates the system of equations. Output equations are
 explicit algebraic equations where the algebraic variables are defined in
-terms of the differential variables. We refine the integration function by
-adding the output equation that solves the algebraic variable $i_1$.
+terms of the differential variables. The Haskell code given in Figure
+\ref{figIntegrateSimpleCircuit2} refines the integration function by adding
+the output equation that solves the algebraic variable $i_1$. Figure
+\ref{figCircuitPlot1} shows a partial simulation result obtained by evaluating
+the function with output equations.
+
+\begin{figure}
 
 \begin{code}
 integrateSimpleCircuit  ::  Double -> Double -> Double -> Double
@@ -188,8 +201,10 @@ integrateSimpleCircuit dt r c l = go 0 0 0
                 in    (t, i2, uc, i1) : go (t + dt) (uc + duc) (i2 + di2)
 \end{code}
 
-Figure \ref{figCircuitPlot1} shows the simulation result obtained by
-evaluating the $integrateSimpleCircuit$ function.
+\caption{\label{figIntegrateSimpleCircuit2} Function that adds two output
+equations to the function given in Figure \ref{figIntegrateSimpleCircuit}.}
+
+\end{figure}
 
 \begin{figure}
 \begin{center}
@@ -315,8 +330,15 @@ This section presents a Modelica model of the simple electrical circuit
 depicted in Figure \ref{figCircuit1} to illustrate basic features of the
 language.
 
-The following Modelica code declares the \emph{connector} record for
-representing electrical connectors.
+The Modelica code that is given in Figure \ref{figModelicaConnector} declares
+the \emph{connector} record for representing electrical connectors. The
+connector record introduces the variable |i| and the variable |v| representing
+the current flowing into the connector and the voltage at the connector
+respectively. In Modelica, connector records do not introduce equations. The
+meaning of the flow annotation is explained later on when \emph{connect
+equations} are introduced.
+
+\begin{figure}
 
 \begin{code}
 connector Pin
@@ -325,14 +347,20 @@ connector Pin
 end Pin;
 \end{code}
 
-The connector record introduces the variable |i| and the variable |v|
-representing the current flowing into the connector and the voltage at the
-connector respectively. In Modelica, connector records do not introduce
-equations. The meaning of the flow annotation is explained later on when
-\emph{connect equations} are introduced.
+\caption{\label{figModelicaConnector} Connector record defined in Modelica.}
 
-The following Modelica code defines the model that captures common properties
-of electrical components with two connectors.
+\end{figure}
+
+The Modelica code that is given in Figure \ref{figModelicaTwoPin} defines the
+model that captures common properties of electrical components with two
+connectors. The variables |p| and |n| represent the positive and negative pins
+of an electrical component. The variable |u| represents the voltage drop
+across the component. The variable |i| represents the current flowing into the
+positive pin. The |TwoPin| model defines the noncausal equations that these
+variables satisfy.
+
+
+\begin{figure}
 
 \begin{code}
 model TwoPin
@@ -345,17 +373,26 @@ equation
 end TwoPin;
 \end{code}
 
-The variables |p| and |n| represent the positive and negative pins of an
-electrical component. The variable |u| represents the voltage drop across the
-component. The variable |i| represents the current flowing into the positive
-pin. The |TwoPin| model defines the noncausal equations that these variables
-satisfy.
+\caption{\label{figModelicaTwoPin} Modelica model for two-pin electrical
+components.}
 
-By \emph{extending} the |TwoPin| model with component-specific equations we
-define the models representing resistor, capacitor, inductor and voltage
-source. Note the use of the concept of \emph{inheritance} known from
-object-oriented programming languages for reusing the equations from the
-|TwoPin| model.
+\end{figure}
+
+By \emph{extending} the |TwoPin| model with component-specific equations
+Figure \ref{figModelicaComponents} defines the models representing resistor,
+capacitor, inductor and voltage source. Figure \ref{figModelicaComponents}
+also defines the model that represents the ground pin. Note the use of the
+concept of \emph{inheritance} known from object-oriented programming languages
+for reusing the equations from the |TwoPin| model.
+
+Variables qualified as |parameter| or as |constant| remain unchanged during
+simulation. The value of a constant is defined once and for all in the source
+code, while a parameter can be set when an object of the class is
+instantiated. In this example all parameters are provided with default values
+allowing for instantiations with the default parameter values. All other
+variables represent dynamic, time-varying entities.
+
+\begin{figure}
 
 \begin{code}
 model Resistor
@@ -364,21 +401,27 @@ model Resistor
 equation
   R * i = u;
 end Resistor;
+\end{code}
 
+\begin{code}
 model Capacitor
   extends TwoPin;
   parameter Real C = 1;
 equation
   C * der(u) = i;
 end Capacitor;
+\end{code}
 
+\begin{code}
 model Inductor
   extends TwoPin;
   parameter Real L = 1;
 equation
   u = L * der(i);
 end Inductor;
+\end{code}
 
+\begin{code}
 model VSourceAC
   extends TwoPin;
   parameter Real VA      =  1;
@@ -389,15 +432,6 @@ equation
 end VSourceAC;
 \end{code}
 
-Variables qualified as |parameter| or as |constant| remain unchanged during
-simulation. The value of a constant is defined once and for all in the source
-code, while a parameter can be set when an object of the class is
-instantiated. In this example all parameters are provided with default values
-allowing for instantiations with the default parameter values. All other
-variables represent dynamic, time-varying entities.
-
-The following code defines the model that represents the ground pin.
-
 \begin{code}
 model Ground
   Pin p;
@@ -406,9 +440,16 @@ equation
 end Ground;
 \end{code}
 
-We can now use the circuit component models to define the simple electrical
-circuit model by ``connecting'' appropriate pins according to Figure
-\ref{figCircuit1}.
+\caption{\label{figModelicaComponents} Modelica models with component-specific
+equations.}
+
+\end{figure}
+
+The Modelica model that is given in Figure \ref{figModelicaCircuit1} uses the
+circuit component models to define the simple electrical circuit model by
+``connecting'' appropriate pins according to Figure \ref{figCircuit1}.
+
+\begin{figure}
 
 \begin{code}
 model SimpleCircuit
@@ -426,6 +467,11 @@ equation
   connect(AC.n,  G.p);
 end SimpleCircuit;
 \end{code}
+
+\caption{\label{figModelicaCircuit1} Modelica model for the circuit given in
+Figure \ref{figCircuit1}.}
+
+\end{figure}
 
 Connect statements are analysed and appropriate \emph{connection equations}
 are generated by the Modelica compiler as follows. Connected flow variables
@@ -467,7 +513,9 @@ As we have seen, noncausal languages allow us to model physical systems at a
 high level of abstraction. The structure of the models resemble the modelled
 systems. Consequently, it is easy to reuse or modify existing models. For
 example, it is now trivial to add one more resistor to the Modelica model as
-shown in the following model.
+shown in Figure \ref{figModelicaCircuit2}.
+
+\begin{figure}
 
 \begin{code}
 model SimpleCircuit
@@ -488,6 +536,11 @@ equation
 end SimpleCircuit;
 \end{code}
 
+\caption{\label{figModelicaCircuit2} Modelica model for the circuit given in
+Figure \ref{figCircuit2}.}
+
+\end{figure}
+
 \section{Noncausal Modelling of Structurally Dynamic Systems}
 \label{secHybridModelling}
 
@@ -500,8 +553,6 @@ highlights lack of expressiveness of the Modelica language when it comes to
 dynamic addition and removal of time-varying variables and continuous
 equations, and lack of runtime symbolic processing and code generation
 facilities in Modelica implementations.
-
-\subsection{Modelling Structurally Dynamic Systems in Modelica}
 
 Let us model a physical system whose structural configuration changes abruptly
 during simulation: a simple pendulum that can break at a specified point in
@@ -516,8 +567,21 @@ to gravity $m \vec{g}$. If the rod breaks, the body will fall freely.
 \caption{\label{figPendulum} Pendulum subject to gravity.}
 \end{figure}
 
-The following code is an attempt to model this system in Modelica that on the
-surface appears to solve the problem.
+The code that is given in Figure \ref{figModelicaBreakingPendulum} is an
+attempt to model this system in Modelica that on the surface appears to solve
+the problem. Unfortunately the code fails to compile. The reason is that the
+latest version of the Modelica standard \citep[2010]{Modelica} asserts that
+number of equations in both branches of an if statement must be equal when the
+conditional expression contains a time-varying variable. If considered
+separately, the equations in both branches do solve the publicly available
+variables successfully. In an attempt to fix the model, the modeller might try
+to add a dummy equation for the variable not needed in the second mode (i.e.,
+the variable |phi|, which represents the angle of deviation of the pendulum
+before it is broken). This version compiles, but the generated code fails to
+simulate the system. This example was tried using OpenModelica
+\citep{OpenModelica} and Dymola \citep{Dymola} compilers.
+
+\begin{figure}
 
 \begin{code}
 model BreakingPendulum
@@ -538,17 +602,10 @@ equation
 end BreakingPendulum;
 \end{code}
 
-Unfortunately the code fails to compile. The reason is that the latest version
-of the Modelica standard \citep[2010]{Modelica} asserts that number of
-equations in both branches of an if statement must be equal when the
-conditional expression contains a time-varying variable. If considered
-separately, the equations in both branches do solve the publicly available
-variables successfully. In an attempt to fix the model, the modeller might try
-to add a dummy equation for the variable not needed in the second mode (i.e.,
-the variable |phi|, which represents the angle of deviation of the pendulum
-before it is broken). This version compiles, but the generated code fails to
-simulate the system. This example was tried using OpenModelica
-\citep{OpenModelica} and Dymola \citep{Dymola} compilers.
+\caption{\label{figModelicaBreakingPendulum} Attempt to model a breaking
+pendulum that in Modelica.}
+
+\end{figure}
 
 One of the difficulties of this example is that causality changes during the
 switch between the two modes. In the first mode position is calculated from

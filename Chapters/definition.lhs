@@ -127,7 +127,7 @@ The symbols used in Hydra are given in Figure \ref{figSymbols}. In Hydra,
 single-line comments begin with {\symb{{$-$}{$-$}}} and multiple-line comments
 are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \begin{tabular}{lll}
 {\symb{{$-$}{$>$}}} &{\symb{\{}} &{\symb{\}}} \\
@@ -235,7 +235,7 @@ representation as we show in the following section. The translation is given
 in Figure \ref{figDesugaring} as a Haskell function working with the untyped
 abstract syntax of Hydra.
 
-\begin{figure}[H]
+\begin{figure}
 
 \begin{code}
 desugarPairSigRel                   ::  SigRel -> SigRel
@@ -262,7 +262,7 @@ Figure \ref{figTypedRepresentation} as a GADT definition. Note that the types
 |SR alpha|, |SF alpha beta| and |Equation| are ADTs that use the GADT notation
 for consistency.
 
-\begin{figure}[H]
+\begin{figure}
 \begin{code}
 data SR alpha where
   SR      ::  (Signal alpha -> [Equation]) -> SR alpha

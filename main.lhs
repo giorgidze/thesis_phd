@@ -19,6 +19,9 @@
 
 \doublespacing
 
+\widowpenalty=10000
+\clubpenalty=10000
+
 \begin{document}
 
 \title{

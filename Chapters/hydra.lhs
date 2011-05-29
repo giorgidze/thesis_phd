@@ -213,7 +213,19 @@ is:
 \end{code}
 
 Models for an inductor, a capacitor, a voltage source and a ground reference
-are defined as follows:
+are defined in Figure \ref{figHydraComponents}. Note that the inductor and the
+capacitor signal relations contain |init| equations. An |init| equation is
+enforced only at the point in time when the signal relation becomes active. In
+this example, the |init| equations are used to initialise the differential
+variables involved in the inductor and the capacitor signal relations.
+
+Modelica implicitly initialises differential variables to zero. That is why
+initialisation equations were not considered in the corresponding Modelica
+models given in Chapter \ref{chapBackground}. Hydra does not allow for
+implicit initialisation; that is, all initialisation equations must be
+specified explicitly.
+
+\begin{figure}
 
 \begin{code}
 iInductor :: Real -> Real -> SR (Pin,Pin)
@@ -222,37 +234,36 @@ inductor p_i_0 l = [rel| ((p_i,p_v),(n_i,n_v)) ->
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $l$ * der p_i = u
 |]
+\end{code}
 
+\begin{code}
 iCapacitor :: Real -> Real -> SR (Pin,Pin)
 iCapacitor u0 c = [rel| ((p_i,p_v),(n_i,n_v)) ->
     init u = u0
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $c$ * der u  = p_i
 |]
+\end{code}
 
+\begin{code}
 vSourceAC :: Real -> Real -> SR (Pin,Pin)
 vSourceAC v f = [rel| ((p_i,p_v),(n_i,n_v)) ->
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     u = $v$ * sin (2 * $pi$ * $f$ * time)
 |]
+\end{code}
 
+\begin{code}
 ground :: SR (Pin)
 ground = [rel| (p_i,p_v) where
     p_v = 0
 |]
 \end{code}
 
-Note that the inductor and the capacitor signal relations contain |init|
-equations. An |init| equation is enforced only at the point in time when the
-signal relation becomes active. In this example, the |init| equations are used
-to initialise the differential variables involved in the inductor and the
-capacitor signal relations.
+\caption{\label{figHydraComponents} Hydra models for an inductor, a capacitor,
+a voltage source and a ground reference.}
 
-Modelica implicitly initialises differential variables to zero. That is why
-initialisation equations were not considered in the corresponding Modelica
-models given in Chapter \ref{chapBackground}. Hydra does not allow for
-implicit initialisation; that is, all initialisation equations must be
-specified explicitly.
+\end{figure}
 
 \section{Noncausal Connections}
 \label{secConnections}
@@ -273,6 +284,7 @@ relation that models the serial connection of the two electrical components.
 The graphical representation of the signal relation is given in Figure
 \ref{figSerial}.
 
+\begin{figure}[H]
 \begin{code}
 serial :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
 serial sr1 sr2 = [rel| ((p_i, p_v),(n_i, n_v)) ->
@@ -292,6 +304,7 @@ serial sr1 sr2 = [rel| ((p_i, p_v),(n_i, n_v)) ->
     n2_v = n_v
 |]
 \end{code}
+\end{figure}
 
 \begin{figure}
 \centering
@@ -307,6 +320,7 @@ relation that models the parallel connection of the two electrical components.
 The graphical representation of the signal relation is given in Figure
 \ref{figParallel}.
 
+\begin{figure}[H]
 \begin{code}
 parallel :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
 parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
@@ -324,6 +338,7 @@ parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
     n1_v = n2_v
 |]
 \end{code}
+\end{figure}
 
 \begin{figure}
 \centering
@@ -339,6 +354,7 @@ signal relation that models the grounded circuit involving the two electrical
 components. The graphical representation of the signal relation is given
 in Figure \ref{figGroundedCircuit}.
 
+\begin{figure}[H]
 \begin{code}
 groundedCircuit :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR ()
 groundedCircuit sr1 sr2 = [rel| () ->
@@ -359,6 +375,7 @@ groundedCircuit sr1 sr2 = [rel| () ->
     n2_v = gp_v
 |]
 \end{code}
+\end{figure}
 
 \begin{figure}
 \centering
@@ -372,6 +389,7 @@ components.}
 Now we can assemble the models of the electrical components into the simple
 electrical circuit as follows:
 
+\begin{figure}[H]
 \begin{code}
 simpleCircuit :: SR ()
 simpleCircuit =
@@ -379,6 +397,7 @@ simpleCircuit =
                    (parallel  (serial (resistor 1) (iCapacitor 0 1))
                               (iInductor 0 1))
 \end{code}
+\end{figure}
 
 Note that the above code is a direct textual representation of how the
 components are connected in the circuit. Having said that, unlike the Modelica
@@ -388,8 +407,9 @@ combinators that are capable of specifying noncausal connections by connecting
 noncausal models directly.
 
 It is trivial in Hydra to reuse the circuit components and model the modified
-circuit that is depicted on Figure \ref{figCircuit2}.
+circuit that is depicted on Figure \ref{figCircuit2}:
 
+\begin{figure}[H]
 \begin{code}
 simpleCircuit2 :: SR ()
 simpleCircuit2 =
@@ -397,6 +417,7 @@ simpleCircuit2 =
                    (parallel  (serial  (resistor 1)  (iCapacitor  0 1))
                               (serial  (resistor 1)  (iInductor   0 1)))
 \end{code}
+\end{figure}
 
 \section{Simulation}
 
@@ -578,8 +599,18 @@ modes are sufficiently large that, for example, Modelica does not support
 noncausal modelling of this system, as we discussed in Section
 \ref{secHybridModelling}.
 
-The following code shows how to model the two modes of the pendulum in Hydra.
+The code that is given in Figure \ref{figHydraBreakingPendulum} shows how to
+model the two modes of the pendulum in Hydra. The type |Body| denotes the
+state of the pendulum body; that is, its position and velocity, where position
+and velocity both are 2-dimensional vectors represented by pairs of reals.
+Each model is represented by a function that maps the parameters of the model
+to a relation on signals. In the unbroken mode, the parameters are the length
+of the rod |l| and the initial angle of deviation |phi0|. In the broken mode,
+the signal relation is parametrised on the initial state of the body. Once
+again, note that the equations that are marked by the keyword |init| are
+initialisation equations used to specify initial conditions.
 
+\begin{figure}
 \begin{code}
 type Pos   =  (Real,Real)
 type Vel   =  (Real,Real)
@@ -612,15 +643,10 @@ pendulum l phi0 = [rel| ((x,y),(vx,vy)) ->
 |]
 \end{code}
 
-The type |Body| denotes the state of the pendulum body; that is, its position
-and velocity, where position and velocity both are 2-dimensional vectors
-represented by pairs of reals. Each model is represented by a function that
-maps the parameters of the model to a relation on signals. In the unbroken
-mode, the parameters are the length of the rod |l| and the initial angle of
-deviation |phi0|. In the broken mode, the signal relation is parametrised on
-the initial state of the body. Once again, note that the equations that are
-marked by the keyword |init| are initialisation equations used to specify
-initial conditions.
+\caption{\label{figHydraBreakingPendulum} Signal relations modelling the two
+modes of the pendulum.}
+
+\end{figure}
 
 To model a pendulum that breaks at some point, we need to create a composite
 signal relation where the signal relation that models the dynamic behaviour of

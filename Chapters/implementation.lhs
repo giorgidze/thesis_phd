@@ -338,8 +338,7 @@ to a numerical solver that simulates the system until the end of simulation or
 an event occurrence. In the case of an event occurrence, the process is
 repeated from the first stage by staring the new iteration.
 
-
-\begin{figure}[t]
+\begin{figure}
 \begin{center}
 \includegraphics[width = \textwidth]{Graphics/simulation}
 \end{center}
