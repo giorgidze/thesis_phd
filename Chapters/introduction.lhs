@@ -122,9 +122,9 @@ interact with continuous physical systems, can also be seen as instances of
 hybrid systems. In this context, structurally dynamic modelling is relevant;
 as modelling of a cyber-physical system where the digital part's influence
 causes major changes in the physical part may require changing of the
-equations describing the dynamics of the continuous part. Recently,
-the US National Science Foundation identified Cyber-physical systems as one of
-its key research areas \citep[2008]{NSF2008a}.
+equations describing the dynamics of the continuous part. Recently, the US
+National Science Foundation identified cyber-physical systems as one of its
+key research areas \citep[2008]{NSF2008a}.
 
 Current noncausal languages offer limited support for modelling structurally
 dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
@@ -319,36 +319,38 @@ The following four papers describe various aspects of the design and
 implementation of Hydra, as well as a number of its applications.
 
 \begin{itemize}
-\item
-George Giorgidze and Henrik Nilsson.
-\newblock Embedding a {F}unctional {H}ybrid {M}odelling language in {H}askell.
-\newblock In {\em Proceedings of the 20th international symposium on
-  Implementation and Application of Functional Languages}, Hatfield, England,
-  2008.
-\newblock To appear in peer-reviewed proceedings published by Springer LNCS.
 
 \item
 George Giorgidze and Henrik Nilsson.
-\newblock Higher-order noncausal modelling and simulation of structurally
+\newblock Embedding a {F}unctional {H}ybrid {M}odelling language in {H}askell.
+\newblock In {\em Revised selected papers of the 20th international symposium
+  on Implementation and Application of Functional Languages, Hatfield,
+  England}, volume 5836 of {\em Lecture Notes in Computer Science}. Springer,
+  2008.
+
+\item
+George Giorgidze and Henrik Nilsson.
+\newblock Higher-order non-causal modelling and simulation of structurally
   dynamic systems.
-\newblock In {\em Proceedings of the 7th International Modelica Conference},
-  Como, Italy, 2009. Link{\"o}ping University Electronic Press.
+\newblock In {\em Proceedings of the 7th International Modelica Conference,
+  Como, Italy}. Link{\"o}ping University Electronic Press, 2009.
 
 \item
 George Giorgidze and Henrik Nilsson.
 \newblock Mixed-level embedding and {JIT} compilation for an iteratively staged
   {DSL}.
-\newblock In {\em Proceedings of the 19th international workshop on Functional
-  and (Constraint) Logic Programming}, Madrid, Spain, 2010.
-\newblock To appear in peer-reviewed proceedings published by Springer LNCS.
+\newblock In {\em Revised selected papers of the 19th international workshop on
+  Functional and (Constraint) Logic Programming, Madrid, Spain}, volume 6559 of
+  {\em Lecture Notes in Computer Science}. Springer, 2010.
 
 \item
-Henrik Nilsson and George Giorgidze.
+George Giorgidze and Henrik Nilsson.
 \newblock Exploiting structural dynamism in {F}unctional {H}ybrid {M}odelling
   for simulation of ideal diodes.
 \newblock In {\em Proceedings of the 7th EUROSIM Congress on Modelling and
-  Simulation}, Prague, Czech Republic, 2010. Czech Technical University
-  Publishing House.
+  Simulation, Prague, Czech Republic}. Czech Technical University Publishing
+  House, 2010.
+
 \end{itemize}
 
 The following two papers are about highly structurally dynamic, causal
@@ -359,31 +361,36 @@ inspiration from switching combinators featured in Yampa
 \citep{Nilsson2002a,Courtney2003a}.
 
 \begin{itemize}
+
 \item
 George Giorgidze and Henrik Nilsson.
-\newblock Demo outline: switched-on {Y}ampa.
-\newblock In {\em Proceedings of the ACM SIGPLAN Haskell workshop}, Freiburg,
-  Germany, 2007. ACM.
+\newblock Demo outline: {S}witched-on {Y}ampa.
+\newblock In {\em Proceedings of the ACM SIGPLAN Haskell workshop, Freiburg,
+  Germany}. ACM, 2007.
 
 \item
 George Giorgidze and Henrik Nilsson.
 \newblock Switched-on {Y}ampa: declarative programming of modular synthesizers.
 \newblock In {\em Proceedings of the 10th international symposium on Practical
-  Aspects of Declarative Languages}, San Francisco, CA, USA, 2008. Springer.
+  Aspects of Declarative Languages, San Francisco, CA, USA}, volume 4902 of
+  {\em Lecture Notes in Computer Science}. Springer, 2008.
+
 \end{itemize}
 
 Some of the embedding techniques described in this thesis are also used in the
 following paper.
 
 \begin{itemize}
+
 \item
 George Giorgidze, Torsten Grust, Tom Schreiber, and Jeroen Weijers.
 \newblock {H}askell boards the {F}erry: Database-supported program execution
   for {H}askell.
-\newblock In {\em Proceedings of the 22nd international symposium on
-  Implementation and Application of Functional Languages}, Alphen aan den Rijn,
-  Netherlands, 2010.
-\newblock To appear in peer-reviewed proceedings published by Springer LNCS.
+\newblock In {\em Revised selected papers of the 22nd international symposium
+  on Implementation and Application of Functional Languages, Alphen aan den
+  Rijn, Netherlands}. Springer, 2010.
+\newblock Peter Landin Prize for the best paper at IFL 2010, to appear.
+
 \end{itemize}
 
 \section{Prerequisites}
