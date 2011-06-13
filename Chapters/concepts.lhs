@@ -21,10 +21,10 @@ type  Signal alpha   ~=  Time -> alpha
 
 |Time| is continuous and is represented as a real number. The type parameter
 |alpha| specifies the type of values carried by the signal; for example, a
-signal of type |Signal Real| can represent a change of total amount of current
-flowing in a certain electrical circuit over time, or a signal of type |Signal
-(Real,Real)| can represent a change of position of a certain object in a two
-dimensional space over time.
+signal of type |Signal Real| may represent a change to the total amount of
+current flowing in a certain electrical circuit over time, or a signal of type
+|Signal (Real,Real)| may represent a change in position of a certain object in
+a two dimensional space over time.
 
 Hydra features signals of reals (i.e., |Signal Real|) and signals of
 arbitrarily nested pairs of reals. Signals of nested pairs are useful for
@@ -82,7 +82,7 @@ type SR alpha  ~=  Time -> Signal alpha -> Prop
 
 Given a point in time and a signal, a signal relation defines a proposition
 constraining the signal starting from the given point in time. Here, |Prop| is
-a type for propositions defined in the second-order logic. \emph{Solving} a
+a type for propositions defined in second-order logic. \emph{Solving} a
 relation for a given starting time thus means finding a signal that satisfies
 the predicate.
 
