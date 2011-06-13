@@ -1,12 +1,12 @@
 \chapter{Introduction}
 \label{chapIntroduction}
 
-The field of physical modelling and simulation plays a vital role in the
-design, implementation and analysis of systems in numerous areas of science
-and engineering. Examples include: electronics, mechanics, thermodynamics,
-chemical reaction kinetics, population dynamics and neural networks
+Physical modelling and simulation plays a vital role in the design,
+implementation and analysis of systems in numerous areas of science and
+engineering. Examples include electronics, mechanics, thermodynamics, chemical
+reaction kinetics, population dynamics and neural networks
 \citep{Cellier1991}. To cope with the increasing size and complexity of
-physical models, a number modelling and simulation languages have been
+physical models, a number of modelling and simulation languages have been
 developed. The modelling and simulation languages can be divided in two broad
 categories: \emph{causal} and \emph{noncausal}.
 
@@ -16,7 +16,7 @@ is, the cause-effect relationship is explicitly specified by the modeller
 \citep{Cellier2006}. In other words, the equations are directed: only
 \emph{unknown} variables can appear on the left hand side of the equal sign,
 and only \emph{known} variables on the other side. Since the equations are
-directed, it is relatively straightforward to translate causal models into a
+directed, it is relatively straightforward to translate a causal model into a
 low-level simulation code (e.g., into a sequence of assignment statements) and
 simulate it. Simulink is a prominent representative of causal modelling
 languages \citep[2008]{Simulink}.
@@ -27,14 +27,14 @@ other words, the equations are undirected: both known and unknown variables
 may appear on both sides of the equal sign \citep{Cellier2006}. The
 translation of noncausal models into simulation code involves additional
 symbolic processing and numerical simulation methods that are not required for
-causal modelling and simulation. Examples include: symbolic transformations
+causal modelling and simulation. Examples include symbolic transformations
 that try to causalise noncausal models and, if this is not possible, numerical
 solvers for (nonlinear) implicit equations. Modelica is a prominent,
 state-of-the-art representative of noncausal modelling languages
 \citep[2010]{Modelica}.
 
-Noncausal modelling has a number of advantages over causal modelling. The
-most important ones are listed below:
+Noncausal modelling has a number of advantages over causal modelling. The most
+important ones are:
 
 \begin{itemize}
 
@@ -47,8 +47,8 @@ from a higher level of abstraction by focusing on \emph{what} to model rather
 than \emph{how} to model to enable simulation.
 
 \item Noncausal models are more reusable as equations can be used in a number
-of different ways depending on their usage context (e.g., causalised in a
-number of different ways).
+of different ways depending on their context of usage (i.e., effectively
+causalised in a number of different ways).
 
 \end{itemize}
 
@@ -65,10 +65,8 @@ A language entity is \emph{first-class} if it can be (1) passed as a parameter
 to functions, (2) returned as a result from functions, (3) constructed at
 runtime and (4) placed in data structures \citep{Scott2009a}. Current,
 main-stream noncausal languages do not treat models as first-class values
-\citep{Nilsson2003a}. This limits their expressiveness and applicability,
-resulting in a very limited capabilities in the following crucial application
-areas of modelling languages: \emph{higher-order} and \emph{structurally
-dynamic} modelling.
+\citep{Nilsson2003a}. This limits their expressiveness for \emph{higher-order}
+and \emph{structurally dynamic} modelling.
 
 \subsection{Higher-order Modelling}
 
@@ -93,17 +91,16 @@ The idea to treat noncausal models as first-class values in a functional
 programming language was introduced by \citet{Nilsson2003a} in the context of
 a framework called Functional Hybrid Modelling (FHM) for designing and
 implementing noncausal modelling languages. However, the paper postpones a
-concrete language definition and implementation for future work. In Addition,
+concrete language definition and implementation for future work. In addition,
 the FHM framework proposes to exploit the first-class nature of noncausal
 models for modelling \emph{hybrid} systems (i.e., systems that exhibit both
-continuous and discrete behaviour); this is relevant in the following
-section.
+continuous and discrete behaviour); this is relevant in the following section.
 
-\citet{Broman2007a} defined and implemented a noncausal language that
-supports parametrisation of models on other models and allows for a form of
-higher-order modelling, but construction of noncausal models at
-simulation runtime and manipulation of collections of models placed
-in data structures have not been considered.
+\citet{Broman2007a} defined and implemented a noncausal language that supports
+parametrisation of models on other models and allows for a form of
+higher-order modelling, but construction of noncausal models at simulation
+runtime and manipulation of collections of models placed in data structures
+were not considered.
 
 \subsection{Structurally Dynamic Modelling}
 
@@ -121,28 +118,27 @@ of equations at discrete points in time.
 interact with continuous physical systems, can also be seen as instances of
 hybrid systems. In this context, structurally dynamic modelling is relevant;
 as modelling of a cyber-physical system where the digital part's influence
-causes major changes in the physical part may require changing of the
-equations describing the dynamics of the continuous part. Recently, the US
-National Science Foundation identified cyber-physical systems as one of its
-key research areas \citep[2008]{NSF2008a}.
+causes major changes in the physical part may require changing the equations
+that describe the dynamics of the continuous part. Recently, the US National
+Science Foundation identified cyber-physical systems as one of its key
+research areas \citep[2008]{NSF2008a}.
 
-Current noncausal languages offer limited support for modelling structurally
+Current, noncausal languages offer limited support for modelling structurally
 dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
-Zimmer2008a}. There are a number of reasons for this limited support. This
-thesis concentrates on one particular reason related to the design and
-implementation of modelling and simulation languages, specifically the
-prevalent assumption that most or all processing to put a model into a form
-suitable for simulation will take place \emph{prior} to simulation
-\citep{Nilsson2007,Zimmer2007}. By enforcing this assumption in the design of
-a modelling language, its implementation can be simplified as there is no need
-for simulation-time support for handling structural changes. For instance, a
-compiler can typically generate static simulation code (often just a sequence
-of assignment statements) with little or no need for dynamic memory or code
-management. This results in a good performance, but such language design and
-implementation approach restricts the number of modes to be modest as, in
-general, separate code must be generated for each mode. This rules out
-supporting \emph{highly} structurally dynamic systems where the number of
-modes is too large or even a priori unbounded.
+Zimmer2008a}. There are a number of reasons for this. However, this thesis
+concentrates on one particular reason related to the design and implementation
+of modelling and simulation languages: the prevalent assumption that most or
+all processing to put a model into a form suitable for simulation will take
+place \emph{prior} to simulation \citep{Nilsson2007,Zimmer2007}. By enforcing
+this assumption in the design of a modelling language, its implementation can
+be simplified as there is no need for simulation-time support for handling
+structural changes. For instance, a compiler can typically generate static
+simulation code (often just a sequence of assignment statements) with little
+or no need for dynamic memory or code management. This results in good
+performance, but such language design and implementation approaches restrict
+the number of modes to be modest as, in general, separate code must be
+generated for each mode. This rules out supporting \emph{highly} structurally
+dynamic systems where the number of modes is too large or even unbounded.
 
 There are a number of efforts to design and implement modelling and simulation
 languages with improved support for structural dynamism. Examples include:
@@ -159,10 +155,10 @@ This dissertation presents a novel approach to the design and implementation
 of noncausal modelling and simulation languages with first-class models
 supporting higher-order and structurally dynamic modelling. The thesis
 formally defines a noncausal modelling language called Hydra and describes its
-implementation in great detail. Hydra provides noncausal modelling and
-simulation capabilities that go beyond the state of the art and represents
-significant progress in the field of design and implementation of declarative
-modelling and simulation languages, in particular:
+implementation in detail. Hydra provides noncausal modelling and simulation
+capabilities that go beyond the state of the art and represents significant
+progress in the field of design and implementation of declarative modelling
+and simulation languages, in particular:
 
 \begin{itemize}
 
@@ -183,14 +179,14 @@ simulation code for efficiency.
 
 In addition to presenting the language definition and implementation, the
 aforementioned claims are also backed up by illustrating a range of example
-physical systems that cannot be modelled and simulated in current noncausal
+physical systems that cannot be modelled and simulated in current, noncausal
 languages. The examples are carefully chosen to showcase those language
 features of Hydra that are lacking in other noncausal modelling languages.
 
 The language design choices and implementation approaches presented here can
 be used to enhance existing noncausal modelling and simulation languages, as
 well as to design and implement new modelling languages. This thesis provides
-a self-contained reference for such undertaking by defining the language
+a self-contained reference for such an undertaking by defining the language
 semantics formally and providing an in-depth description of the
 implementation.
 
@@ -206,13 +202,14 @@ principle, can be incorporated in the Hydra language.
 This work can be seen as an application of successful ideas developed in
 functional programming languages research to declarative modelling and
 simulation languages. I hope that this work will aid to further
-cross-fertilisation and exchange of ideas between these research communities.
+cross-fertilisation and the exchange of ideas between these research
+communities.
 
 \section{Embedding}
 
 Hydra is a Haskell-embedded \emph{domain-specific language} (DSL). Here, the
-domain is noncausal modelling and simulation using implicitly formulated
-DAEs. Haskell is a purely functional, higher-order, strongly typed programming
+domain is noncausal modelling and simulation using implicitly formulated DAEs.
+Haskell is a purely functional, higher-order, statically typed programming
 language \citep{Haskell98}, which is widely used for embedded DSL development
 \citep{Stewart2009a}.
 
@@ -223,8 +220,7 @@ addressing a particular application or problem domain tends to save a lot of
 design and implementation effort. The motivation behind using an embedding
 approach for Hydra is to concentrate the language design and implementation
 effort on noncausal modelling notions that are domain specific and absent in
-the host language, and, at the same time, to reuse the rest from the host
-language.
+the host language, and to reuse the rest from the host language.
 
 Having said that, the concept of first-class models, and the runtime symbolic
 processing and JIT compilation approaches implemented in Hydra, are not
@@ -428,8 +424,7 @@ languages.
 \item Chapter \ref{chapDefinition} formally defines Hydra's concrete syntax,
 abstract syntax, type system and ideal denotational semantics.
 
-\item Chapter \ref{chapImplementation} describes how Hydra is implemented in
-great detail.
+\item Chapter \ref{chapImplementation} describes how Hydra is implemented.
 
 \item Chapter \ref{chapRelatedWork} overviews the related work and, in light
 of it, positions the contributions of this thesis in further detail.
