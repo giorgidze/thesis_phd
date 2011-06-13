@@ -32,7 +32,7 @@ simulation, while FHM supports noncausal simulation. Signal functions are
 first class entities in most incarnations of FRP, and new ones can be computed
 and integrated into a running system dynamically. As we have seen, this
 capability has also been carried over to FHM. This means that these FRP
-versions, including Yampa, also are examples of iteratively staged languages.
+versions, including Yampa, are also examples of iteratively staged languages.
 However, as all FRP versions supporting highly dynamic system structure so far
 have been interpreted, the program generation aspect is much less pronounced
 than what is the case for Hydra. That said, in Yampa, program fragments are
@@ -47,7 +47,7 @@ FRP, especially in the context of the recently proposed optimisations by
 
 Sol is a Modelica-like language \citep{Zimmer2007,Zimmer2008a}. It introduces
 language constructs that enable the description of systems where objects are
-dynamically created and deleted, thus aiming at supporting modelling of highly
+dynamically created and deleted, thus aiming to support modelling of highly
 structurally dynamic systems. So far, the research emphasis has been on the
 design of the language itself along with support for incremental dynamic
 recausalisation and dynamic handling of structural singularities. An
