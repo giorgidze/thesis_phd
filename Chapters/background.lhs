@@ -5,10 +5,10 @@
 \label{secModelling}
 
 This chapter overviews the field of physical modelling and simulation by using
-simple, and at the same time, instructive examples. By modelling and
-simulating the example physical systems, basic concepts of modelling and
-simulation are introduced. When necessary, the presentation abstracts from the
-concrete examples and defines the basic concepts generally.
+simple and instructive examples. By modelling and simulating the example
+physical systems, basic concepts of modelling and simulation are introduced.
+Where necessary, the presentation abstracts from the concrete examples and
+defines the basic concepts more generally.
 
 \subsection{Mathematical Modelling}
 
@@ -39,15 +39,15 @@ u_S & = & u_L
 The first four equations describe the component behaviours. The last three
 equations describe the circuit topology. The system of equations consists of
 implicitly defined algebraic and differential equations. This mathematical
-representation is called system of implicit \emph{differential algebraic
+representation is a system of implicit \emph{differential algebraic
 equations} (DAEs) \citep{Cellier2006}. More generally, a system of implicit DAEs
-can be written in the following way:
+can be written in the following form:
 \begin{equation}
 f(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) = 0
 \end{equation}
 Here, $\vec{x}$ is a vector of \emph{differential variables}, also known as
 \emph{state variables}, $\vec{y}$ is a vector of algebraic variables and $t$
-is an independent scalar variable. In physical modelling $t$ represents
+is an independent scalar variable. In physical modelling $t$ denotes
 \emph{time}.
 
 
@@ -106,10 +106,10 @@ the system.
 \end{eqnarray}
 \end{subequations}
 
-This representation is called system of explicit ODEs and can be passed to a
+This representation is a system of explicit ODEs and can be passed to a
 numerical ODE solver. This representation is also called \emph{state-space
 model}. More generally, a system of explicit ODEs can be written in the
-following way:
+following form:
 \begin{equation}
 \label{eqExplODE}
 \frac{d\vec{x}}{dt} = f(\vec{x},t)
@@ -124,8 +124,8 @@ replace the derivatives with the following approximation:
 \begin{equation}
 \frac{d\vec{x}}{dt} \approx \frac{\vec{x}(t + h) - \vec{x}(t)}{h}
 \end{equation}
-Here, $h$ is a \emph{sufficiently small} positive scalar which is referred as
-\emph{step size} of the numerical integration.
+Here, $h$ is a \emph{sufficiently small} positive scalar which is referred to
+as the \emph{step size} of the numerical integration.
 
 Let us make use of Equation \ref{eqExplODE} and substitute the derivative.
 
@@ -272,7 +272,7 @@ block diagrams is generally regarded as a difficult and somewhat involved task
 \citep{Nilsson2007}. Moreover, a slight change in a modelled system might
 require drastic changes in the corresponding block diagram. This is because
 causal models limit reuse \citep{Cellier1996}. For example, a resistor
-behaviour is usually modelled using the Ohm's law which can be written as $i =
+behaviour is usually modelled using Ohm's law which can be written as $i =
 \frac{u}{R}$ or $u = R \cdot i$. Unfortunately, no single causal block can
 capture the resistor behaviour. If we need to compute the current from the
 voltage, we should use the block that corresponds to the first equation. If we
@@ -322,7 +322,7 @@ higher-order causal modelling.
 %include ../Format/modelica.lhs
 
 Modelica is a declarative language for noncausal modelling and simulation of
-physical systems. Modelica models are given using noncausal DAEs. Modelica
+physical systems. Modelica models are given using implicit DAEs. Modelica
 features a class system known from object-oriented programming languages for
 structuring equations and for supporting model reuse.
 
@@ -549,8 +549,8 @@ continuous equations and switching statements that specify discontinuous
 changes in the system. This section is about structurally dynamic modelling in
 noncausal languages. Current limitations are illustrated using a Modelica
 model of a simple structurally dynamic system. In particular, this section
-highlights lack of expressiveness of the Modelica language when it comes to
-dynamic addition and removal of time-varying variables and continuous
+highlights the lack of expressiveness of the Modelica language when it comes
+to dynamic addition and removal of time-varying variables and continuous
 equations, and lack of runtime symbolic processing and code generation
 facilities in Modelica implementations.
 
@@ -578,7 +578,7 @@ variables successfully. In an attempt to fix the model, the modeller might try
 to add a dummy equation for the variable not needed in the second mode (i.e.,
 the variable |phi|, which represents the angle of deviation of the pendulum
 before it is broken). This version compiles, but the generated code fails to
-simulate the system. This example was tried using OpenModelica
+simulate the system. This example was tried using the OpenModelica
 \citep{OpenModelica} and Dymola \citep{Dymola} compilers.
 
 \begin{figure}
@@ -603,27 +603,27 @@ end BreakingPendulum;
 \end{code}
 
 \caption{\label{figModelicaBreakingPendulum} Attempt to model a breaking
-pendulum that in Modelica.}
+pendulum in Modelica.}
 
 \end{figure}
 
 One of the difficulties of this example is that causality changes during the
-switch between the two modes. In the first mode position is calculated from
-the differential variable |phi|, which is not the case after the switch. This
-makes the job of the simulation code generator a lot harder and as it turns
-out the Modelica tools are not able to handle it. Specifically, the tools
-commit to a certain causality before they generate the simulation code. This
-and related issues are covered in greater detail in
+switch between the two modes. In the first mode the position is calculated
+from the differential variable |phi|, which is not the case after the switch.
+This makes the job of the simulation code generator a lot harder and, as it
+turns out, the Modelica tools are not able to handle it. Specifically, the
+tools commit to a certain causality before they generate the simulation code.
+This and related issues are covered in greater detail in
 \citep[2000]{ModelicaTutorial}. The suggested Modelica solution is more
 involved and requires reformulation of the model by making it causal. The need
-of manual reformulation to conform to a certain causality eliminates the
+for manual reformulation to conform to a certain causality eliminates the
 advantages of working in a noncausal modelling language.
 
-Currently, the Modelica language lacks expressiveness to describe structural
-changes. The breaking pendulum example demonstrates the problems that arise
-when there is a need to change the number of variables in the system. In
-addition, the Modelica compilers carry out the symbolic processing and
-generate the simulation code all at once, prior to simulation, which
+Currently, the Modelica language lacks the expressiveness to describe
+structural changes. The breaking pendulum example demonstrates the problems
+that arise when there is a need to change the number of variables in the
+system. In addition, the Modelica compilers carry out the symbolic processing
+and generate the simulation code all at once, prior to simulation, which
 introduces further limitations.
 
 %}
