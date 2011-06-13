@@ -11,7 +11,7 @@ respectively.
 Hydra is a two-level language. It features the \emph{functional level} and the
 \emph{signal level}. The functional level allows for the definition of
 ordinary functions operating on time-invariant values. The signal level allows
-for the definition of signal relations and signal functions on on time-varying
+for the definition of signal relations and signal functions on time-varying
 values.
 
 Signal relations and signal functions are first-class entities at the
@@ -447,10 +447,10 @@ With the |defaultExperiment| parameter the |simpleCircuit| signal relation is
 simulated for 10 seconds of simulation time starting from the time point of
 zero. The time step is set to |0.001| and the trajectories of the constrained
 signals are printed to the standard output in the
-gnuplot\footnote{\url{http://www.gnuplot.info/}} compatible format. The default
-numerical solver is SUNDIALS \citep{Sundials2005}, but users allowed to
-provide their own symbolic processors and numerical solvers. This and other
-implementation aspects are described in detail in Chapter
+gnuplot\footnote{\url{http://www.gnuplot.info/}} compatible format. The
+default numerical solver is SUNDIALS \citep{Sundials2005}, but users are
+allowed to provide their own symbolic processors and numerical solvers. This
+and other implementation aspects are described in detail in Chapter
 \ref{chapImplementation}.
 
 The earlier sections of this chapter introduced the Hydra language using the
@@ -459,8 +459,8 @@ object-oriented, noncausal languages like Modelica to compare the Hydra model
 given in this Chapter to the Modelica model given in Chapter
 \ref{chapBackground}. The rest of the Chapter focuses on the features of Hydra
 that are absent from main-stream, noncausal modelling languages. Specifically,
-we discuss higher-order and structurally dynamic modelling capabilities of the
-Hydra language.
+we discuss the higher-order and structurally dynamic modelling capabilities of
+the Hydra language.
 
 \section{More Higher-order Modelling}
 
@@ -596,7 +596,7 @@ To introduce structurally dynamic modelling in Hydra, let us model the
 breaking-pendulum system described in Section \ref{secHybridModelling}. The
 system system has two modes of operation. The differences between the two
 modes are sufficiently large that, for example, Modelica does not support
-noncausal modelling of this system, as we discussed in Section
+noncausal modelling of this system, as discussed in Section
 \ref{secHybridModelling}.
 
 The code that is given in Figure \ref{figHydraBreakingPendulum} shows how to
@@ -628,10 +628,10 @@ freeFall ((x0,y0),(vx0,vy0)) = [rel| ((x,y),(vx,vy)) ->
 |]
 
 pendulum ::  Real -> Real -> SR Body
-pendulum l phi0 = [rel| ((x,y),(vx,vy)) ->
+pendulum l phi_0 = [rel| ((x,y),(vx,vy)) ->
     local phi
 
-    init phi      =  $phi0$
+    init phi      =  $phi_0$
     init der phi  =  0
     init vx       =  0
     init vy       =  0
@@ -665,10 +665,10 @@ breakingPendulum t l phi0 =
 
 In this signal relation, the switch happens at an \emph{a priori} specified
 point in time, but the switching condition could be an arbitrary time-varying
-entity. Note how succeeding signal relation (i.e., |freeFall|) is initialised
-so as to ensure the continuity of the position and velocity as discussed
-above. The simulation results obtained by the |simulate| function can be seen
-in Figure \ref{figPendulumPlot}
+entity. Note how the succeeding signal relation (i.e., |freeFall|) is
+initialised so as to ensure the continuity of the position and velocity as
+discussed above. The simulation results obtained by the |simulate| function
+can be seen in Figure \ref{figPendulumPlot}
 
 \begin{figure}
 \begin{center}
@@ -715,7 +715,7 @@ as demonstrated in Chapter \ref{chapBackground}.
 One common solution to the division-by-zero problem in models involving ideal
 diodes is to avoid the ideal model and opt for a leaky diode model instead.
 This works, but often leads to very stiff equations. Thus, if an ideal model
-would suffice for the purpose at hand, that would many times be preferable
+would suffice for the purpose at hand, that would be preferable
 \citep{Cellier2006}.
 
 In the following we model the half-wave rectifier circuit in Hydra. Since the
@@ -788,7 +788,7 @@ mentioned earlier.
 
 Because of the expressivity of the |switch| combinator, in general, it is not
 possible to compile Hydra models prior to simulation. For example, given a
-parametrised signal relation |sr' :: Real -> SR Real)| and a signal function
+parametrised signal relation |sr' :: Real -> SR Real| and a signal function
 |sf :: SF Real Real| one can recursively define a signal relation |sr| that
 describes an overall behaviour by ``stringing together'' the behaviours
 described by |sr'|:
