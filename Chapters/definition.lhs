@@ -1,10 +1,10 @@
 \chapter{Definition of Hydra}
 \label{chapDefinition}
 
-This is a highly technical chapter giving a formal definition of the Hydra
-language. Note that this chapters defines Hydra's signal-level sublanguage.
-The functional-level sublanguage is provided by Haskell. The definition of
-Haskell is given in the book by \cite{Haskell98}.
+This is a technical chapter giving a formal definition of the Hydra language.
+Note that this chapters defines Hydra's signal-level sublanguage. The
+functional-level sublanguage is provided by Haskell. The definition of Haskell
+is given in the book by \cite{Haskell98}.
 
 The language definition is given in four steps. Firstly, we define Hydra's
 lexical structure and concrete syntax by using regular expression and BNF
@@ -31,10 +31,9 @@ in terms of second-order logic.
 \newcommand{\symb}[1]{\mbox{{\texttt {#1}}}}
 
 The syntactic structure of Hydra is given in Figure \ref{figSyntax}, which
-uses the BNF notation. Specifically, non-terminals are enclosed between
-$\langle$ and $\rangle$. The symbols {\arrow} (production), {\delimit} (union)
-and {\emptyP} (empty rule) belong to the BNF notation. All other symbols are
-terminals.
+uses BNF notation. Non-terminals are enclosed between $\langle$ and $\rangle$.
+The symbols {\arrow} (production), {\delimit} (union) and {\emptyP} (empty
+rule) belong to BNF notation. All other symbols are terminals.
 
 \begin{figure}
 
@@ -334,16 +333,16 @@ switch = Switch
 
 The typed abstract syntax embodies Hydra's type system features that were only
 informally introduced in earlier sections of the thesis. Let us outline
-several key features. A type of a signal relation is determined by its
+several key features. The type of a signal relation is determined by its
 pattern. A type of a structurally dynamic signal relation remains unchanged
 despite the structural changes. Signal relation and signal function
 applications must be well typed. This includes the application of the built-in
 equality signal relation.
 
-Note, however, that the type system says nothing about solvability of signal
+Note that the type system says nothing about the solvability of signal
 relations. It is possible to define a type correct signal relation that does
-not have a solution or has more than one solution. It is the modeller's
-responsibility to define a signal relation that has an unique solution. Recent
+not have a solution or has more than one solution. It is the responsibility of
+the modeller to define a signal relation that has an unique solution. Recent
 work in the context of the FHM framework has made progress in the direction of
 more expressive type systems incorporating the solvability aspect of noncausal
 models \citep{Nilsson2008a,Capper2010a}. Incorporation of the aforementioned
@@ -430,13 +429,13 @@ different implementers to implement the same language. In addition, a formally
 defined semantics paves the way for proving useful statements about the
 language.
 
-There are a number different approaches to specification of formal semantics.
-Two most widely used approaches are operational semantics \citep{Plotkin2004a}
-and denotation semantics \citep{Scott1982a}. An operational semantics formally
-defines an abstract machine and how the language terms are executed on the
-machine. A denotational semantics formally defines translation of the language
-terms into terms in a formalism that is well understood (often a field of
-mathematics).
+There are a number of different approaches to the specification of formal
+semantics. Two most widely used approaches are operational semantics
+\citep{Plotkin2004a} and denotation semantics \citep{Scott1982a}. An
+operational semantics formally defines an abstract machine and how the
+language terms are executed on the machine. A denotational semantics formally
+defines translation of the language terms into terms in a formalism that is
+well understood (often a field of mathematics).
 
 One characteristic of noncausal modelling languages setting them apart from
 traditional programming languages is that concrete implementations of
@@ -459,8 +458,8 @@ models needs to be taken into account when defining a formal semantics for a
 noncausal language. In particular, definition of operational semantics is
 problematic as it is hard to account for the myriad of approximation
 combinations that were outlined earlier. One option is to parameterise the
-operational semantics on approximations. This is feasible, but leaves bulk of
-operational details unspecified defeating the purpose of an operational
+operational semantics on approximations. This is feasible, but leaves the bulk
+of operational details unspecified defeating the purpose of an operational
 semantics.
 
 For the reasons outlined above, and because the concept of first-class models,
@@ -472,7 +471,7 @@ implementations are only expected to approximate the denotational semantics.
 
 The primary goal of the denotational semantics that is given in this section
 is to precisely and concisely communicate Hydra's definition to modelling
-language designers and implementers, in order to facilitate incorporation
+language designers and implementers, in order to facilitate incorporation of
 Hydra's key features in other noncausal modelling languages.
 
 Although not considered in this thesis, the ideal denotational semantics of
@@ -481,7 +480,7 @@ certain approximations. In addition, the denotational semantics can be used to
 check whether concrete simulation results correspond to the source-level
 noncausal model, again under certain approximation; for example, by using the
 absolute error tolerance of the numerical simulation. These two applications
-of the ideal denotational semantics are subject of future work.
+of the ideal denotational semantics are subjects of future work.
 
 The ideal denotational semantics of Hydra are given in Figure
 \ref{figSigRelSigFunSem} and in Figure \ref{figSigSem}. Note that the domains
