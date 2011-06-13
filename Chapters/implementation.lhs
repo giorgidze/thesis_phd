@@ -112,8 +112,8 @@ GHC.
 
 We illustrate the quasiquoting process by using a signal relation that models
 a parametrised van der Pol oscillator. The oscillator model is given in Figure
-\ref{figVanDerPol}. After the parsing stage the quasiquoted signal relation
-turns into the AST that is given in Figure \ref{figVanDerPolAst}. After the
+\ref{figVanDerPol}. After the parsing stage the quasiquoted signal relation is
+turned into the AST that is given in Figure \ref{figVanDerPolAst}. After the
 desugaring stage we get the AST that is given in Figure
 \ref{figVanDerPolAstDesugar}. After translation into the typed representation
 we get the typed AST that is given in Figure \ref{figVanDerPolAstTyped}.
@@ -281,8 +281,8 @@ Equations formed by the |Equal| constructor are basic equations imposing the
 constraint that the valuations of the two signals have to be equal for as long
 as the signal relation instance that contains the equation is active.
 
-The fourth kind of equation is signal relation application, |App|; that is,
-equations like |sr <> (x, y + 2)|. The application constrains the given
+The fourth kind of equation is signal relation application, |App|; that is, an
+equation such as |sr <> (x, y + 2)|. The application constrains the given
 signals by the equations defined by the signal relation.
 
 The following code defines the typed representation of signals used in the
@@ -347,7 +347,7 @@ repeated from the first stage by staring the new iteration.
 
 Before we describe the three stages of the simulation in detail, let us
 briefly overview a function that performs these three stages. The simulator
-performs the aforementioned the three stages iteratively at each structural
+performs the aforementioned three stages iteratively at each structural
 change. A function that performs simulation has the following type signature:
 
 \begin{code}
@@ -427,7 +427,7 @@ mode of operation. By flat we mean that the list of equations only contain
 function places an empty list in this field.
 
 The |events| field is for a list of zero-crossing signals defining the event
-occurrences. Recall the the type signature of the |switch| combinator given in
+occurrences. Recall the type signature of the |switch| combinator given in
 Section \ref{secEmbedding}. A signal function that detects events returns a
 real valued signal. The simulator places the signal expressions that describe
 an event occurrence at each structural change. Initially, at the start of the
@@ -451,7 +451,7 @@ differentials.
 data SymTab = SymTab {
      model         :: [Equation]
   ,  equations     :: [Equation]
-  ,  events        :: [(Signal Real)]
+  ,  events        :: [Signal Real]
   ,  time          :: Real
   ,  instants      :: Array Integer (Real,Real)
   }
@@ -661,8 +661,8 @@ zero-crossing signals placed in the |events| field of the symbol table and
 specifies event conditions.
 
 The task of a DAE solver is to find time varying valuations of $\vec{x}$ and
-$\vec{y}$ such that the residual vectors are zero. In addition a DAE solver is
-required to detect points in time when the vector $\vec{r_e}$ changes and
+$\vec{y}$ such that the residual vectors are zero. In addition, a DAE solver
+is required to detect points in time when the vector $\vec{r_e}$ changes and
 report it as an event occurrence.
 
 The generated equations are implicitly formulated ones. In general, it is not
@@ -896,7 +896,7 @@ dynamic mode switching, we do not compare the performance to other simulation
 software. The results would not be very meaningful.
 
 The implementation of Hydra provides for user-defined symbolic processors and
-numerical solvers. It does not provide for user-defined JIT compiler. In the
+numerical solvers. It does not provide for a user-defined JIT compiler. In the
 following we evaluate the performance of the default symbolic processor, the
 default numerical solver and the built-in LLVM-based JIT compiler.
 
