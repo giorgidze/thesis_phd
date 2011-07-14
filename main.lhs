@@ -1,9 +1,9 @@
-\documentclass[10pt,a4paper]{report}
+\documentclass[a4paper]{report}
 
 %include polycode.fmt
 %include Format/haskell.lhs
 
-\usepackage[left=2in, right=1in, top=1in, bottom=1in, includefoot]{geometry}
+\usepackage[left=1.5in, right=1.5in, top=1in, bottom=1in]{geometry}
 
 \usepackage{graphicx}
 \usepackage{float}
