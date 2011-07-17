@@ -5,10 +5,13 @@
 
 The deep-embedding techniques used in the Hydra implementation for
 domain-specific optimisations and efficient code generation draws from the
-extensive work on compiling staged domain-specific embedded languages.
-Examples include \citet{Elliott2000} and \citet{Mainland2008}. However, these
-works are concerned with compiling programs all at once, meaning the host
-language is used only for meta-programming, not for running the actual
+extensive work on compiling embedded, staged DSLs. Examples include
+\citet{Elliott2000} and \citet{Mainland2008}. However, these works are
+concerned with compiling programs all at once, meaning the host language is
+used only for meta-programming, not for running the actual programs. Hydra
+combines the the aforementioned deep-embedding techniques with shallow
+embedding techniques in order to allow the host language to participate in
+runtime generation, optimisation, compilation and execution of embedded
 programs.
 
 The use of quasiquoting in the implementation of Hydra draws its inspiration
@@ -21,8 +24,8 @@ run-time. Because Hydra is iteratively staged, we cannot use this approach: we
 need to move type checking back to host-language compile-time. The Hydra
 implementation thus translates embedded programs into typed combinators at the
 stage of quasiquoting, charging the host-language type checker with checking
-the embedded terms. This ensures only well-typed programs are generated at
-run-time.
+the embedded terms. This ensures that only well-typed programs are generated
+at run-time.
 
 The FHM design was originally inspired by Functional Reactive Programming
 (FRP) \citep{Elliott1997}, particularly Yampa \citep{Nilsson2002a}. A key
@@ -43,20 +46,55 @@ FRP, especially in the context of the recently proposed optimisations by
 \citet{Liu2009a} and \citet{Sculthorpe2011a}.
 
 \section{Noncausal Modelling and Simulation Languages}
+
+\subsection{Modelling Kernel Language}
+
+Broman \citep{Broman2007a,Broman2008a} developed Modelling Kernel Language
+(MKL). The language is intended to be a core language for noncausal modelling
+languages such as Modelica. Broman takes a functional approach to noncausal
+modelling, similar to the FHM approach proposed by \citet{Nilsson2003a}.
+
+MKL is based on an untyped, effectful $\lambda$-calculus. The effectful part
+of the underling $\lambda$-calculus is used for specification of noncausal
+connections. Similarly to Hydra, MKL provides a $\lambda$-abstraction for
+defining functions and an abstraction similar to |rel| for defining noncausal
+models. Both functions and noncausal models are first-class entities in MKL,
+enabling higher-order, noncausal modelling. The similarity of the basic
+abstractions in Hydra and MKL leads to a similar style of modelling in both
+languages.
+
+The work on MKL has not considered support for structural dynamics, meaning
+that its expressive power in that respect is similar to current main-stream,
+noncausal modelling and simulation languages like Modelica. However, given the
+similarities between MKL and Hydra, MKL should be a good setting for exploring
+support for structural dynamics, which ultimately could carry over to better
+support for structural dynamics for any higher-level language that has a
+semantics defined by translation into MKL. The language design and
+implementation approaches (especially those related to structural dynamism)
+discussed in this paper should be of interest in the MKL setting.
+
 \subsection{Sol}
 
 Sol is a Modelica-like language \citep{Zimmer2007,Zimmer2008a}. It introduces
 language constructs that enable the description of systems where objects are
-dynamically created and deleted, thus aiming to support modelling of highly
-structurally dynamic systems. So far, the research emphasis has been on the
-design of the language itself along with support for incremental dynamic
-recausalisation and dynamic handling of structural singularities. An
-interpreter is used for simulation. The work on Sol is thus complementary to
-ours: techniques for dynamic compilation would be of interest in the context
-of Sol to enable it to target high-end simulation tasks; conversely,
-algorithms for incremental recausalisation is of interest to us to minimise
-the amount of work needed to regenerate simulation code after structural
-changes.
+dynamically created and deleted, thus supporting modelling of highly
+structurally dynamic systems. The work on Sol is complementary to ours in a
+number of respects outlined in the following.
+
+Sol explores how structurally dynamic systems can be modelled in an
+object-oriented, noncausal language. Hydra extends a purely functional
+programming with constructs for structurally dynamic noncausal modelling.
+
+The implementation of Sol makes use of symbolic methods that for each
+structural change aim to identify the smallest number of equations that need
+to be modified or added in order to model the structural change. It would be
+interesting to combine these symbolic methods with the runtime code generation
+approach used in Hydra in order to reduce the JIT compilation overheads by
+only compiling the modified and added equations for each structural change.
+
+Sol features only an interpreted implementation. The dynamic compilation
+techniques featured in the implementation of Hydra would be of interest in the
+context of Sol to enable it to target high-end simulation tasks.
 
 \subsection{MOSILAB}
 
@@ -72,33 +110,37 @@ higher-order and structurally dynamic modelling techniques and their
 implementations investigated here might be of interest also in the
 implementation of MOSILAB.
 
-\subsection{Modelling Kernel Language}
-
-Broman \citep{Broman2007a,Broman2008a} developed Modelling Kernel Language
-(MKL). The language is intended to be a core language for noncausal modelling
-languages such as Modelica. Broman takes a functional approach to noncausal
-modelling, similar to the FHM approach proposed by \citet{Nilsson2003a}. One
-of the main goals of MKL is to provide a formal semantics of the core
-language. The semantics is based on an untyped, effectful $\lambda$-calculus.
-
-Similarly to Hydra, MKL provides a $\lambda$-abstraction for defining
-functions and an abstraction similar to |rel| for defining noncausal
-models. Both functions and noncausal models are first-class entities in MKL,
-enabling higher-order, noncausal modelling. The similarity of the basic
-abstractions in Hydra and MKL leads to a similar style of modelling in both
-languages.
-
-Thus far, the work on MKL has not specifically considered support for
-structural dynamics, meaning that its expressive power in that respect is
-similar to current main-stream, noncausal modelling and simulation languages
-like Modelica. However, given the similarities between MKL and Hydra, MKL
-should be a good setting for exploring support for structural dynamics, which
-ultimately could carry over to better support for structural dynamics for any
-higher-level language that has a semantics defined by translation into MKL.
-Again, the implementation techniques discussed in this paper should be of
-interest in such a setting.
-
 \subsection{Acumen}
 
-\citep{Taha2010a}.
+Acumen is a language for modelling and simulation of cyber-physical systems
+\citep{Taha2010a}. In Acumen, a digital component can be modelled using a
+variant of FRP called Event-driven FRP \citep{Wan2002a}, while a continuous
+component can be modelled using a combination of DAEs and partial differential
+equations (PDEs). The implementation of Acumen features advanced symbolic
+processing methods that reduce a combination of DAEs and PDEs to the
+corresponding system of ODEs whenever possible. Acumen supports bounded
+structural dynamism, but unbounded structural dynamism is not supported. The
+symbolic processing methods developed for Acumen and tight integration with an
+FRP variant would benefit Hydra, while Hydra's support for unbounded
+structural dynamism both from the language design and implementation point of
+view would benefit Acumen.
+
+\section{Semantics}
+
+A hybrid automaton is formal model for a hybrid system proposed by
+\citet{Henzinger1996a}. The formalism allows a hybrid system to be specified
+in terms of a finite set of continuous, time-varying variables and a graph
+with DAEs constraining the variables at the nodes and switching conditions at
+the edges. Noncausal language can be given semantics by translation into the
+formalism. The modelling and simulation language Chi \citep{Beek2008a} takes
+this approach. Because, a hybrid automaton can only describe a bounded
+structurally dynamic system and does not allow new equations to be computed at
+switches (i.e., does not feature equational constrains as first-class
+entities) we did not use the hybrid automata as a target formalism when
+defining the ideal semantics of Hydra.
+
+A formal semantics for the MKL language was defined by \citet{Broman2007a}. A
+(higher-order) model is given semantics by translation into a flat system of
+equations. The support for structural dynamism and its formal specification
+has not been considered in the setting of MKL.
 
