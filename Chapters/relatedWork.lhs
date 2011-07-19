@@ -83,7 +83,8 @@ number of respects outlined in the following.
 
 Sol explores how structurally dynamic systems can be modelled in an
 object-oriented, noncausal language. Hydra extends a purely functional
-programming with constructs for structurally dynamic noncausal modelling.
+programming language with constructs for structurally dynamic, noncausal
+modelling.
 
 The implementation of Sol makes use of symbolic methods that for each
 structural change aim to identify the smallest number of equations that need
@@ -103,12 +104,11 @@ of structural changes using object-oriented statecharts
 \citep{Nytsch-Geusen2005a}. This enables modelling of structurally dynamic
 systems. The language extension has a compiled implementation. However, the
 statechart approach implies that all structural modes must be explicitly
-specified in advance, meaning that MOSILAB does not support highly
-structurally dynamic systems. Even so, if the number of possible
-configurations is large (perhaps generated mechanically by meta-modelling),
-higher-order and structurally dynamic modelling techniques and their
-implementations investigated here might be of interest also in the
-implementation of MOSILAB.
+specified in advance, meaning that MOSILAB does not support unbounded
+structural dynamism. Even so, if the number of possible configurations is
+large (perhaps generated mechanically by meta-modelling), higher-order and
+structurally dynamic modelling techniques and their implementations
+investigated here might be of interest also in the implementation of MOSILAB.
 
 \subsection{Acumen}
 
@@ -127,20 +127,26 @@ view would benefit Acumen.
 
 \section{Semantics}
 
-A hybrid automaton is formal model for a hybrid system proposed by
-\citet{Henzinger1996a}. The formalism allows a hybrid system to be specified
-in terms of a finite set of continuous, time-varying variables and a graph
-with DAEs constraining the variables at the nodes and switching conditions at
-the edges. Noncausal language can be given semantics by translation into the
-formalism. The modelling and simulation language Chi \citep{Beek2008a} takes
-this approach. Because, a hybrid automaton can only describe a bounded
-structurally dynamic system and does not allow new equations to be computed at
-switches (i.e., does not feature equational constrains as first-class
-entities) we did not use the hybrid automata as a target formalism when
-defining the ideal semantics of Hydra.
+Proposed by \citet{Henzinger1996a}, a hybrid automaton is a formal model for a
+hybrid system. The formalism allows a hybrid system to be specified in terms
+of a finite set of continuous, time-varying variables and a graph with DAEs
+constraining the variables at the graph nodes and switching conditions at the
+graph edges. Noncausal, hybrid languages can be given semantics by translation
+into the formalism. The modelling and simulation language Chi
+\citep{Beek2008a} takes this approach. Because, a hybrid automaton can only
+describe a bounded structurally dynamic system and does not allow new
+equations to be computed at switches (i.e., does not feature equational
+constrains as first-class entities) we did not use the hybrid automata as a
+target formalism when defining the ideal semantics of Hydra.
 
 A formal semantics for the MKL language was defined by \citet{Broman2007a}. A
 (higher-order) model is given semantics by translation into a flat system of
 equations. The support for structural dynamism and its formal specification
 has not been considered in the setting of MKL.
 
+\citet{Wan2000} define an ideal semantics for a simple FRP language. In
+addition to the ideal semantics, they provide an operational semantics that
+makes use of discrete sampling. They show that the operational semantics
+converges to the ideal semantics when the discrete sampling rate tends to
+zero. Applying a similar approach to an FHM language implementation, in order
+to prove its correctness, is a subject of future work.
