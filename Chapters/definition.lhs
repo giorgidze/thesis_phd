@@ -16,8 +16,8 @@ abstract syntax to the typed abstract syntax. The typed representation fully
 embodies Hydra's type system and can be seen as a definition of Hydra's type
 system in terms of the Haskell type system. In other words, Hydra's type
 system is embedded into Haskell's type system. Finally, we give ideal
-denotational semantics of Hydra by giving meaning to the typed abstract syntax
-in terms of second-order logic.
+semantics of Hydra by giving meaning to the typed abstract syntax in terms of
+second-order logic.
 
 \section{Concrete Syntax}
 
@@ -279,9 +279,10 @@ data Equation where
 data Signal alpha where
   Unit     ::  Signal ()
   Time     ::  Signal Real
-  Const    ::  alpha -> Signal alpha
+  Const    ::  Real -> Signal Real
   Pair     ::  Signal alpha -> Signal beta -> Signal (alpha,beta)
   PrimApp  ::  PrimSF alpha beta -> Signal alpha -> Signal beta
+  Signal   ::  (Real -> alpha) -> Signal alpha
 
 data PrimSF alpha beta where
   Der    ::  PrimSF Real Real
@@ -380,7 +381,7 @@ Haskell and generates the corresponding Haskell code. The translation rules
 \begin{figure}
 \begin{code}
 translateExp (ExprAnti (HsExpr s1))             =  Const (translateHs (s1))
-translateExp (ExprVar (Ident s))                =  translateIdent (s1)
+translateExp (ExprVar (Ident s1))               =  translateIdent (s1)
 translateExp (ExprAdd e1 e2)                    =  PrimApp Add (Pair (translateExp e1)  (translateExp e1))
 translateExp (ExprSub e1 e2)                    =  PrimApp Sub (Pair (translateExp e1)  (translateExp e1))
 translateExp (ExprDiv e1 e2)                    =  PrimApp Div (Pair (translateExp e1)  (translateExp e1))
@@ -429,14 +430,6 @@ different implementers to implement the same language. In addition, a formally
 defined semantics paves the way for proving useful statements about the
 language.
 
-There are a number of different approaches to the specification of formal
-semantics. Two most widely used approaches are operational semantics
-\citep{Plotkin2004a} and denotation semantics \citep{Scott1982a}. An
-operational semantics formally defines an abstract machine and how the
-language terms are executed on the machine. A denotational semantics formally
-defines translation of the language terms into terms in a formalism that is
-well understood (often a field of mathematics).
-
 One characteristic of noncausal modelling languages setting them apart from
 traditional programming languages is that concrete implementations of
 noncausal languages only aim to approximate the model defined at the source
@@ -455,52 +448,53 @@ combination of approximations prior to simulation.
 
 The fact that the implementations are only expected to approximate noncausal
 models needs to be taken into account when defining a formal semantics for a
-noncausal language. In particular, definition of operational semantics is
-problematic as it is hard to account for the myriad of approximation
-combinations that were outlined earlier. One option is to parameterise the
-operational semantics on approximations. This is feasible, but leaves the bulk
-of operational details unspecified defeating the purpose of an operational
-semantics.
+noncausal language. For example, definition of operational semantics
+\citep{Plotkin2004a} is problematic as it is hard to account for the myriad of
+approximation combinations that were outlined earlier. One option is to
+parameterise the operational semantics on approximations. This is feasible,
+but leaves the bulk of operational details unspecified defeating the purpose
+of an operational semantics.
 
 For the reasons outlined above, and because the concept of first-class models,
 which allows for higher-order and structurally dynamic modelling, is not
 predicated on particular approximations used during simulation, we opted to
-use \emph{ideal} denotational semantics for formally defining the Hydra
-language. By referring to the semantics as ideal, we emphasise that concrete
-implementations are only expected to approximate the denotational semantics.
+use \emph{ideal} semantics obtained by translating noncausal models into
+second-order logic predicates for formally defining the Hydra language. By
+referring to the semantics as ideal, we emphasise that concrete
+implementations are only expected to approximate the semantics.
 
-The primary goal of the denotational semantics that is given in this section
-is to precisely and concisely communicate Hydra's definition to modelling
-language designers and implementers, in order to facilitate incorporation of
-Hydra's key features in other noncausal modelling languages.
+The primary goal of the semantics that is given in this section is to
+precisely and concisely communicate Hydra's definition to modelling language
+designers and implementers, in order to facilitate incorporation of Hydra's
+key features in other noncausal modelling languages.
 
-Although not considered in this thesis, the ideal denotational semantics of
-Hydra can also be used to verify concrete implementations of Hydra with
-certain approximations. In addition, the denotational semantics can be used to
-check whether concrete simulation results correspond to the source-level
-noncausal model, again under certain approximation; for example, by using the
-absolute error tolerance of the numerical simulation. These two applications
-of the ideal denotational semantics are subjects of future work.
+Although not considered in this thesis, the ideal semantics of Hydra can also
+be used to verify concrete implementations of Hydra with certain
+approximations. In addition, the ideal semantics can be used to check whether
+concrete simulation results correspond to the source-level noncausal model,
+again under certain approximation; for example, by using the absolute error
+tolerance of the numerical simulation. These two applications of the ideal
+semantics are subjects of future work.
 
-The ideal denotational semantics of Hydra are given in Figure
-\ref{figSigRelSigFunSem} and in Figure \ref{figSigSem}. Note that the domains
-of the denotational semantics are the same as the conceptual definitions of
-signals, signal functions, and signal relations given in Chapter
-\ref{chapHydra}. Specifically, signal relations are mapped to functions from
-starting time and signal to second-order logic proposition, signal functions
-are mapped to functions from signal to signal, and signals are mapped to
-function from time to value. Time is represented as a real number.
+The ideal semantics of Hydra are given in Figure \ref{figSigRelSigFunSem} and
+in Figure \ref{figSigSem}. Note that the translation targets are the same as
+the conceptual definitions of signals, signal functions, and signal relations
+given in Chapter \ref{chapHydra}. Specifically, signal relations are mapped to
+functions from starting time and signal to second-order logic proposition,
+signal functions are mapped to functions from signal to signal, and signals
+are mapped to function from time to value. Time is represented as a real
+number.
 
-A signal relation denotation may involve existentially quantified function
-symbols (i.e., signals). This is what makes the denotations second-order logic
-propositions (i.e., not expressible in first-order logic). In other words,
+A signal relation translation may involve existentially quantified function
+symbols (i.e., signals). This is what makes the target predicates second-order
+logic predicates (i.e., not expressible in first-order logic). In other words,
 solving of a signal relation can be understood as proving of \emph{existence}
 of signals that satisfy the given constraints (see Figure
 \ref{figSigRelSigFunSem} for details).
 
 \begin{figure}
 \begin{code}
-semSR (SR f)            =   \t1 t2 s -> semEqs ((0,t1,t2,f s))
+semSR (SR f)            =   \t1 t2 s -> semEqs ((0,t1,t2,f (Signal s)))
 semSR (Switch sr sf f)  =   \t1 t2 s ->
     ((semSR sr) t1 t2 s) && ({-" \forall \, t \in \mathbb{R} . \, "-} t1 < t <= t2  => not (semZC (sf,s,t)))
     ||
@@ -512,7 +506,7 @@ semSR (Switch sr sf f)  =   \t1 t2 s ->
 \end{code}
 
 \begin{code}
-semZC (sf,s,t) = (semSF (sf)) s t == 0 && {-" \frac{d_{ - }}{dt} "-} ((semSF (sf)) s) t /= 0
+semZC (sf,s,t) = semSig ((semSF (sf)) (Signal s)) t == 0 && {-" \frac{d_{ - }}{dt} "-} (semSig ((semSF (sf)) (Signal s))) t /= 0
 \end{code}
 
 \begin{code}
@@ -521,15 +515,15 @@ semSF (SF sf)   =   sf
 
 \begin{code}
 semEqs  (_  ,  _   ,  _   ,  []                     )  =   {-" \top "-}
-semEqs  (i  ,  t1  ,  t2  ,  (Local f)      :  eqs  )  =   ({-" \exists \, s_{i} \in \mathbb{R} \rightarrow \mathbb{R} . \, "-} (semEqs (i + 1,t0,f s_i ++ eqs)))
-semEqs  (i  ,  t1  ,  t2  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t0 s)                         &&  semEqs  (i,t0,eqs)
+semEqs  (i  ,  t1  ,  t2  ,  (Local f)      :  eqs  )  =   ({-" \exists \, s_{i} \in \mathbb{R} \rightarrow \mathbb{R} . \, "-} (semEqs (i + 1,t1,t2,f (Signal s_i) ++ eqs)))
+semEqs  (i  ,  t1  ,  t2  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t1 t2 s) &&  semEqs  (i,t1,t2,eqs)
 semEqs  (i  ,  t1  ,  t2  ,  (Equal s1 s2)  :  eqs  )  =
-  ({-" \forall \, t \in \mathbb{R} . \, "-}  (t >= t1 && t <= t2)  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
+  ({-" \forall \, t \in \mathbb{R} . \, "-}  (t >= t1 && t <= t2)  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t1,t2,eqs)
 semEqs  (i  ,  t1  ,  t2  ,  (Init  s1 s2)  :  eqs  )  =
-  ({-" \forall \, t \in \mathbb{R} . \, "-}  (t == t1)             =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t0,eqs)
+  ({-" \forall \, t \in \mathbb{R} . \, "-}  (t == t1)             =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t1,t2,eqs)
 \end{code}
 
-\caption{\label{figSigRelSigFunSem} Denotations for signal relations, signal
+\caption{\label{figSigRelSigFunSem} Semantics of signal relations, signal
 functions and equations.}
 
 \end{figure}
@@ -560,8 +554,9 @@ semSig (PrimApp Add  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  +            
 semSig (PrimApp Mul  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  *             ((semSig s2) t)
 semSig (PrimApp Div  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  /             ((semSig s2) t)
 semSig (PrimApp Pow  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  ^             ((semSig s2) t)
+semSig (Signal s)                   =   s
 \end{code}
 
-\caption{\label{figSigSem} Denotations for signals.}
+\caption{\label{figSigSem} Semantics of signals.}
 
 \end{figure}

@@ -395,7 +395,7 @@ Some parts of the thesis assume that the reader is familiar with Haskell,
 predicate logic, and BNF notation. Haskell is used for defining Hydra, as well
 as for implementing it. BNF notation is used for specifying the concrete
 syntax of Hydra. Predicate logic is used for explaining the language concepts
-and to give the ideal denotational semantics of Hydra.
+and to give the ideal semantics of Hydra.
 
 Readers unfamiliar with Haskell may refer to the language report by
 \citet{Haskell98} or one of the following books: \citet{Hutton2007a},
@@ -422,7 +422,7 @@ showcase those language features that are absent in other noncausal modelling
 languages.
 
 \item Chapter \ref{chapDefinition} formally defines Hydra's concrete syntax,
-abstract syntax, type system and ideal denotational semantics.
+abstract syntax, type system and ideal semantics.
 
 \item Chapter \ref{chapImplementation} describes how Hydra is implemented.
 
