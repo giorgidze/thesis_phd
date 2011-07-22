@@ -422,6 +422,22 @@ simpleCircuit2 =
 \end{code}
 \end{figure}
 
+In \citet{Giorgidze2008c} we describe a syntactic sugar for specifying
+noncausal connections. In this thesis we implement the same approach using
+higher-order modelling combinators. In both cases we were able to describe
+noncausal connections without a special semantic language construct. In this
+aspect, Hydra is simpler than other noncausal modelling languages such as
+\citet{Modelica}, MKL \citep{Broman2007a}, and Chi \citep{Beek2008a},
+as these languages feature special language constructs for specifying
+noncausal connections.
+
+Detailed comparison of approaches to noncausal connections still lies ahead,
+including devising of a minimal set of higher-order combinators expressive
+enough to capture all possible noncausal interconnections. It is worthwhile to
+mention, that although the aforementioned approaches to noncausal connections
+serve the same purpose they are very different from each other, both in their
+syntax and in their semantics.
+
 \section{Simulation}
 
 The Haskell-embedded implementation of Hydra features the following function:
