@@ -77,14 +77,14 @@ An ordinary relation can be seen as a predicate that specifies whether some
 given values are related or not. The same is true for signal relations:
 
 \begin{code}
-type SR alpha  ~=  Time -> Signal alpha -> Prop
+type SR alpha  ~=  Time -> Time -> Signal alpha -> Prop
 \end{code}
 
-Given a point in time and a signal, a signal relation defines a proposition
-constraining the signal starting from the given point in time. Here, |Prop| is
-a type for propositions defined in second-order logic. \emph{Solving} a
-relation for a given starting time thus means finding a signal that satisfies
-the predicate.
+Given two points in time and a signal, a signal relation defines a proposition
+constraining the signal starting from the first point in time and ending with
+the second point in time. Here, |Prop| is a type for propositions defined in
+second-order logic. \emph{Solving} a relation for a given period of time thus
+means finding a signal that satisfies the predicate.
 
 Just like for signal functions, unary signal relations suffice for handling
 signal relations of any arity; for example, the following code defines a
@@ -92,7 +92,7 @@ binary signal relation:
 
 \begin{code}
 equal ::  SR (Real,Real)
-equal t0 s ~= {-" \forall \, t \in \mathbb{R} . \, "-}  t >= t0  =>  fst (s t) == snd (s t)
+equal t1 t2 s ~= {-" \forall \, t \in \mathbb{R} . \, "-}  t1  <= t && t <= t2  =>  fst (s t) == snd (s t)
 \end{code}
 
 This signal relation asserts that the first and second components of the

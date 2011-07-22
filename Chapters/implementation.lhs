@@ -292,18 +292,23 @@ implementation of Hydra:
 data Signal a where
   Unit     ::  Signal ()
   Time     ::  Signal Real
-  Const    ::  a -> Signal a
+  Const    ::  Real -> Signal Real
   Pair     ::  Signal a -> Signal b -> Signal (a,b)
   PrimApp  ::  PrimSF a b -> Signal a -> Signal b
   Var      ::  Integer -> Signal Real
 \end{code}
 
-As you can see, this data type definition contains one constructor that is not
-featured in the language definition, namely the |Var| constructor. This
-constructor is not used at the stage of quasiquoting. Instead, the constructor
-is used later at the stage of runtime symbolic processing to instantiate each
-local signal variable to an unique signal variable by using the constructor's
-|Integer| field.
+As you can see, this data type definition replaces the |Signal| constructor
+featured in the language definition (see Chapter \ref{chapDefinition}) with
+the |Var| constructor. In the implementation, instead of representing signals
+that need to be solved and functions from time to values we represent them as
+signal variables whose approximated values will be determined by the numerical
+solver.
+
+The |Var| constructor is not used at the stage of quasiquoting. Instead, the
+constructor is used later at the stage of runtime symbolic processing to
+instantiate each local signal variable to an unique signal variable by using
+the constructor's |Integer| field.
 
 The implementation of Hydra supports the same set of primitive functions as
 defined in the language definition. Hence, in the implementation we use the
@@ -952,7 +957,7 @@ the circuit.
 \end{tabular}
 
 \caption{\label{table:larger-system-1} Time profile of structurally dynamic
-RLC circuit simulation (part I).}
+RLC circuit simulation (part~I).}
 
 \end{table}
 
@@ -990,7 +995,7 @@ RLC circuit simulation (part I).}
 \end{tabular}
 
 \caption{\label{table:larger-system-2} Time profile of structurally dynamic
-RLC circuit simulation (part II).}
+RLC circuit simulation (part~II).}
 
 \end{table}
 

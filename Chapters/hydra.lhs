@@ -230,6 +230,7 @@ specified explicitly.
 \begin{code}
 iInductor :: Real -> Real -> SR (Pin,Pin)
 inductor p_i_0 l = [rel| ((p_i,p_v),(n_i,n_v)) ->
+    local u
     init p_i = p_i_0
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $l$ * der p_i = u
@@ -239,6 +240,7 @@ inductor p_i_0 l = [rel| ((p_i,p_v),(n_i,n_v)) ->
 \begin{code}
 iCapacitor :: Real -> Real -> SR (Pin,Pin)
 iCapacitor u0 c = [rel| ((p_i,p_v),(n_i,n_v)) ->
+    local u
     init u = u0
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     $c$ * der u  = p_i
@@ -248,6 +250,7 @@ iCapacitor u0 c = [rel| ((p_i,p_v),(n_i,n_v)) ->
 \begin{code}
 vSourceAC :: Real -> Real -> SR (Pin,Pin)
 vSourceAC v f = [rel| ((p_i,p_v),(n_i,n_v)) ->
+    local u
     $twoPin$ <> (((p_i,p_v),(n_i,n_v)),u)
     u = $v$ * sin (2 * $pi$ * $f$ * time)
 |]
@@ -776,6 +779,85 @@ half-wave rectifier circuit with in-line inductor.}
 
 \end{figure}
 
+
+Simulation of the full-wave rectifier circuit given in Figure
+\ref{figRectifierFullWave} is more challenging than simulating the half-wave
+rectifier. A key difficulty is that the circuit breaks down into two isolated
+halves when all diodes are open. The lack of a ground reference for the left
+part means the system becomes under-determined and it cannot be simulated.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width = \textwidth]{Graphics/rectifierFullWave.pdf}
+\end{center}
+
+\caption{\label{figRectifierFullWave} Full-wave rectifier circuit with ideal
+diodes.}
+
+\end{figure}
+
+However, a more detailed analysis reveals that this is as it should be as the
+model is incomplete: for the model to make sense, there is further tacit
+modelling knowledge that needs to be stated explicitly in the form of
+additional equations. If the diodes are truly ideal, this means that they are
+also identical, which in turn implies that the voltage drops over them are
+always going to be pairwise equal, even when they are open. The model for the
+full circuit can be described along the lines we saw in the previous section,
+except that two extra equations, stating the pairwise equality of the voltages
+across the diodes, are needed. That is:
+
+\begin{eqnarray}
+(dp_{v_{1}} - dn_{v_{1}}) & = & (dp_{v_{1}} - dn_{v_{1}}) \label{eq:ud1=ud3} \\
+(dp_{v_{2}} - dn_{v_{2}}) & = & (dp_{v_{4}} - dn_{v_{4}}) \label{eq:ud2=ud4}
+\end{eqnarray}
+
+However, adding Eq.~(\ref{eq:ud1=ud3}) and Eq.~(\ref{eq:ud2=ud4}) results in
+additional complications for simulation as the system now seemingly becomes
+over-determined when some diodes are closed. It turns out, though, that the
+system is only trivially over-determined; that is, the extra equations are
+mathematically equivalent to other equations in the system. This is easy to
+see: when a diode is closed, there is an equation provided by the model of the
+diode itself that states that the voltage across it is 0. If, for example,
+$D1$ and $D3$ are closed, we have:
+
+\begin{eqnarray}
+(dp_{v_{1}} - dn_{v_{1}}) & = & 0 \label{eq:ud1=0} \\
+(dp_{v_{1}} - dn_{v_{1}}) & = & 0 \label{eq:ud3=0}
+\end{eqnarray}
+
+But, additionally, $(dp_{v_{1}} - dn_{v_{1}})$ and $(dp_{v_{1}} - dn_{v_{1}})$
+are related by Equation \ref{eq:ud1=ud3} that is provided by model of the
+overall circuit.
+
+In this case, a simple symbolic simplification pass suffice to eliminate the
+redundant equations in the modes where the diodes are pairwise closed. Using
+Equation \ref{eq:ud1=0} and Equation \ref{eq:ud3=0}, Equation \ref{eq:ud1=ud3}
+can be simplified to the trivially satisfied equation $0 = 0$ that then can be
+eliminated. After this the model can be simulated without further issues. Note
+that dynamic generation of equations followed by symbolic processing, as
+provided by FHM, is crucial to this approach to simulating ideal diodes.
+
+As we have already mentioned, the implementation of Hydra provides an
+extensible and configurable symbolic processor. The symbolic processor that
+simplifies trivially over-determined equations is provided with the
+implementation of Hydra and can be activated through the experiment
+description passed to the |simulate| function.
+
+It should be pointed out that changes caused by an instance of a switch only
+concern equations originating from that switch instance. All other equations
+remain as they were. Thus, even though, in the case of ideal diodes, a circuit
+with $n$ diodes has up to $2^n$ distinct structural configurations or modes,
+it is always entirely clear which mode to move to after a switch; there is no
+need to search among the up to $2^n$ possibilities for a consistent successor
+mode.
+
+As a result, we have obtained a model of an ideal full-wave rectifier that is
+constructed modularly from individual, reusable components. The proper
+behaviour emerges from simply assembling the components, with just some minor
+additional guidance from the modeller in the form of a couple of extra
+equations. There is no need for any heavyweight, auxiliary mechanisms, such as
+an explicit finite state machine, to control how the model moves between
+structural configurations.
 
 \section{Highly Structurally Dynamic Modelling}
 
