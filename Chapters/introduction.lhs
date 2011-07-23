@@ -74,9 +74,9 @@ and \emph{structurally dynamic} modelling.
 Higher-order modelling allows parametrisation of models on other models
 \citep{Nilsson2003a}. For instance, a car model can be parametrised on the
 list of tyres it is using, and an electrical transmission line model can be
-parametrised on the list of electrical components on the line. This style of
-modelling is not supported by main-stream, noncausal languages, including
-Modelica. Tool specific and external scripting languages are often used to
+parametrised on the list of electrical components on the line. Main-stream,
+noncausal languages feature a very limited support for this style of
+modelling. Tool specific and external scripting languages are often used to
 generate noncausal models for particular instances of higher-order models
 \citep{Broman2008a}. Whilst practical for some applications, this defeats the
 purpose of a declarative, noncausal modelling language.
@@ -106,9 +106,9 @@ were not considered.
 \subsection{Structurally Dynamic Modelling}
 
 Major system behaviour changes are often modelled by changing the equations
-that describe the system dynamics \citep{Mosterman1997}. A model where the
-equational description changes over time is called structurally dynamic. Each
-structural configuration of the model is known as a \emph{mode} of operation.
+that describe the system \citep{Mosterman1997}. A model where the equational
+description changes over time is called structurally dynamic. Each structural
+configuration of the model is known as a \emph{mode} of operation.
 \citet{Cellier2006} refer to structurally dynamic systems as
 \emph{variable-structure} systems. Structurally dynamic systems are an example
 of the more general notion of hybrid systems \citep{Nilsson2003a}. The term
@@ -120,7 +120,7 @@ interact with continuous physical systems, can also be seen as instances of
 hybrid systems. In this context, structurally dynamic modelling is relevant;
 as modelling of a cyber-physical system where the digital part's influence
 causes major changes in the physical part may require changing the equations
-that describe the dynamics of the continuous part. Recently, the US National
+that describe the behaviour of the continuous part. Recently, the US National
 Science Foundation identified cyber-physical systems as one of its key
 research areas \citep[2008]{NSF2008a}.
 
@@ -150,7 +150,7 @@ sacrificing the efficiency, or languages have been restricted so as to limit
 the number of modes to make it feasible to compile code for all modes prior to
 simulation (MOSILAB and Acumen).
 
-\subsection{Contributions to the Field of Noncausal Modelling and Simulation}
+\section{Contributions to the Field of Noncausal Modelling and Simulation}
 
 This dissertation presents a novel approach to the design and implementation
 of noncausal modelling and simulation languages with first-class models
@@ -267,7 +267,7 @@ external code generation framework such as LLVM. This approach has not been
 pursued, as the tight control over the dynamically generated code is essential
 in this application domain.
 
-\subsection{Contributions to the Field of DSL Embedding}
+\section{Contributions to the Field of DSL Embedding}
 
 Compilation of embedded DSLs is today a standard tool in the DSL-implementer's
 tool box. The seminal example is the work by Elliott et al. on compiling
@@ -431,7 +431,10 @@ showcase those language features that are absent in other noncausal modelling
 languages.
 
 \item Chapter \ref{chapDefinition} formally defines Hydra's concrete syntax,
-abstract syntax, type system and ideal semantics.
+abstract syntax, type system and ideal semantics. The chapter defines the the
+equational part (i.e., the signal level) of the Hydra language. The reader is
+referred to \citet{Haskell98} for the semi-formal definition of the host
+functional language.
 
 \item Chapter \ref{chapImplementation} describes how Hydra is implemented.
 
