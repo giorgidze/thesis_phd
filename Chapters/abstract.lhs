@@ -5,14 +5,15 @@ numerous scientific and engineering disciplines. To cope with the increasing
 size and complexity of physical models, a number of modelling and simulation
 languages have been developed. These languages can be divided into two broad
 categories: causal and noncausal. Causal languages express a system model in
-terms of explicit equations. In contrast, a noncausal model is formulated in
-terms of implicit equations. The fact that the causality can be left implicit
-makes noncausal languages more declarative and noncausal models more reusable.
-These are considered to be crucial advantages in many physical domains.
+terms of directed equations. In contrast, a noncausal model is formulated in
+terms of undirected equations. The fact that the causality can be left
+implicit makes noncausal languages more declarative and noncausal models more
+reusable. These are considered to be crucial advantages in many physical
+domains.
 
-Current, main-stream noncausal languages do not treat models as first-class
-values; that is, a model cannot be parametrised on other models or generated
-at simulation runtime. This results in very limited higher-order and
+Current, mainstream noncausal languages do not treat equational models as
+first-class values; that is, a model cannot be parametrised on other models or
+generated at simulation runtime. This results in very limited higher-order and
 structurally dynamic modelling capabilities, and limits the expressiveness and
 applicability of noncausal languages.
 
