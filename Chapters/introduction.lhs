@@ -53,7 +53,8 @@ causalised in a number of different ways).
 \end{itemize}
 
 Although causal modelling remains a dominant paradigm, interest in noncausal
-modelling has grown recently as evidenced by release of noncausal modelling
+modelling has grown recently as evidenced by the wide adoption of the Modelica
+language both in industry and academia, and by release of noncausal modelling
 and simulation tools by prominent vendors such as Maple (MapleSim) and
 MathWorks (Simscape).
 
@@ -149,7 +150,7 @@ sacrificing the efficiency, or languages have been restricted so as to limit
 the number of modes to make it feasible to compile code for all modes prior to
 simulation (MOSILAB and Acumen).
 
-\subsection{Contributions}
+\subsection{Contributions to the Field of Noncausal Modelling and Simulation}
 
 This dissertation presents a novel approach to the design and implementation
 of noncausal modelling and simulation languages with first-class models
@@ -266,7 +267,7 @@ external code generation framework such as LLVM. This approach has not been
 pursued, as the tight control over the dynamically generated code is essential
 in this application domain.
 
-\subsection{Contributions}
+\subsection{Contributions to the Field of DSL Embedding}
 
 Compilation of embedded DSLs is today a standard tool in the DSL-implementer's
 tool box. The seminal example is the work by Elliott et al. on compiling
@@ -302,14 +303,15 @@ iteratively staged embedded DSL efficiently.
 
 \end{itemize}
 
-\section{Published Peer-reviewed Contributions}
+\section{Overview of Peer-reviewed Publications}
 
 The content of this thesis is partly based on the peer-reviewed publications
 that are listed in this section. I wrote the papers in collaboration with my
-coauthors. This thesis was written by myself. I have implemented the software
-described in this dissertation and in the following papers. The software is
-available on my webpage\footnote{\url{http://www.cs.nott.ac.uk/~ggg/}} under
-the open source BSD license.
+coauthors. This thesis was written by myself and presents my contributions. I
+have implemented the Hydra language described in this dissertation and in the
+following papers. The software is available on my
+webpage\footnote{\url{http://www.cs.nott.ac.uk/~ggg/}} under the open source
+BSD3 license.
 
 The following four papers describe various aspects of the design and
 implementation of Hydra, as well as a number of its applications.
@@ -340,7 +342,7 @@ George Giorgidze and Henrik Nilsson.
   {\em Lecture Notes in Computer Science}. Springer, 2010.
 
 \item
-George Giorgidze and Henrik Nilsson.
+Henrik Nilsson and George Giorgidze.
 \newblock Exploiting structural dynamism in {F}unctional {H}ybrid {M}odelling
   for simulation of ideal diodes.
 \newblock In {\em Proceedings of the 7th EUROSIM Congress on Modelling and
@@ -374,7 +376,7 @@ George Giorgidze and Henrik Nilsson.
 \end{itemize}
 
 Some of the embedding techniques described in this thesis are also used in the
-following paper.
+following two papers.
 
 \begin{itemize}
 
@@ -384,8 +386,15 @@ George Giorgidze, Torsten Grust, Tom Schreiber, and Jeroen Weijers.
   for {H}askell.
 \newblock In {\em Revised selected papers of the 22nd international symposium
   on Implementation and Application of Functional Languages, Alphen aan den
-  Rijn, Netherlands}. Springer, 2010.
-\newblock Peter Landin Prize for the best paper at IFL 2010, to appear.
+  Rijn, Netherlands}, volume 6647 of {\em Lecture Notes in Computer Science}.
+  Springer, 2010.
+\newblock Peter Landin Prize for the best paper at IFL 2010.
+
+\item
+George Giorgidze, Torsten Grust, Nils Schweinsberg, and Jeroen Weijers.
+\newblock Bringing back monad comprehensions.
+\newblock In {\em Proceedings of the ACM SIGPLAN Haskell symposium, Tokyo,
+  Japan}. ACM, 2011.
 
 \end{itemize}
 
