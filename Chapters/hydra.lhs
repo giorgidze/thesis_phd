@@ -937,11 +937,12 @@ divide ((x0,y0),(vx0,vy0)) = [rel| ((x,y),(vx,vy)) ->
 
 The model assumes that the kinetic energy is not lost and the balls divide the
 initial kinetic energy by bouncing in opposite directions. This is an example
-of a highly structurally dynamic system; the number of modes cannot be
+of an unbounded structurally dynamic system; the number of modes cannot be
 determined prior to simulation and it is not feasible to generate the code
 prior to simulation.
 
 Unfortunately, due to the limitations of main-stream noncausal modelling
-languages, declarative equational modelling of (highly) structurally dynamic
-systems remains an elusive application. We believe the adoption of the Hydra
-features described in this chapter will remedy this unfortunate situation.
+languages, declarative equational modelling of (unbounded) structurally
+dynamic systems remains an elusive application. We believe the adoption of the
+Hydra features described in this chapter will remedy this unfortunate
+situation.

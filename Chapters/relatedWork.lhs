@@ -36,7 +36,7 @@ first class entities in most incarnations of FRP, and new ones can be computed
 and integrated into a running system dynamically. As we have seen, this
 capability has also been carried over to FHM. This means that these FRP
 versions, including Yampa, are also examples of iteratively staged languages.
-However, as all FRP versions supporting highly dynamic system structure so far
+However, as all FRP versions supporting unbounded structural dynamism so far
 have been interpreted, the program generation aspect is much less pronounced
 than what is the case for Hydra. That said, in Yampa, program fragments are
 generated and then optimised dynamically \citep{Nilsson2005a}. It would be
@@ -77,7 +77,7 @@ discussed in this paper should be of interest in the MKL setting.
 
 Sol is a Modelica-like language \citep{Zimmer2007,Zimmer2008a}. It introduces
 language constructs that enable the description of systems where objects are
-dynamically created and deleted, thus supporting modelling of highly
+dynamically created and deleted, thus supporting modelling of unbounded
 structurally dynamic systems. The work on Sol is complementary to ours in a
 number of respects outlined in the following.
 

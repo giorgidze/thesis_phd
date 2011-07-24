@@ -310,9 +310,9 @@ blocks are used to \emph{switch} between block diagrams as a response to
 discrete events. This makes Simulink very useful for modelling of structurally
 dynamic systems. However, the number of modes must be finite and all modes
 must be predetermined before simulation. Thus Simulink does not enable
-modelling and simulation of highly structurally dynamic systems. In addition,
-Simulink block diagrams are first order, thus Simulink does not support
-higher-order causal modelling.
+modelling and simulation of unbounded structurally dynamic systems. In
+addition, Simulink block diagrams are first order, thus Simulink does not
+support higher-order causal modelling.
 
 
 \section{Noncausal Modelling in Modelica}

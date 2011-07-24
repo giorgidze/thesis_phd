@@ -138,8 +138,11 @@ simulation code (often just a sequence of assignment statements) with little
 or no need for dynamic memory or code management. This results in good
 performance, but such language design and implementation approaches restrict
 the number of modes to be modest as, in general, separate code must be
-generated for each mode. This rules out supporting \emph{highly} structurally
-dynamic systems where the number of modes is too large or even unbounded.
+generated for each mode. This rules out supporting structurally dynamic
+systems where the number of modes is a priori unbounded. We refer to this kind
+of systems as \emph{unbounded structurally dynamic} systems. Systems with a
+priori bounded number of modes are referred as \emph{bounded structurally
+dynamic}.
 
 There are a number of efforts to design and implement modelling and simulation
 languages with improved support for structural dynamism. Examples include:
@@ -173,7 +176,7 @@ four points outlined in the beginning of Section \ref{secFirstClassModels}).
 \emph{just-in-time} (JIT) compilation to enable efficient simulation of
 noncausal models that are generated at simulation runtime. To my knowledge,
 Hydra is the first language that enables support \emph{both} for modelling and
-simulation of highly structurally dynamic systems and for compilation of
+simulation of unbounded structurally dynamic systems and for compilation of
 simulation code for efficiency.
 
 \end{itemize}
@@ -351,7 +354,7 @@ Henrik Nilsson and George Giorgidze.
 
 \end{itemize}
 
-The following two papers are about highly structurally dynamic, causal
+The following two papers are about unbounded structurally dynamic, causal
 modelling and simulation using Yampa, a Haskell-embedded Functional Reactive
 Programming (FRP) language \citep{Hudak2003}. The combinator that allows
 switching of equations during simulation runtime in Hydra draws its
