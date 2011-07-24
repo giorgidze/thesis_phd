@@ -1,21 +1,38 @@
 \chapter{Background}
 \label{chapBackground}
 
-\section{Modelling and Simulation of Physical Systems}
-\label{secModelling}
+Hydra is a domain-specific language. The domain of the language is equational
+modelling and simulation of physical systems. In order to make the thesis self
+contained, this chapter gives background information on the language domain.
 
-This chapter overviews the field of physical modelling and simulation by using
-simple and instructive examples. By modelling and simulating the example
-physical systems, basic concepts of modelling and simulation are introduced.
-Where necessary, the presentation abstracts from the concrete examples and
-defines the basic concepts more generally.
+The three essential steps involved in the process of modelling and simulation
+of a physical system are:
 
-\subsection{Mathematical Modelling}
+\begin{itemize}
+\item Mathematical modelling of the system behaviour
+\item Translation of the mathematical representation into a computer program
+\item Simulation of the system by compiling and executing the computer program
+\end{itemize}
+
+This chapter illustrates the aforementioned three steps by using simple and
+instructive examples. We start by conducting these steps manually. We then
+demonstrate how causal and noncausal modelling languages and tools can be used
+to automate this process, and discuss advantages and disadvantages of current,
+main-stream modelling languages.
+
+In addition, by modelling and simulating the example physical systems, basic
+concepts of modelling and simulation are introduced. Where necessary, the
+presentation abstracts from the concrete examples and defines the basic
+concepts more generally. Also note that in this thesis we focus on modelling
+languages capable of simulating mathematical models without assuming a
+particular domain of physics.
+
+\section{Equational Modelling}
 
 Figure \ref{figCircuit1} depicts a simple electrical circuit. The circuit is
-grounded and has the following four two-pin electrical components: voltage
-source, resistor, inductor and capacitor. The following system of equations is
-a mathematical model of the circuit.
+grounded and consists of four two-pin electrical components: a voltage source,
+a resistor, an inductor and a capacitor. The following system of equations is
+a equational model of the circuit.
 
 \begin{figure}
 \begin{center}
@@ -38,18 +55,22 @@ u_S & = & u_L
 
 The first four equations describe the component behaviours. The last three
 equations describe the circuit topology. The system of equations consists of
-implicitly defined algebraic and differential equations. This mathematical
-representation is a system of implicit \emph{differential algebraic
-equations} (DAEs) \citep{Cellier2006}. More generally, a system of implicit DAEs
-can be written in the following form:
+undirected algebraic and differential equations\footnote{\citet{Cellier1991}
+provides wealth of information on how to derive equational models for physical
+systems.}. This mathematical representation is a system of implicit
+\emph{differential algebraic equations} (DAEs) \citep{Cellier2006}. More
+generally, a system of implicit DAEs can be written in the following form:
+
 \begin{equation}
 f(\frac{d\vec{x}}{dt},\vec{x},\vec{y},t) = 0
 \end{equation}
-Here, $\vec{x}$ is a vector of \emph{differential variables}, also known as
-\emph{state variables}, $\vec{y}$ is a vector of algebraic variables and $t$
-is an independent scalar variable. In physical modelling $t$ denotes
-\emph{time}.
 
+\noindent Here, $\vec{x}$ is a vector of \emph{differential variables} (i.e.,
+their derivatives with respect to time appear in the equations), $\vec{y}$ is a
+vector of \emph{algebraic variables} (i.e., their derivatives with respect to
+time do not appear in the equations) and $t$ is an independent scalar variable.
+In physical modelling $t$ denotes \emph{time}. Differential variables are also
+referred as \emph{state variables}.
 
 Numerical integration is a widely used approach for deriving approximate
 solutions of systems of DAEs. This is partly because, in general, exact
@@ -57,13 +78,16 @@ symbolic methods do not suffice for solving systems of DAEs
 \citep{Brenan1996a}. There are a number of methods for numerical integration
 of an implicit DAE. For example, there are numerical solvers that directly
 operate on the implicit representation (e.g., the IDA solver from the SUNDIALS
-numerical suite \citep{Sundials2005}), but in some cases it is possible to
-translate a DAE into a system of explicit \emph{ordinary differential
+numerical suite \citep{Sundials2005}), however, in some cases it is possible
+to translate a DAE into a system of explicit \emph{ordinary differential
 equations} (ODEs), which makes it possible to simulate the system using an ODE
 solver (e.g., the CVODE solver from the SUNDIALS numerical suite
-\citep{Sundials2005}). In the following we illustrate the latter approach.
+\citep{Sundials2005}). In the following we illustrate the latter approach, as
+ODE solvers are much simpler to implement. For an equational model that can be
+transformed to an ODE it is preferable to use an ODE solver for numerical
+integration, because ODE solvers are usually more efficient than DAE solvers.
 
-\subsection{Symbolic Manipulation}
+\section{Causalisation}
 
 In order to transform the implicit DAE describing the simple electrical
 circuit into an explicit one, we perform the following steps. Firstly, we
@@ -90,9 +114,11 @@ i    & = & i_1 + i_2 \\
 \end{eqnarray}
 \end{subequations}
 
-This symbolic manipulation process is called \emph{causalisation}. Now the
-cause-effect relationship is explicitly specified which was not the case for
-the implicit DAE.
+This symbolic manipulation process is called \emph{causalisation}\footnote{In
+general, the process of causalisation can be more involved than one described
+in this section. \citet{Cellier2006} give a good survey of partial and
+complete causalisation methods.}. Now the direction of equations is explicitly
+specified which was not the case for the implicit DAE.
 
 Let us substitute the variables defined in the first five equations into the
 last two equations. This effectively eliminates the algebraic equations from
@@ -110,22 +136,28 @@ This representation is a system of explicit ODEs and can be passed to a
 numerical ODE solver. This representation is also called \emph{state-space
 model}. More generally, a system of explicit ODEs can be written in the
 following form:
+
 \begin{equation}
 \label{eqExplODE}
 \frac{d\vec{x}}{dt} = f(\vec{x},t)
 \end{equation}
-Here, $\vec{x}$ is a vector of differential variables and $t$ is time.
 
-\subsection{Numerical Integration}
+\noindent Here, $\vec{x}$ is a vector of differential variables and $t$ is
+time.
 
-In the following the \emph{forward Euler} method, which is the simplest
-numerical integration method for ODEs, is explained. The key idea is to
-replace the derivatives with the following approximation:
+\section{Numerical Integration}
+
+Let us give an illustration of the process of numerical integration through a
+concrete method. In the following the \emph{forward Euler} method, which is
+the simplest numerical integration method for ODEs, is explained. The key idea
+is to replace the derivatives with the following approximation:
+
 \begin{equation}
 \frac{d\vec{x}}{dt} \approx \frac{\vec{x}(t + h) - \vec{x}(t)}{h}
 \end{equation}
-Here, $h$ is a \emph{sufficiently small} positive scalar which is referred to
-as the \emph{step size} of the numerical integration.
+
+\noindent Here, $h$ is a \emph{sufficiently small} positive scalar which is
+referred to as the \emph{step size} of the numerical integration.
 
 Let us make use of Equation \ref{eqExplODE} and substitute the derivative.
 
@@ -148,7 +180,7 @@ on different approximations and integration algorithms. A comprehensive
 presentation of this and other more sophisticated methods can be found in the
 book by \citet{Cellier2006}.
 
-\subsection{Simulation}
+\section{Simulation}
 
 Once an initial condition (i.e., a value of the differential vector at time
 zero) is given it is possible to numerically integrate the ODE. The Haskell
@@ -179,14 +211,14 @@ differential vector at the discrete points of time given in Equation
 \ref{eqStateVectorDiscreteSeq} as a list.
 
 In the case of the simple electrical circuit model, the algebraic variables
-can also be solved by adding so called \emph{output equations} in the function
-that numerically integrates the system of equations. Output equations are
-explicit algebraic equations where the algebraic variables are defined in
-terms of the differential variables. The Haskell code given in Figure
+can be solved by adding more directed equations in the function that
+numerically integrates the system of equations. Output equations are explicit
+algebraic equations where the algebraic variables are defined in terms of the
+differential variables. The Haskell code given in Figure
 \ref{figIntegrateSimpleCircuit2} refines the integration function by adding
-the output equation that solves the algebraic variable $i_1$. Figure
+the directed equation that solves the algebraic variable $i_1$. Figure
 \ref{figCircuitPlot1} shows a partial simulation result obtained by evaluating
-the function with output equations.
+the function with the additional directed equation.
 
 \begin{figure}
 
@@ -201,8 +233,8 @@ integrateSimpleCircuit dt r c l = go 0 0 0
                 in    (t, i2, uc, i1) : go (t + dt) (uc + duc) (i2 + di2)
 \end{code}
 
-\caption{\label{figIntegrateSimpleCircuit2} Function that adds two output
-equations to the function given in Figure \ref{figIntegrateSimpleCircuit}.}
+\caption{\label{figIntegrateSimpleCircuit2} Function that adds one directed
+equation to the function given in Figure \ref{figIntegrateSimpleCircuit}.}
 
 \end{figure}
 
@@ -216,14 +248,9 @@ change over time.}
 
 \end{figure}
 
-The simple electrical-circuit example highlights the three essential steps
-involved in the process of modelling and simulation of physical systems:
-
-\begin{itemize}
-\item Mathematical modelling of the system behaviour
-\item Translation of the mathematical representation into a computer program
-\item Simulation of the system by compiling and executing the computer program
-\end{itemize}
+The simple electrical circuit example highlights the three essential steps
+involved in the process of modelling and simulation outlined in the
+introduction of this chapter.
 
 As we have already seen, for some systems, it is feasible to conduct this
 process manually. Indeed translation of systems of equations into code in
@@ -231,22 +258,16 @@ general purpose programming languages like Fortran, C, Java or Haskell is a
 common practise. However, manual translation becomes tedious and error prone
 with growing complexity. Imagine conducting the process presented in this
 section for a physical system described with hundreds of thousands of
-equations.
+equations. Modelling languages and simulation tools can help with all three
+phases mentioned above as discussed in the following sections of this chapter.
 
-Modelling languages and simulation tools can help with all three phases
-mentioned above. The following section overviews state-of-the-art
-representatives of causal and noncausal modelling languages. In this thesis,
-we focus on modelling languages capable of simulating mathematical models
-without assuming a particular domain of physics.
-
-\section{Causal Modelling in Simulink}
+\section{Causal Modelling}
 \label{secSimulink}
 
-Simulink is a graphical block diagramming tool for causal modelling and
-simulation. The block diagram depicted in Figure \ref{figCircuitBlockDiagram1}
-is a model of the simple electrical circuit from Figure \ref{figCircuit1}.
-Note that the diagram uses causal blocks (with input and outputs) for
-multiplication, summation and integration.
+The block diagram depicted in Figure \ref{figCircuitBlockDiagram1} is a model
+of the simple electrical circuit from Figure \ref{figCircuit1}. Note that the
+diagram uses causal blocks (with input and outputs) for multiplication,
+summation and integration.
 
 \begin{figure}
 \begin{center}
@@ -264,7 +285,9 @@ are used to define the derivatives and the output variables. The construction
 of a block diagram is closely related to the process of causalisation.
 Derivation of simulation code from a block diagram is done much in the same
 way as described in Section \ref{secModelling}, but using more sophisticated
-numerical methods.
+numerical methods. The causal model given in Figure
+\ref{figCircuitBlockDiagram1} can be simulated by graphical block diagramming
+tools such as Simulink.
 
 Structurally, the block diagram in Figure \ref{figCircuitBlockDiagram1} is
 quite far removed from the circuit it models. Because of this, construction of
@@ -284,7 +307,7 @@ electrical circuit by adding one more resistor, as shown in Figure
 \ref{figCircuit2}, and then causally model it as shown in Figure
 \ref{figCircuitBlockDiagram2}. Note that we were unable to reuse the resistor
 model from the original circuit diagram. Furthermore, a simple addition to the
-physical system caused hardly obvious changes in the causal model.
+physical system caused changes to the causal model that hardly are obvious.
 
 \begin{figure}
 \begin{center}
@@ -305,17 +328,17 @@ circuit depicted in Figure \ref{figCircuit2}.}
 
 \end{figure}
 
-Simulink can be used to model some structurally dynamic systems: special
-blocks are used to \emph{switch} between block diagrams as a response to
-discrete events. This makes Simulink very useful for modelling of structurally
-dynamic systems. However, the number of modes must be finite and all modes
-must be predetermined before simulation. Thus Simulink does not enable
-modelling and simulation of unbounded structurally dynamic systems. In
-addition, Simulink block diagrams are first order, thus Simulink does not
-support higher-order causal modelling.
+The block diagramming tool Simulink can be used to model bounded structurally
+dynamic systems: special blocks are used to \emph{switch} between block
+diagrams as a response to discrete events. This makes Simulink very useful for
+modelling of bounded structurally dynamic systems. The number of modes (i.e.,
+structural configurations) must be finite and all modes must be predetermined
+before simulation. Thus Simulink does not enable modelling and simulation of
+unbounded structurally dynamic systems. In addition, Simulink block diagrams
+are first order, thus Simulink does not support higher-order causal modelling.
 
 
-\section{Noncausal Modelling in Modelica}
+\section{Noncausal Modelling Illustrated through Modelica}
 \label{secModelica}
 
 %{
@@ -323,8 +346,9 @@ support higher-order causal modelling.
 
 Modelica is a declarative language for noncausal modelling and simulation of
 physical systems. Modelica models are given using implicit DAEs. Modelica
-features a class system known from object-oriented programming languages for
-structuring equations and for supporting model reuse.
+features a class system similar to what can be found in many object-oriented
+programming languages for structuring equations and for supporting model
+reuse.
 
 This section presents a Modelica model of the simple electrical circuit
 depicted in Figure \ref{figCircuit1} to illustrate basic features of the
@@ -475,9 +499,10 @@ Figure \ref{figCircuit1}.}
 
 Connect statements are analysed and appropriate \emph{connection equations}
 are generated by the Modelica compiler as follows. Connected flow variables
-generate sum-to-zero equations. In this case the sum-to-zero equations
-correspond to Kirchhoff's current law. For the |SimpleCircuit| model the
-Modelica compiler generates the following sum-to-zero equations:
+generate sum-to-zero equations. In this case, as the domain is electrical
+circuits, the sum-to-zero equations correspond to Kirchhoff's current law. For
+the |SimpleCircuit| model the Modelica compiler generates the following
+sum-to-zero equations:
 
 \begin{code}
 AC.n.i + C.n.i + L.n.i + G.p.i = 0;
