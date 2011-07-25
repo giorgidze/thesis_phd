@@ -1,14 +1,14 @@
-\chapter{Hydra by Examples}
+\chapter{Modelling and Simulation in Hydra}
 \label{chapHydra}
 
 This chapter presents the Hydra language informally, by means of instructive
-examples. The formal definition of the language and its implementation are
-given in Chapter \ref{chapDefinition} and Chapter \ref{chapImplementation},
-respectively.
+examples. The examples are carefully chosen to back up the contributions of
+the thesis by illustrating Hydra's features that are absent from other
+noncausal modelling and simulation languages.
 
 \section{Models with Static Structure}
 
-Let us introduce the Hydra language by modelling the circuit that is depicted
+Let us illustrate the Hydra language by modelling the circuit that is depicted
 in Figure \ref{figCircuit1}. Let us first define the |twoPin| signal relation
 that captures the common behaviour of electrical components with two
 connectors (see Figure \ref{figTwoPin}):
@@ -58,13 +58,14 @@ of the signal relation. As a consequence, |u| can only be constrained in this
 signal relation, unlike the rest of the variables in the pattern, which can be
 constrained further.
 
-Hydra uses two kinds of variables: the functional-level ones representing
-time-invariant parameters, and the signal-level ones, representing
-time-varying entities, the signals. Functional-level fragments, such as
-variable references, are spliced into the signal level by enclosing them
-between antiquotes, \$. On the other hand time-varying entities are not
-allowed to escape to the functional level; that is, signal-variables are not
-in scope between antiquotes and outside the quasiquotes.
+As we have already mentioned, Hydra uses two kinds of variables: the
+functional-level ones representing time-invariant parameters, and the
+signal-level ones, representing time-varying entities, the signals.
+Functional-level fragments, such as variable references, are spliced into the
+signal level by enclosing them between antiquotes, \$. On the other hand
+time-varying entities are not allowed to escape to the functional level; that
+is, signal-variables are not in scope between antiquotes and outside the
+quasiquotes.
 
 The |resistor| signal relation uses antiquoting to splice in a copy of the
 |twoPin| signal relation; that is, its equations are reused in the context of
@@ -82,8 +83,8 @@ the signal relation into a list of signal equality constraints (i.e., a flat
 DAE). In the process of flattening, the arguments of a signal relation
 application are substituted into the body of the applied signal relation, and
 the entire application is then replaced by the instantiated signal relation
-body. In our case, the result of flattening the signal relation |resistor 10|
-is:
+body, renaming local variables as necessary to avoid name clashes. In our
+case, the result of flattening the signal relation |resistor 10| is:
 
 \begin{code}
 [rel| ((p_i,p_v),(n_i,n_v)) ->
@@ -101,10 +102,10 @@ enforced only at the point in time when the signal relation becomes active. In
 this example, the |init| equations are used to initialise the differential
 variables involved in the inductor and the capacitor signal relations.
 
-Modelica implicitly initialises differential variables to zero. That is why
-initialisation equations were not considered in the corresponding Modelica
-models given in Chapter \ref{chapBackground}. Hydra does not allow for
-implicit initialisation; that is, all initialisation equations must be
+By default, Modelica implicitly initialises differential variables to zero.
+That is why initialisation equations were not considered in the corresponding
+Modelica models given in Chapter \ref{chapBackground}. Hydra does not allow
+for implicit initialisation; that is, all initialisation equations must be
 specified explicitly.
 
 \begin{figure}
@@ -285,11 +286,11 @@ simpleCircuit =
 \end{figure}
 
 Note that the above code is a direct textual representation of how the
-components are connected in the circuit. Having said that, unlike the Modelica
-model that specifies the noncausal connections in terms of connections of
-time-varying variables, Hydra allows for definition of higher-order
-combinators that are capable of specifying noncausal connections by connecting
-noncausal models directly.
+components are connected in the circuit. Unlike the Modelica model that
+specifies the noncausal connections in terms of connections of time-varying
+variables, Hydra allows for definition of higher-order combinators that are
+capable of specifying noncausal connections by connecting noncausal models
+directly.
 
 It is trivial in Hydra to reuse the circuit components and model the modified
 circuit that is depicted on Figure \ref{figCircuit2}:
@@ -309,20 +310,20 @@ noncausal connections. In this thesis we implement the same approach using
 higher-order modelling combinators. In both cases we were able to describe
 noncausal connections without a special semantic language construct. In this
 aspect, Hydra is simpler than other noncausal modelling languages such as
-\citet{Modelica}, MKL \citep{Broman2007a}, and Chi \citep{Beek2008a},
-as these languages feature special language constructs for specifying
-noncausal connections.
+\citet{Modelica}, MKL \citep{Broman2007a}, and Chi \citep{Beek2008a}, as these
+languages feature special language constructs for specifying noncausal
+connections. It is worthwhile to mention, that although the aforementioned
+approaches to noncausal connections serve the same purpose they are very
+different from each other, both in their syntax and in their semantics.
 
 Detailed comparison of approaches to noncausal connections still lies ahead,
 including devising of a minimal set of higher-order combinators expressive
-enough to capture all possible noncausal interconnections. It is worthwhile to
-mention, that although the aforementioned approaches to noncausal connections
-serve the same purpose they are very different from each other, both in their
-syntax and in their semantics.
+enough to capture all possible noncausal interconnections.
 
 \section{Simulation}
 
-The Haskell-embedded implementation of Hydra features the following function:
+In this section we briefly discuss how to simulate Hydra models. The
+Haskell-embedded implementation of Hydra features the following function:
 
 \begin{code}
 simulate :: SR () -> Experiment -> IO ()
@@ -363,28 +364,30 @@ that are absent from main-stream, noncausal modelling languages. Specifically,
 we discuss the higher-order and structurally dynamic modelling capabilities of
 the Hydra language.
 
-\section{More Higher-order Modelling}
+\section{Higher-order Modelling with Collections of Models}
 
 We have already seen several higher-order models; for example, the |serial|,
 |parallel| and |groundedCircuit| signal relations. This section considers more
 higher-order modelling examples, but this time concentrating on signal
-relations that are parametrised on collections of signal relations. The
-examples are again from the physical domain of electronics.
+relations that are parametrised on collections of signal relations. In
+addition, this section puts an emphasis on how the host, higher-order
+functional language can provide expressive facilities for higher-order,
+noncausal modelling.
 
 Let us define a higher-order signal relation that takes as an argument a list
 of signal relations modelling two-pin electrical components and returns the
 signal relation that models serial connection of the given electrical
-components. The following higher-order signal relation can be used to model
-electronic transmission lines, for example.
+components. This would be useful to model electronic transmission lines, for
+example.
 
 \begin{code}
 serialise :: [SR (Pin,Pin)] -> SR (Pin,Pin)
 serialise = foldr serial wire
 \end{code}
 
-This definition begs for detailed explanation. The |foldr| function is defined
-in the standard Haskell prelude and has the following type signature and
-definition.
+The definition of the |serialise| signal relation begs for detailed
+explanation. The |foldr| function is defined in the standard Haskell prelude
+and has the following type signature and definition.
 
 \begin{code}
 foldr :: (a -> b -> b) -> b -> [a] -> b
@@ -444,10 +447,10 @@ identity of the |serial| higher-order signal relation.}
 \end{figure}
 
 Here by the equality of the signal relations we mean that the signal relations
-introduce equivalent constrains, and not necessarily the same equations.
-Because the |wire| signal relation is both left and right identity of the
-|serial| binary function, in the definition of the |serialise| signal relation
-we could also use the left fold instead of the right fold.
+introduce mathematically equivalent constrains, and not necessarily the same
+equations. Because the |wire| signal relation is both left and right identity
+of the |serial| binary function, in the definition of the |serialise| signal
+relation we could also use the left fold instead of the right fold.
 
 Somewhat similarly to the |serialise| signal relation the higher-order signal
 relation |parallelise| that takes as an argument a list of signal relations
@@ -486,19 +489,14 @@ right identity of the |parallel| higher-order signal relation.}
 
 \end{figure}
 
-In addition to demonstrating higher-order modelling capabilities of Hydra,
-this section puts an emphasis on how the host, higher-order functional
-language can provide expressive facilities for higher-order, noncausal
-modelling.
-
 \section{Structurally Dynamic Modelling}
 
-To introduce structurally dynamic modelling in Hydra, let us model the
-breaking-pendulum system described in Section \ref{secHybridModelling}. The
-system system has two modes of operation. The differences between the two
-modes are sufficiently large that, for example, Modelica does not support
-noncausal modelling of this system, as discussed in Section
-\ref{secHybridModelling}.
+For a concrete example of structurally dynamic modelling in Hydra, let us
+model the breaking-pendulum system described in Section
+\ref{secHybridModelling}. The system system has two modes of operation. The
+differences between the two modes are sufficiently large that, for example,
+Modelica does not support noncausal modelling of this system, as discussed in
+Section \ref{secHybridModelling}.
 
 The code that is given in Figure \ref{figHydraBreakingPendulum} shows how to
 model the two modes of the pendulum in Hydra. The type |Body| denotes the
@@ -565,11 +563,11 @@ breakingPendulum t l phi0 =
 \end{code}
 
 In this signal relation, the switch happens at an \emph{a priori} specified
-point in time, but the switching condition could be an arbitrary time-varying
-entity. Note how the succeeding signal relation (i.e., |freeFall|) is
-initialised so as to ensure the continuity of the position and velocity as
-discussed above. The simulation results obtained by the |simulate| function
-can be seen in Figure \ref{figPendulumPlot}
+point in time, but a switching condition can be derived from an arbitrary
+time-varying entity. Note how the succeeding signal relation (i.e.,
+|freeFall|) is initialised so as to ensure the continuity of the position and
+velocity as discussed above. The simulation results obtained by the |simulate|
+function can be seen in Figure \ref{figPendulumPlot}
 
 \begin{figure}
 \begin{center}
@@ -581,12 +579,13 @@ the body on the breaking pendulum change over time.}
 
 \end{figure}
 
-We have already demonstrated how the |switch| combinator can be used to
-dynamically add and remove signal variables and noncausal equations. This
-flexibility is useful even when the number of equations and variables remain
-unchanged during the simulation. The book by \citet{Cellier2006} gives one
-such example: the half-wave rectifier circuit with an ideal diode and an
-in-line inductor that is depicted in Figure \ref{figRectifier}.
+In the breaking pendulum example the |switch| combinator was used to
+dynamically add and remove signal variables and noncausal equations. The
+|switch| combinator can also be used when the number of equations and
+variables remain unchanged during the simulation. The book by
+\citet{Cellier2006} gives one such example: the half-wave rectifier circuit
+with an ideal diode and an in-line inductor that is depicted in Figure
+\ref{figRectifier}.
 
 \begin{figure}
 \begin{center}
@@ -605,29 +604,16 @@ will fail as the causalised model will lead to a division by zero when the
 switch is open: there simply is no one fixed causality model that is valid
 both when the switch is open and closed.
 
-One reason is that noncausal modelling languages tend to be designed and
-implemented on the assumption that the causality of the model does not change
-during simulation. This assumption simplifies the language design and
-facilitates the generation of efficient simulation code. In particular, the
-causality can be analysed and code can be generated once and for all, at
-compile time, paving the way for using a fast, explicit solver for simulation
-as demonstrated in Chapter \ref{chapBackground}.
+One common solution to the division-by-zero problem is to avoid the ideal
+model and opt for a leaky diode model instead. This works, but often leads to
+very stiff equations. Thus, if an ideal model would suffice for the purpose at
+hand, that would be preferable \citep{Cellier2006}.
 
-One common solution to the division-by-zero problem in models involving ideal
-diodes is to avoid the ideal model and opt for a leaky diode model instead.
-This works, but often leads to very stiff equations. Thus, if an ideal model
-would suffice for the purpose at hand, that would be preferable
-\citep{Cellier2006}.
-
-In the following we model the half-wave rectifier circuit in Hydra. Since the
-Hydra language is not predicated on compilation of simulation all at once and
-allows for runtime symbolic processing it addresses the shortcomings of
-main-stream, noncausal modelling languages discussed earlier in this section.
-
-The following two signal relations model initially opened (|ioDiode|) and
-initially closed (|icDiode|) ideal diodes. Note the use of the host language
-feature of mutual recursion in the following definitions allowing for signal
-relations to switch into each other.
+Let us model the half-wave rectifier circuit in Hydra. The following two
+signal relations model initially opened (|ioDiode|) and initially closed
+(|icDiode|) ideal diodes. Note the use of the host language feature of mutual
+recursion in the following definitions allowing for signal relations to switch
+into each other.
 
 \begin{code}
 ioDiode  ::  SR (Pin,Pin)
@@ -766,12 +752,11 @@ prior to simulation. However, despite their simplicity, these are examples
 with which main-stream noncausal languages such as Modelica struggle, as
 mentioned earlier.
 
-Because of the expressivity of the |switch| combinator, in general, it is not
-possible to compile Hydra models prior to simulation. For example, given a
-parametrised signal relation |sr' :: Real -> SR Real| and a signal function
-|sf :: SF Real Real| one can recursively define a signal relation |sr| that
-describes an overall behaviour by ``stringing together'' the behaviours
-described by |sr'|:
+In general, it is not possible to compile Hydra models prior to simulation.
+For example, given a parametrised signal relation |sr' :: Real -> SR Real| and
+a signal function |sf :: SF Real Real| one can recursively define a signal
+relation |sr| that describes an overall behaviour by ``stringing together''
+the behaviours described by |sr'|:
 
 \begin{code}
 sr :: Real -> SR Real
@@ -796,7 +781,7 @@ bouncingBall b = switch   (freeFall b)
 \end{code}
 
 This example involves stringing of the |bouncingBall| signal relation. But
-even here, in principal, it is possible to generate the code prior to
+even here, in principle, it is possible to generate the code prior to
 simulation, because the active equations always remain the same; that is, only
 initial the condition is changing.
 
@@ -825,6 +810,6 @@ prior to simulation.
 
 Unfortunately, due to the limitations of main-stream noncausal modelling
 languages, declarative equational modelling of (unbounded) structurally
-dynamic systems remains an elusive application. We believe the adoption of the
-Hydra features described in this chapter will remedy this unfortunate
+dynamic systems remains an elusive application. We believe adoption of the
+Hydra features illustrated in this chapter would mitigate this unfortunate
 situation.

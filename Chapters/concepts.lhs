@@ -151,10 +151,14 @@ closing quasiquote. The pattern binds \emph{signal variables} that scope over
 the equations that follow. An equations can be an equality constrain and a
 \emph{signal relation applications} (stated by using the operator |<>|).
 Signal relation application is how the constraints embodied by a signal
-relation are imposed on particular signals. The equations are required to be
-well typed. For example, consider the signal relation application |sr <> s|.
-Here, if |sr| has the type |SR alpha| then |s| must have the type |Signal
-alpha|.
+relation are imposed on particular signals. In addition to the signal
+variables bound in the pattern, equations may also introduce local signal
+variables. Concrete examples of signal relations are given in Chapter
+\ref{chapHydra}.
+
+The equations are required to be well typed. For example, consider the signal
+relation application |sr <> s|. Here, if |sr| has the type |SR alpha| then |s|
+must have the type |Signal alpha|.
 
 Hydra provides a conventional syntax for specifying equality constrains. For
 example, the equation |x * x = 0| is an equality constrain. Here, |0| is a
@@ -213,8 +217,8 @@ constrained by the composite signal relation crosses zero (i.e., changes its
 sign from negative to positive or from positive to negative), the composite
 behaviour is defined by the signal relation that is computed by applying the
 third argument (a function of type |a -> SR a|) to the instantaneous value of
-the constrained signal. A formally defined meaning of the |switch| combinator
-is given in Chapter \ref{chapDefinition}.
+the constrained signal at that point in time. A formally defined meaning of
+the |switch| combinator is given in Chapter \ref{chapDefinition}.
 
 The |switch| combinator allows for definition of a signal relation whose
 equational description changes over time. In addition, the |switch|
