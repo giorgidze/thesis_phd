@@ -743,7 +743,8 @@ equations. There is no need for any heavyweight, auxiliary mechanisms, such as
 an explicit finite state machine, to control how the model moves between
 structural configurations.
 
-\section{Highly Structurally Dynamic Modelling}
+\section{Unbounded Structurally Dynamic Modelling}
+\label{secUnboundedStructDyn}
 
 The breaking pendulum and half-wave rectifier examples feature only two modes
 of operation. In principle (with a suitable language design and

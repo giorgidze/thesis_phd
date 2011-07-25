@@ -504,7 +504,32 @@ symbols (i.e., signals). This is what makes the target predicates second-order
 logic predicates (i.e., not expressible in first-order logic). In other words,
 solving of a signal relation can be understood as proving of \emph{existence}
 of signals that satisfy the given constraints (see Figure
-\ref{figSigRelSigFunSem} for details).
+\ref{figSigRelSigFunSem} for details). Thus the simulator can be seen as a
+constraint solver that tries to solve the denotations of Hydra models.
+
+It is interesting to note that for a model of an unbounded structurally
+dynamic system the denotational semantics gives rise to the predicate in
+\emph{infinitary} second-order logic \citep{Karp1964a}. The typed abstract
+syntax representation of such model would be infinite because of the switches
+that generate unbounded number of modes, and consequently the ideal
+denotational semantics would map such infinite representation to the predicate
+with infinite chain of disjunctions. This is not to say that it is not
+possible to solve such constraints. Quite the opposite, in Section
+\ref{secUnboundedStructDyn} we modelled and simulated one such system.
+
+It would be interesting to precisely characterise under what circumstances can
+a model of an unbounded structurally dynamic system be simulated. We
+conjecture that if in a finite period of time the model switches finite number
+of times it is possible to simulate it, assuming of course that individual
+modes of operations can be solved in the given period. Interestingly, in the
+context of ideal semantics of FRP languages, similar requirements have been
+proposed by \citet{Wan2000} and \citet{Sculthorpe2011b} for characterising
+when an unbounded structurally dynamic causal model can be simulated.
+
+To our knowledge, Hydra is the first language that features a formal
+specification capturing both continuous and discrete aspects of a noncausal
+language that supports unbounded structural dynamism. However, detailed
+studies of of the ideal semantics and its properties still lay ahead.
 
 \begin{figure}
 \begin{code}
@@ -547,7 +572,7 @@ semF2 (f)  =  \     t1  t2  s      ->  semSR (f (s t1))
 semF3 (f)  =  \  i  t1  t2  s eqs  ->  semEqs (i + 1,t1,t2,f (Signal s) ++ eqs)
 \end{code}
 
-\caption{\label{figSigRelSigFunSem} Semantics of signal relations, signal
+\caption{\label{figSigRelSigFunSem} Denotations for signal relations, signal
 functions and equations.}
 
 \end{figure}
@@ -581,6 +606,6 @@ semSig (PrimApp Pow  (Pair s1 s2))  =   \ t  ->  ((semSig s1)  t)  ^            
 semSig (Signal s)                   =   s
 \end{code}
 
-\caption{\label{figSigSem} Semantics of signals.}
+\caption{\label{figSigSem} Denotations for signals.}
 
 \end{figure}
