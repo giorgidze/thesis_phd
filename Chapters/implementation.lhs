@@ -56,7 +56,7 @@ SigRel. SigRel ::= Pattern "->" "{" [Equation] "}" ;
 SigFun. SigFun ::= Pattern "->" "{" Expr       "}" ;
 
 PatWild. Pattern ::= "_" ;
-PatName. Pattern ::= Ident ;
+PatVar.  Pattern ::= Ident ;
 PatUnit. Pattern ::= "()" ;
 PatPair. Pattern ::= "(" Pattern "," Pattern ")" ;
 

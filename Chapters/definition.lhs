@@ -159,7 +159,7 @@ data SigFun  =  SigFun  Pattern  Expr
 
 \begin{code}
 data Pattern  =   PatWild
-              |   PatName  Ident
+              |   PatVar  Ident
               |   PatUnit
               |   PatPair  Pattern  Pattern
 \end{code}
@@ -186,7 +186,7 @@ data Expr  =  ExprAdd       Expr    Expr
            |  ExprUnit
            |  ExprPair      Expr    Expr
 \end{code}
-\caption{\label{figAbstractSyntax} Abstract syntax of Hydra.}
+\caption{\label{figAbstractSyntax} Abstract syntax of the quasi-quoted fragment of Hydra.}
 \end{figure}
 
 
@@ -195,20 +195,22 @@ variable and built-in signal function identifiers. The data type |HsExpr| is
 used to represent antiquoted Haskell expressions.
 
 The data type |SigRel| is used to represent signal relations. The data type
-has a single constructor. Given a pattern and a list of equations the
-constructor constructs the corresponding signal relation.
+has a single constructor. Given a pattern and a list of equations it
+constructs the corresponding signal relation.
 
 The data type |SigFun| is used to represent signal functions. The data type
-has a single constructor. Given a pattern and a signal expression the
-constructor constructs the corresponding signal function.
+has a single constructor. Given a pattern and a signal expression it
+constructs the corresponding signal function.
 
 The data type |Pattern| is used to represent patterns that bind signal
 variables. There are four ways to construct a pattern. The constructor
 |PatWild| constructs the wild card pattern. Given an identifier the
-constructor |PatName| constructs a pattern that binds the corresponding single
+constructor |PatVar| constructs a pattern that binds the corresponding single
 signal variable. The constructor |PatUnit| constructs the pattern that only
 matches unit signals. The constructor |PatPair| constructs a pattern that
-matches a pair of patterns.
+matches the components of a signal carrying pairs or, due to the the
+isomorphism between a signal of products and a product of signals, a pair of
+signals.
 
 The data type |Equation| is used to represent noncausal equations and local
 signal variable declarations. The constructor |EquEqual| constructs an
@@ -216,8 +218,8 @@ equation that asserts equality of two signal expressions. The constructor
 |EquInit| constructs an initialisation equation that asserts equality of two
 signal expressions. The constructor |EquLocal| constructs a local variable
 declaration. The constructor |EquSigRelApp| constructs a signal relation
-application that applies the signal relation referred in the antiquoted
-Haskell expression to the given signal expression.
+application that applies the signal relation that is computed by the
+antiquoted Haskell expression to the given signal expression.
 
 The data type |Expr| is used to represent signal expressions. Common
 mathematical operations, identifiers, antiquoted Haskell expressions, integer
@@ -357,7 +359,7 @@ translateSF (SigFun  pattern  expression)  =  SF  (\ translatePat (pattern)  -> 
 
 \begin{code}
 translatePat (PatWild)                =  _
-translatePat (PatName (Ident s))      =  translateHs (s)
+translatePat (PatVar (Ident s))       =  translateHs (s)
 translatePat (PatUnit)                =  Unit
 translatePat (PatPair pat1 pat2)      =  Pair (translatePat pat1) (translatePat pat2)
 \end{code}
@@ -430,20 +432,25 @@ different implementers to implement the same language. In addition, a formally
 defined semantics paves the way for proving useful statements about the
 language.
 
-One characteristic of noncausal modelling languages setting them apart from
-traditional programming languages is that concrete implementations of
-noncausal languages only aim to approximate the model defined at the source
-level. For example, consider the system of equations modelling the simple
-electrical circuit given in Chapter \ref{chapBackground}. In the process of
-deriving the simulation code we introduced a number of approximations. The
-continuous real numbers were approximated using the double-precision machine
-floating-point numbers and the system of equations was approximated using the
-Haskell code implementing the forward Euler method.
+For conventional programming languages, the aim of the dynamic semantics is
+typically to characterise the meaning of programs expressed in the language
+exactly; for example, as a final result, a trace, or a set of possible results
+or traces. The situation for languages for physical modelling is quite
+different: the model has a precise mathematical meaning, but when trying to
+find out what this meaning is through numerical simulation, we can only ever
+hope to find an approximation to this meaning up to some desired precision.
 
-Implementations of noncausal modelling languages allow modellers to choose
-floating-point representations (e.g., single or double precision), symbolic
-processing methods and numerical simulation methods that needs to be used
-during the simulation. This amounts to allowing modellers to choose a
+For example, consider the system of equations modelling the simple electrical
+circuit given in Chapter \ref{chapBackground}. In the process of deriving the
+simulation code we introduced a number of approximations. The continuous real
+numbers were approximated using the double-precision machine floating-point
+numbers and the system of equations was approximated using the Haskell code
+implementing the forward Euler method.
+
+Implementations of noncausal modelling languages typically allow modellers to
+choose floating-point representations (e.g., single or double precision),
+symbolic processing methods and numerical simulation methods that needs to be
+used during the simulation. This amounts to allowing modellers to choose a
 combination of approximations prior to simulation.
 
 The fact that the implementations are only expected to approximate noncausal
@@ -516,7 +523,7 @@ semSF (SF sf)   =   sf
 \begin{code}
 semEqs  (_  ,  _   ,  _   ,  []                     )  =   {-" \top "-}
 semEqs  (i  ,  t1  ,  t2  ,  (Local f)      :  eqs  )  =   ({-" \exists \, s_{i} \in \mathbb{R} \rightarrow \mathbb{R} . \, "-} (semEqs (i + 1,t1,t2,f (Signal s_i) ++ eqs)))
-semEqs  (i  ,  t1  ,  t2  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t1 t2 s) &&  semEqs  (i,t1,t2,eqs)
+semEqs  (i  ,  t1  ,  t2  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t1 t2 (semSig s)) &&  semEqs  (i,t1,t2,eqs)
 semEqs  (i  ,  t1  ,  t2  ,  (Equal s1 s2)  :  eqs  )  =
   ({-" \forall \, t \in \mathbb{R} . \, "-}  (t >= t1 && t <= t2)  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t1,t2,eqs)
 semEqs  (i  ,  t1  ,  t2  ,  (Init  s1 s2)  :  eqs  )  =
