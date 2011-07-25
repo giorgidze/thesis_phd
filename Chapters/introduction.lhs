@@ -168,16 +168,21 @@ and simulation languages, in particular:
 
 \item The thesis shows how to enable higher-order modelling capabilities by
 embedding noncausal models as first-class entities into a purely functional
-programming language. To my knowledge, Hydra is the first language that
-faithfully treats noncausal models as first-class values (i.e., supports all
-four points outlined in the beginning of Section \ref{secFirstClassModels}).
+programming language. To my knowledge, Hydra is the first noncausal language
+that faithfully treats equational models as first-class values (i.e., supports
+all four points outlined in the beginning of Section
+\ref{secFirstClassModels}).
 
 \item The thesis shows how to use runtime symbolic processing and
 \emph{just-in-time} (JIT) compilation to enable efficient simulation of
 noncausal models that are generated at simulation runtime. To my knowledge,
-Hydra is the first language that enables support \emph{both} for modelling and
-simulation of unbounded structurally dynamic systems and for compilation of
-simulation code for efficiency.
+Hydra is the first noncausal language that enables support \emph{both} for
+modelling and simulation of unbounded structurally dynamic systems and for
+compilation of simulation code for efficiency.
+
+\item The thesis formally defines the Hydra language. To my knowledge, Hydra
+is the first noncausal language that features a formal specification capturing
+both continuous and discrete aspects of unbounded structural dynamism.
 
 \end{itemize}
 

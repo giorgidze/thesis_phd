@@ -528,8 +528,10 @@ when an unbounded structurally dynamic causal model can be simulated.
 
 To our knowledge, Hydra is the first language that features a formal
 specification capturing both continuous and discrete aspects of a noncausal
-language that supports unbounded structural dynamism. However, detailed
-studies of of the ideal semantics and its properties still lay ahead.
+language that supports unbounded structural dynamism. Although detailed
+studies of of the ideal semantics and its properties still lay ahead, we think
+that the semantics given in this section provides for a good starting point
+for such undertaking.
 
 \begin{figure}
 \begin{code}
@@ -545,7 +547,7 @@ semSR (Switch sr sf f)  =   \ t1 t2 s ->
                                                     &&
                                                     ({-" \forall \, t \in \mathbb{R} . \, "-} t1 < t < t_e  => not ((semZC sf) s t))
                                                     &&
-                                                    ((semF2 f) t_e t2 s)
+                                                    ((semF2 f) t_e t2 s))
 \end{code}
 
 \begin{code}
