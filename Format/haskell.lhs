@@ -33,7 +33,11 @@
 %format (semEqs  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"
 %format (semSig  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{sig}}"
 
-%format (semZC      a) = "{\llbracket}" a "{\rrbracket}_{\Varid{zc}}"
+%format (semF1  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{f1}}"
+%format (semF2  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{f2}}"
+%format (semF3  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{f3}}"
+%format (semZC  (a)) = "{\llbracket}" a "{\rrbracket}_{\Varid{zc}}"
+
 %format (handleEvs  a) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"
 %format (buildEvs   a) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"
 %format (flattenEqs a) = "{\llbracket}" a "{\rrbracket}_{\Varid{eqs}}"

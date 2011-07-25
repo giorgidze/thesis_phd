@@ -502,19 +502,19 @@ of signals that satisfy the given constraints (see Figure
 
 \begin{figure}
 \begin{code}
-semSR (SR f)            =   \t1 t2 s -> semEqs ((0,t1,t2,f (Signal s)))
-semSR (Switch sr sf f)  =   \t1 t2 s ->
-    ((semSR sr) t1 t2 s) && ({-" \forall \, t \in \mathbb{R} . \, "-} t1 < t <= t2  => not (semZC (sf,s,t)))
+semSR (SR f)            =   \ t1 t2 s -> (semF1 f) t1 t2 s
+semSR (Switch sr sf f)  =   \ t1 t2 s ->
+    ((semSR sr) t1 t2 s) && ({-" \forall \, t \in \mathbb{R} . \, "-} t1 < t <= t2  => not ((semZC sf) s t))
     ||
     ({-" \exists \, t_{e} \in \mathbb{R} . \, "-}   (t1 < t_e <= t2)
                                                     &&
-                                                    ((semSR sr) t1 t_e s) && (semZC (sf,s,t_e)) && ({-" \forall \, t \in \mathbb{R} . \, "-} t1 < t < t_e  => not (semZC (sf,s,t)))
+                                                    ((semSR sr) t1 t_e s)
                                                     &&
-                                                    ((semSR (f (s t_e))) t_e t2 s))
-\end{code}
-
-\begin{code}
-semZC (sf,s,t) = semSig ((semSF (sf)) (Signal s)) t == 0 && {-" \frac{d_{ - }}{dt} "-} (semSig ((semSF (sf)) (Signal s))) t /= 0
+                                                    ((semZC sf) s t_e)
+                                                    &&
+                                                    ({-" \forall \, t \in \mathbb{R} . \, "-} t1 < t < t_e  => not ((semZC sf) s t))
+                                                    &&
+                                                    ((semF2 f) t_e t2 s)
 \end{code}
 
 \begin{code}
@@ -523,12 +523,22 @@ semSF (SF sf)   =   sf
 
 \begin{code}
 semEqs  (_  ,  _   ,  _   ,  []                     )  =   {-" \top "-}
-semEqs  (i  ,  t1  ,  t2  ,  (Local f)      :  eqs  )  =   ({-" \exists \, s_{i} \in \mathbb{R} \rightarrow \mathbb{R} . \, "-} (semEqs (i + 1,t1,t2,f (Signal s_i) ++ eqs)))
+semEqs  (i  ,  t1  ,  t2  ,  (Local f)      :  eqs  )  =   ({-" \exists \, s_{i} \in \mathbb{R} \rightarrow \mathbb{R} . \, "-} (semF3 f) i t1 t2 s_i eqs)
 semEqs  (i  ,  t1  ,  t2  ,  (App   sr s)   :  eqs  )  =   ((semSR sr) t1 t2 (semSig s)) &&  semEqs  (i,t1,t2,eqs)
 semEqs  (i  ,  t1  ,  t2  ,  (Equal s1 s2)  :  eqs  )  =
   ({-" \forall \, t \in \mathbb{R} . \, "-}  (t >= t1 && t <= t2)  =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t1,t2,eqs)
 semEqs  (i  ,  t1  ,  t2  ,  (Init  s1 s2)  :  eqs  )  =
   ({-" \forall \, t \in \mathbb{R} . \, "-}  (t == t1)             =>  (semSig s1) t  ==  (semSig s2) t)  &&  semEqs  (i,t1,t2,eqs)
+\end{code}
+
+\begin{code}
+semZC (sf) = \ s t -> semSig ((semSF (sf)) (Signal s)) t == 0 && {-" \frac{d_{ - }}{dt} "-} (semSig ((semSF (sf)) (Signal s))) t /= 0
+\end{code}
+
+\begin{code}
+semF1 (f)  =  \     t1  t2  s      ->  semEqs ((0,t1,t2,f (Signal s)))
+semF2 (f)  =  \     t1  t2  s      ->  semSR (f (s t1))
+semF3 (f)  =  \  i  t1  t2  s eqs  ->  semEqs (i + 1,t1,t2,f (Signal s) ++ eqs)
 \end{code}
 
 \caption{\label{figSigRelSigFunSem} Semantics of signal relations, signal
