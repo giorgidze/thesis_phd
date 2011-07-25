@@ -16,8 +16,8 @@ abstract syntax to the typed abstract syntax. The typed representation fully
 embodies Hydra's type system and can be seen as a definition of Hydra's type
 system in terms of the Haskell type system. In other words, Hydra's type
 system is embedded into Haskell's type system. Finally, we give ideal
-semantics of Hydra by giving meaning to the typed abstract syntax in terms of
-second-order logic.
+denotational semantics of Hydra by giving meaning to the typed abstract syntax
+in terms of second-order logic.
 
 \section{Concrete Syntax}
 
@@ -258,10 +258,13 @@ desugarPairEquation (eq)                                    =   [eq]
 \section{Typed Abstract Syntax}
 
 The typed abstract syntax that embodies the type system of Hydra is given in
-Figure \ref{figTypedRepresentation} as a GADT definition. Note that the types
-|Signal alpha| and |PrimSF alpha beta| are genuine GADTs, while the data types
-|SR alpha|, |SF alpha beta| and |Equation| are ADTs that use the GADT notation
-for consistency.
+Figure \ref{figTypedRepresentation} as a GADT definition. The types |Signal
+alpha| and |PrimSF alpha beta| are genuine GADTs, while the data types |SR
+alpha|, |SF alpha beta| and |Equation| are ADTs that use the GADT notation for
+consistency. Note that the typed abstract syntax uses a technique called
+\emph{higher-order abstract syntax (HOAS)} \citep{Pfenning1988a}.
+Specifically, through the use of function-valued fields we use Haskell's
+variable binding mechanism to represent signal variable bindings in Hydra.
 
 \begin{figure}
 \begin{code}
@@ -375,8 +378,9 @@ translateEqs ((EquLocal (Ident s)) : eqs)           =  [Local  (\ (translateHs s
 \caption{\label{figSigRelSigFunTrans} Translation of untyped signal functions
 and signal relations into typed signal functions and signal relations. The
 translation rule |translateHs| takes a string in the concrete syntax of
-Haskell and generates the corresponding Haskell code. The translation rules
-|translateExp| and |translateIdent| are given in Figure \ref{figSigTrans}.}
+Haskell and generates the corresponding Haskell expression. The translation
+rules |translateExp| and |translateIdent| are given in Figure
+\ref{figSigTrans}.}
 
 \end{figure}
 
@@ -466,10 +470,12 @@ of an operational semantics.
 For the reasons outlined above, and because the concept of first-class models,
 which allows for higher-order and structurally dynamic modelling, is not
 predicated on particular approximations used during simulation, we opted to
-use \emph{ideal} semantics obtained by translating noncausal models into
-second-order logic predicates for formally defining the Hydra language. By
-referring to the semantics as ideal, we emphasise that concrete
-implementations are only expected to approximate the semantics.
+use \emph{ideal} denotational semantics obtained by translating noncausal
+models into second-order logic predicates for formally defining the Hydra
+language. By referring to the semantics as ideal, we emphasise that concrete
+implementations are only expected to approximate the semantics. Introduced by
+\citet{Scott1982a}, denotational semantics is a widely used approach for
+specifying the meaning of computer programs.
 
 The primary goal of the semantics that is given in this section is to
 precisely and concisely communicate Hydra's definition to modelling language
@@ -484,14 +490,14 @@ again under certain approximation; for example, by using the absolute error
 tolerance of the numerical simulation. These two applications of the ideal
 semantics are subjects of future work.
 
-The ideal semantics of Hydra are given in Figure \ref{figSigRelSigFunSem} and
-in Figure \ref{figSigSem}. Note that the translation targets are the same as
-the conceptual definitions of signals, signal functions, and signal relations
-given in Chapter \ref{chapHydra}. Specifically, signal relations are mapped to
-functions from starting time and signal to second-order logic proposition,
-signal functions are mapped to functions from signal to signal, and signals
-are mapped to function from time to value. Time is represented as a real
-number.
+The ideal denotational semantics of Hydra are given in Figure
+\ref{figSigRelSigFunSem} and in Figure \ref{figSigSem}. Note that the
+translation targets are the same as the conceptual definitions of signals,
+signal functions, and signal relations given in Chapter \ref{chapHydra}.
+Specifically, signal relations are mapped to functions from starting time and
+signal to second-order logic proposition, signal functions are mapped to
+functions from signal to signal, and signals are mapped to function from time
+to value. Time is represented as a real number.
 
 A signal relation translation may involve existentially quantified function
 symbols (i.e., signals). This is what makes the target predicates second-order
