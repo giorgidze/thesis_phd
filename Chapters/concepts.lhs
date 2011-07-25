@@ -12,6 +12,7 @@ Hydra's design facilitates the embedding of the aforementioned concepts into a
 functional programming language.
 
 \section{Signal}
+\label{secSignal}
 
 Conceptually, a \emph{signal} is a time-varying value, that is, a function
 from time to value:
@@ -34,6 +35,11 @@ grouping of related signals. As an example of a signal that carries nested
 pairs of reals, consider a signal of type |Signal ((Real,Real),(Real,Real))|.
 This signal can represent current and voltage pairs at the positive and
 negative pins of a two-pin electrical component, for example.
+
+In a concrete implementation, |Real| would typically be represented by a
+suitable floating point type, such as |Double|. Indeed, |Double| is used in
+Hydra. However, |Real| is used in most places of the presentation as we
+conceptually are dealing with real numbers.
 
 \section{Signal Function}
 

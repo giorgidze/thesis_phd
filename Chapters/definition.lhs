@@ -425,6 +425,7 @@ typed signal expressions.}
 \end{figure}
 
 \section{Ideal Denotational Semantics}
+\label{secSemantics}
 
 A formal language definition has a number of advantages over an informal
 presentation. A formal semantics does not leave room for ambiguity and allows

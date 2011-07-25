@@ -26,13 +26,14 @@ the typed abstract syntax of Hydra fully embodies the type system of Hydra, we
 effectively delegate the task of type checking to the host language type
 checker. This approach reduces the language specification and implementation
 effort by reusing the host language type system and the host language type
-checker. However, the disadvantage of this approach is the fact that typing
-errors are not domain specific.
+checker. However, the disadvantage of this approach is the fact that
+type-related error messages are not phrased in domain-specific terms, but
+rather in terms of the Haskell encoding of the domain-specific types.
 
 The implementation of Hydra provides two quasiquoters: the |rel| quasiquoter
 for generating typed signal relations, and the |fun| quasiquoter for
 generating typed signal functions. The implementation of the quasiquoters is
-broken down into three stages: parsing, desugaring and translation into the
+broken down into three stages: parsing, desugaring, and translation into the
 typed abstract syntax.
 
 Firstly, the string in the concrete syntax of Hydra is parsed and the
@@ -222,12 +223,12 @@ the |vanDerPol| signal relation.}
 
 Let us briefly overview the typed abstract syntax used in the implementation
 of Hydra. This is to highlight a minor difference from the typed abstract
-syntax presented in the language definition and to draw your attention to the
-mixed-level embedding techniques used in the implementation.
+syntax presented in the language definition and to draw the reader's attention
+to the mixed-level embedding techniques used in the implementation.
 
 The typed abstract syntax allows for two ways to form a signal relation:
-either from equations that constrain a given signal, or by composing two
-signal relations temporally:
+either from equations that constrain a given signal, or by temporal
+composition of two signal relations:
 
 \begin{code}
 data SR a where
@@ -252,9 +253,9 @@ switch :: SR a -> SF a Real -> (a -> SR a) -> SR a
 switch = Switch
 \end{code}
 
-Note that, in the implementation of Hydra, the type |Real| is a type synonym
-of |Double|, which is a standard double-precision floating-point type of
-Haskell.
+Recall that (see Section \ref{secSignal}), in the implementation of Hydra, the
+type |Real| is a type synonym of |Double|, which is a standard
+double-precision floating-point type of Haskell.
 
 There are four kinds of equations:
 \begin{code}
@@ -266,12 +267,13 @@ data Equation where
 \end{code}
 
 The |Local| constructor forms equations that merely introduce local signals.
-As it is evident from the language definition, such signals can be constrained
-only by the equations that are returned by the function that is the first
-argument of the |Local| constructor. In contrast, equation generating
-functions in the |SR| constructor are allowed to be passed a signal that is
-constrained elsewhere. This distinction is enforced by the language
-implementation, as we will see later in this chapter.
+As it is evident from the language definition (see Section
+\ref{secSemantics}), such signals can be constrained only by the equations
+that are returned by the function that is the first argument of the |Local|
+constructor. In contrast, equation generating functions in the |SR|
+constructor are allowed to be passed a signal that is constrained elsewhere.
+This distinction is enforced by the language implementation, as we will see
+later in this chapter.
 
 Initialisation equations, formed by the |Init| constructor, state initial
 conditions. They are only in force when a signal relation instance first
@@ -307,7 +309,7 @@ solver.
 
 The |Var| constructor is not used at the stage of quasiquoting. Instead, the
 constructor is used later at the stage of runtime symbolic processing to
-instantiate each local signal variable to an unique signal variable by using
+instantiate each local signal variable to a distinct signal variable by using
 the constructor's |Integer| field.
 
 The implementation of Hydra supports the same set of primitive functions as
@@ -315,20 +317,20 @@ defined in the language definition. Hence, in the implementation we use the
 same |PrimSF| data type as given in the language definition.
 
 The implementation of Hydra uses a mixture of shallow and deep techniques of
-embedding. The embedded functions in the |SR|, |Switch|, |Local| and |App|
+embedding. The function-valued fields in the |SR|, |Switch|, |Local| and |App|
 constructors correspond to the shallow part of the embedding. The rest of the
 data constructors, namely, |Equal|, |Init|, and all constructors of the
 |Signal| data type correspond to the deep part of the embedding, providing an
 explicit representation of language terms for further symbolic processing and
-ultimately compilation. As we will see in more detail below, each mode of
-operation can be described as a flat list of equations where each equation is
-constructed, either, by the |Init| constructor or by the |Equal| constructor.
-It is this representation that allows for generation of efficient simulation
-code. This combination of the two embedding techniques allowed us to leverage
-shallow embedding for high-level aspects of the embedded language, such as
-equation generation and temporal composition, and deep embedding for low-level
-aspects of the embedded language, such as simulation code generation for
-efficiency.
+ultimately compilation. As we will see in more detail below, the continuous
+behaviour of each mode of operation can be described as a flat list of
+equations where each equation is constructed, either, by the |Init|
+constructor or by the |Equal| constructor. It is this representation that
+allows for generation of efficient simulation code. This combination of the
+two embedding techniques allowed us to leverage shallow embedding for
+high-level aspects of the embedded language, such as equation generation and
+temporal composition, and deep embedding for low-level aspects of the embedded
+language, such as generation of simulation code for efficiency.
 
 \section{Simulation}
 \label{sec:simulation}
@@ -420,24 +422,29 @@ a symbol table. The symbol table data type that is used in the implementation
 of Hydra is given in Figure \ref{figSymTab}. The symbol table record has five
 fields.
 
-The |model| field is for a top-level signal relation that is active. At the
-start of the simulation, the |simulate| function places application of its
-first argument of type |SR ()| to the |Unit| signal. In other words, the
-|model| field contains currently active system of hierarchical equations that
-contains signal relation applications and temporal compositions.
+The |model| field stores the currently active top-level signal relation. At
+the start of the simulation, the |simulate| function binds this field to the
+result of applying its signal relation argument of type |SR ()| to the |Unit|
+signal. In other words, the |model| field contains currently active system of
+hierarchical equations that contains signal relation applications and temporal
+compositions.
 
 The |equations| field is for a flat list of equations that describe an active
 mode of operation. By flat we mean that the list of equations only contain
 |Init| and |Equal| equations. At the start of the simulation, the |simulate|
 function places an empty list in this field.
 
-The |events| field is for a list of zero-crossing signals defining the event
-occurrences. Recall the type signature of the |switch| combinator given in
-Section \ref{secEmbedding}. A signal function that detects events returns a
-real valued signal. The simulator places the signal expressions that describe
-an event occurrence at each structural change. Initially, at the start of the
-simulation, the simulator places an empty list in the |events| field of the
-symbol table.
+The |events| field is for a list of zero-crossing signal expressions defining
+the event occurrences. Recall the type signature of the |switch| combinator
+given in Section \ref{secEmbedding}. A signal function that detects events
+returns a real valued signal. The simulator places the signal expressions that
+describe an event occurrence at each structural change. Initially, at the
+start of the simulation, the simulator places an empty list in the |events|
+field of the symbol table. The |events| field is used to communicate all the
+switching guards to the JIT compiler and the numerical solver, and then, once
+some events actually have occurred, to communicate back this information to
+the symbolic processor by deleting the signal expressions of those
+zero-crossings that did not occur.
 
 The |time| field is for current time. Initially the simulator places the
 starting time given in the experiment description in this field. The |time|
@@ -498,7 +505,7 @@ Figure \ref{figFlattenEquations}.
 
 \begin{code}
 handleEvents     ::  SymTab -> SymTab
-handleEvents st  =   st {model = handleEvs (symtab, events st, model st)}
+handleEvents st  =   st {model = handleEvs (st, events st, model st)}
 \end{code}
 
 \begin{code}
@@ -576,13 +583,6 @@ evalPrimSF  Add    = uncurry (+)
 evalPrimSF  Mul    = uncurry (*)
 evalPrimSF  Div    = uncurry (/)
 evalPrimSF  Pow    = uncurry (**)
-evalPrimSF  Lt     = \ d -> (d <  0)
-evalPrimSF  Lte    = \ d -> (d <= 0)
-evalPrimSF  Gt     = \ d -> (d >  0)
-evalPrimSF  Gte    = \ d -> (d >= 0)
-evalPrimSF  Or     = uncurry (||)
-evalPrimSF  And    = uncurry (&&)
-evalPrimSF  Not    = not
 \end{code}
 
 \caption{\label{figEval} Functions that evaluate instantaneous signal values.}
@@ -602,8 +602,8 @@ flattenEqs (_,[])                                 =   []
 flattenEqs (i, (App (SR sr) s) : eqs)             =   flattenEqs (i,sr s ++ eqs)
 flattenEqs (i, (App (Switch sr _ _) s) : eqs)     =   flattenEqs (i,(App sr s) : eqs)
 flattenEqs (i, (Local f) : eqs)                   =   flattenEqs (i + 1,f (Var i) ++ eqs)
-flattenEqs (i, (Equal _ _) : eqs)                 =   eq : flattenEqs (i,eqs)
-flattenEqs (i, (Init _ _) : eqs)                  =   eq : flattenEqs (i,eqs)
+flattenEqs (i, (Equal s1 s2)  : eqs)              =   (Equal s1 s2)  : flattenEqs (i,eqs)
+flattenEqs (i, (Init s1 s2)   : eqs)              =   (Init s1 s2)   : flattenEqs (i,eqs)
 \end{code}
 
 \caption{\label{figFlattenEquations} Functions that flatten hierarchical
@@ -611,12 +611,12 @@ systems of equations.}
 
 \end{figure}
 
-Each of the three steps of the default symbolic processor has a compact and
-self-explanatory definition, especially, the |flattenEquations| function. To
-my knowledge, this is the shortest formal and executable definition of the
-flattening process for a noncausal modelling language. This is partly due to
-the simple abstract syntax and utilisation of shallow embedding techniques,
-specifically, embedded functions in the |SR| and |Switch| constructors.
+Each of the three steps of the default symbolic processor has a compact
+definition, especially, the |flattenEquations| function. To my knowledge, this
+is the shortest formal and executable definition of the flattening process for
+a noncausal modelling language. This is partly due to the simple abstract
+syntax and utilisation of shallow embedding techniques, specifically, embedded
+functions in the |SR| and |Switch| constructors.
 
 The default symbolic processor that is described in this section can be
 extended by modellers. This extensibility is especially useful for providing
@@ -670,17 +670,18 @@ $\vec{y}$ such that the residual vectors are zero. In addition, a DAE solver
 is required to detect points in time when the vector $\vec{r_e}$ changes and
 report it as an event occurrence.
 
-The generated equations are implicitly formulated ones. In general, it is not
-possible to transform these implicit equations into explicit ones; that is, to
-completely causalise them \citep{Brenan1996a}. Consequently, a system of
-implicit equations needs to be solved at the start of the simulation of each
-mode of operation and at every integration step. For example, a numerical
-solution of the implicitly formulated DAE given in Equation \ref{main-eq}
-involves evaluation of the function $f$ a number of times (sometimes hundreds
-or more at each integration step), with varying arguments, until it converges
-to zero. The number of executions of $f$ depends on various factors including
-the required precision, the initial guess, the degree of nonlinearity of the
-DAE and so on.
+Because it is not always possible to turn implicit equations into causal
+explicit ones, that is, to completely causalise them \citep{Brenan1996a}, we
+make no assumption that any such causalisation happened, leaving causalisation
+when possible as future work. The generated equations are thus implicitly
+formulated ones. Consequently, a system of implicit equations needs to be
+solved at the start of the simulation of each mode of operation and at every
+integration step. For example, a numerical solution of the implicitly
+formulated DAE given in Equation \ref{main-eq} involves evaluation of the
+function $f$ a number of times (sometimes hundreds or more at each integration
+step), with varying arguments, until it converges to zero. The number of
+executions of $f$ depends on various factors including the required precision,
+the initial guess, the degree of nonlinearity of the DAE and so on.
 
 As the functions $i$, $f$ and $e$ are evaluated from within inner loops of the
 solver, they have to be compiled into machine code for efficiency. Any
@@ -696,7 +697,7 @@ instructions that in turn are compiled by the LLVM JIT compiler into native
 machine code. Function pointers to the generated machine code are then passed
 to the numerical solver.
 
-The function pointers have the following Haskell type:
+The function pointers for $i$, $f$ and $e$ have the following Haskell type:
 
 \begin{code}
 data Void
@@ -708,14 +709,15 @@ type Residual = FunPtr  (       Real
                             ->  IO Void)
 \end{code}
 
-The first function argument is time. The second argument is a vector of real
-valued signal. The third argument is a vector of differentials of real-valued
-signals. The forth argument is a vector of residuals, or in the case of the
-event specification vector of zero-crossing signal values. The residual
-functions read the first three arguments and write the residual values in the
-fourth argument. As these functions are passed to numerical solvers it is
-critical to allow for fast positional access of vector elements and in-place
-vector updates. Hence the use of C-style arrays.
+The first function argument is time. The second argument is a vector of
+instantaneous values of real valued signal. The third argument is a vector of
+instantaneous values of differentials of real-valued signals. The forth
+argument is a vector of residual results, or in the case of the event
+specification vector of zero-crossing signal values. The residual functions
+read the first three arguments and write the residual values in the fourth
+argument. As these functions are passed to numerical solvers it is critical to
+allow for fast positional access of vector elements and in-place vector
+updates. Hence the use of C-style arrays.
 
 Figure \ref{figLLVMCodeUnopt} gives the unoptimised LLVM code that is
 generated for the parametrised van der Pol oscillator. The corresponding
@@ -824,8 +826,8 @@ function $e$ occurs. Event detection facilities are provided by IDA.
 Modellers are allowed to replace the default numerical solver. In fact, any
 solver that implements the interface that is given in Figure
 \ref{figNumericalSolver} can be used. The default numerical solver implements
-this interface by using foreign function interface to the SUNDIALS library
-that is written in C.
+this interface by providing Haskell bindings to the SUNDIALS library (which is
+written in C) using Haskell's foreign function interface.
 
 \begin{figure}
 \begin{code}
@@ -861,7 +863,7 @@ data NumericalSolver = NumericalSolver {
 
 After each integration step that calculates a numerical approximation of a
 vector of active signal variables the simulator calls the
-|defaultTrajectoryVisualiser| function that writes the simulation results into
+|defaultTrajectoryVisualiser| function that writes the simulation results to
 standard output. Hydra users can provide their own signal trajectory
 visualiser of the following type:
 
