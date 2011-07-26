@@ -137,7 +137,7 @@ into the formalism. The modelling and simulation language Chi
 describe a bounded structurally dynamic system and does not allow new
 equations to be computed at switches (i.e., does not feature equational
 constrains as first-class entities) we did not use the hybrid automata as a
-target formalism when defining the ideal denotational semantics of Hydra.
+target formalism when defining the ideal semantics of Hydra.
 
 A formal semantics for the MKL language was defined by \citet{Broman2007a}. A
 (higher-order) model is given semantics by translation into a flat system of
