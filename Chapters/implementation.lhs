@@ -699,15 +699,16 @@ to the numerical solver.
 
 The function pointers for $i$, $f$ and $e$ have the following Haskell type:
 
+\begin{samepage}
 \begin{code}
 data Void
-
 type Residual = FunPtr  (       Real
                             ->  Ptr Real
                             ->  Ptr Real
                             ->  Ptr Real
                             ->  IO Void)
 \end{code}
+\end{samepage}
 
 The first function argument is time. The second argument is a vector of
 instantaneous values of real valued signal. The third argument is a vector of
@@ -928,6 +929,7 @@ the number of equations by 1000) by switching the additional components into
 the circuit.
 
 \begin{table}
+\small
 \centering
 
 \begin{tabular}{|| l || r || r || r || r || r || r ||}  \hline
@@ -964,7 +966,9 @@ RLC circuit simulation (part~I).}
 \end{table}
 
 \begin{table}
+\small
 \centering
+
 \begin{tabular}{|| l || r || r || r || r || r || r ||}
 
 
@@ -1018,7 +1022,11 @@ terms) and grows slowly as model complexity increases.
 
 \begin{figure}
 \begin{center}
+
+\small
+
 %include ../Graphics/benchmark.tex
+
 \end{center}
 
 \caption{\label{fig:benchmark} Plot demonstrating how CPU time spent on mode

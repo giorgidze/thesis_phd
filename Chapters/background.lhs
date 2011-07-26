@@ -579,11 +579,11 @@ to dynamic addition and removal of time-varying variables and continuous
 equations, and lack of runtime symbolic processing and code generation
 facilities in Modelica implementations.
 
-Let us model a physical system whose structural configuration changes abruptly
-during simulation: a simple pendulum that can break at a specified point in
-time; see Figure \ref{figPendulum}. The pendulum is modelled as a body
-represented by a point mass $m$ at the end of a rigid, mass-less rod, subject
-to gravity $m \vec{g}$. If the rod breaks, the body will fall freely.
+Let us model a system whose structural configuration changes abruptly during
+simulation: a simple pendulum that can break at a specified point in time; see
+Figure \ref{figPendulum}. The pendulum is modelled as a body represented by a
+point mass $m$ at the end of a rigid, mass-less rod, subject to gravity $m
+\vec{g}$. If the rod breaks, the body will fall freely.
 
 \begin{figure}
 \begin{center}

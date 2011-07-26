@@ -133,7 +133,7 @@ allowed; that is, a time-varying entity is confined to the signal level. The
 signal-level notions that exist at the functional level are signal relation
 and signal function. These notions are time-invariant.
 
-The Hydra language is implemented as a Haskell-embedded DSL using quasiquoting
+Hydra is implemented as a Haskell-embedded DSL using quasiquoting
 \citep{Mainland2007,Mainland2008}. As a result, Haskell provides the
 functional level for free through shallow embedding. In contrast, the signal
 level is realised through deep embedding; that is, signal relations expressed
@@ -141,9 +141,9 @@ in terms of Hydra-specific syntax are, through the quasiquoting machinery,
 turned into an internal representation, an abstract syntax tree (AST), that
 then is used for compilation into simulation code (see Chapter
 \ref{chapImplementation} for the details). Note that, although Hydra is
-embedded in Haskell, the two-level language design outlined earlier
-in this section and the notion of first-class signal relation are not
-predicated on the embedding approach.
+embedded in Haskell, the two-level language design outlined earlier in this
+section and the notion of first-class signal relation are not predicated on
+the embedding approach.
 
 The Haskell-embedded implementation of Hydra adopts the following syntax for
 defining signal relations:

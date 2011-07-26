@@ -245,8 +245,10 @@ desugarPairSigRel (SigRel pat eqs)  =   SigRel pat (concat [ desugarPairEquation
 
 \begin{code}
 desugarPairEquation                                         ::  Equation -> [Equation]
-desugarPairEquation (EquEqual  (Pair e1 e2) (Pair e3 e4))   =   desugarPairEquation (EquEqual  e1 e3)  ++ desugarPairEquation (EquEqual  e2 e4)
-desugarPairEquation (EquInit   (Pair e1 e2) (Pair e3 e4))   =   desugarPairEquation (EquInit   e1 e3)  ++ desugarPairEquation (EquInit   e2 e4)
+desugarPairEquation (EquEqual  (Pair e1 e2) (Pair e3 e4))   =
+    desugarPairEquation (EquEqual  e1 e3)  ++  desugarPairEquation (EquEqual  e2 e4)
+desugarPairEquation (EquInit   (Pair e1 e2) (Pair e3 e4))   =
+    desugarPairEquation (EquInit   e1 e3)  ++  desugarPairEquation (EquInit   e2 e4)
 desugarPairEquation (eq)                                    =   [eq]
 \end{code}
 
