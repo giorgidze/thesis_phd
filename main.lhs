@@ -11,8 +11,8 @@
 \usepackage{setspace}
 \usepackage{natbib}
 
-\usepackage[firstpage]{draftwatermark}
-\SetWatermarkScale{5.0}
+% \usepackage[firstpage]{draftwatermark}
+% \SetWatermarkScale{5.0}
 
 \usepackage{hyperref}
 \hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=black, urlcolor=black}
@@ -25,13 +25,15 @@
 \begin{document}
 
 \title{
-  \Huge{\textbf{First-class Models}} \\
+  \huge{\textbf{FIRST-CLASS MODELS}} \\
   \LARGE{On a Noncausal Language for Higher-order and Structurally Dynamic Modelling and Simulation} \\[2cm]
-  \Large{\textbf{George Giorgidze, BSc, MSc}} \\[2cm]
-  \Large{Thesis submitted to The University of Nottingham \\
-  for the degree of Doctor of Philosophy}
+  \Large{\textbf{GEORGE GIORGIDZE, BSc, MSc}} \\[2cm]
+  \Large{Thesis submitted to The University of Nottingham} \\
+  \Large{for the degree of Doctor of Philosophy} \\[2cm]
+  \Large{July 2011}
 }
 \author{}
+\date{}
 \maketitle
 
 %include Chapters/abstract.lhs
