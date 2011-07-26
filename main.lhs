@@ -6,13 +6,9 @@
 \usepackage[left=1.5in, right=1.5in, top=1.5in, bottom=1.5in]{geometry}
 
 \usepackage{graphicx}
-\usepackage{float}
 \usepackage{amsmath}
 \usepackage{setspace}
 \usepackage{natbib}
-
-% \usepackage[firstpage]{draftwatermark}
-% \SetWatermarkScale{5.0}
 
 \usepackage{hyperref}
 \hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=black, urlcolor=black}
