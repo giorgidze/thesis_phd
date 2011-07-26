@@ -19,6 +19,13 @@ system is embedded into Haskell's type system. Finally, we give ideal
 semantics of Hydra by giving meaning to the typed abstract syntax in terms of
 second-order logic.
 
+Note that the first three steps are concerned with the quasiquoted part of
+Hydra (i.e., quasiquoted definitions of signal functions and signal
+relations). The fourth step, which gives the ideal semantics, treats the full
+signal level of Hydra including the |switch| combinator. This is because
+structurally dynamic signal relations are defined using the |switch|
+combinator and not the quasiquotes.
+
 \section{Concrete Syntax}
 
 \newcommand{\emptyP}{\mbox{$\epsilon$}}
