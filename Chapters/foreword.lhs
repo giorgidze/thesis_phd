@@ -17,5 +17,5 @@ Edward Gibbon
 
 \begin{center}
 \large
-\emph{For Mari and Mia}
+\emph{Dedicated to Mari and Mia}
 \end{center}

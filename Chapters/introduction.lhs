@@ -99,9 +99,9 @@ continuous and discrete behaviour); this is relevant in the following section.
 
 \citet{Broman2007a} defined and implemented a noncausal language that supports
 parametrisation of models on other models and allows for a form of
-higher-order modelling, but construction of noncausal models at simulation
-runtime and manipulation of collections of models placed in data structures
-were not considered.
+higher-order modelling. However, construction of noncausal models at
+simulation runtime and manipulation of collections of models placed in data
+structures were not considered.
 
 \subsection{Structurally Dynamic Modelling}
 
