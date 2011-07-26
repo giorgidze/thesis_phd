@@ -154,13 +154,23 @@ a voltage source and a ground reference.}
 \section{Noncausal Connections}
 \label{secConnections}
 
-Unlike Modelica, Hydra does not provide a special language construct for
-specifying noncausal connections; that is, Hydra does not provide a construct
-like |connect| from the Modelica language. However, because signal relations
-are first-class entities, it is possible to implement higher-order combinators
-that facilitate connection of noncausal models.
+In \citet{Giorgidze2008c} we describe a syntactic sugar for specifying
+noncausal connections. In this thesis we implement the same approach using
+higher-order modelling combinators. In both cases we were able to describe
+noncausal connections without a special semantic language construct. In this
+aspect, Hydra is simpler than other noncausal modelling languages such as
+\citet{Modelica}, MKL \citep{Broman2007a}, and Chi \citep{Beek2008a}, as these
+languages feature special language constructs for specifying noncausal
+connections. It is worthwhile to mention, that although the aforementioned
+approaches to noncausal connections serve the same purpose they are very
+different from each other, both in their syntax and in their semantics.
+Detailed comparison of approaches to noncausal connections still lies ahead,
+including devising of a minimal set of higher-order combinators expressive
+enough to capture all possible noncausal interconnections.
 
-To model the simple electrical circuit as an interconnection of the already
+Because signal relations are first-class entities, it is possible to implement
+higher-order combinators that facilitate connection of noncausal models. To
+model the simple electrical circuit as an interconnection of the already
 modelled components let us define three higher-order signal relations
 facilitating noncausal connection of two-pin electrical components.
 
@@ -170,6 +180,7 @@ relation that models the serial connection of the two electrical components.
 The graphical representation of the signal relation is given in Figure
 \ref{figSerial}.
 
+\begin{samepage}
 \begin{code}
 serial :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
 serial sr1 sr2 = [rel| ((p_i, p_v),(n_i, n_v)) ->
@@ -189,6 +200,7 @@ serial sr1 sr2 = [rel| ((p_i, p_v),(n_i, n_v)) ->
     n2_v = n_v
 |]
 \end{code}
+\end{samepage}
 
 \begin{figure}
 \centering
@@ -204,6 +216,7 @@ relation that models the parallel connection of the two electrical components.
 The graphical representation of the signal relation is given in Figure
 \ref{figParallel}.
 
+\begin{samepage}
 \begin{code}
 parallel :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
 parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
@@ -221,6 +234,7 @@ parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
     n1_v = n2_v
 |]
 \end{code}
+\end{samepage}
 
 \begin{figure}
 \centering
@@ -236,6 +250,7 @@ signal relation that models the grounded circuit involving the two electrical
 components. The graphical representation of the signal relation is given
 in Figure \ref{figGroundedCircuit}.
 
+\begin{samepage}
 \begin{code}
 groundedCircuit :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR ()
 groundedCircuit sr1 sr2 = [rel| () ->
@@ -256,6 +271,7 @@ groundedCircuit sr1 sr2 = [rel| () ->
     n2_v = gp_v
 |]
 \end{code}
+\end{samepage}
 
 \begin{figure}
 \centering
@@ -269,6 +285,7 @@ components.}
 Now we can assemble the models of the electrical components into the simple
 electrical circuit as follows:
 
+\begin{samepage}
 \begin{code}
 simpleCircuit :: SR ()
 simpleCircuit =
@@ -276,6 +293,7 @@ simpleCircuit =
                    (parallel  (serial (resistor 1) (iCapacitor 0 1))
                               (iInductor 0 1))
 \end{code}
+\end{samepage}
 
 Note that the above code is a direct textual representation of how the
 components are connected in the circuit. Unlike the Modelica model that
@@ -287,6 +305,7 @@ directly.
 It is trivial in Hydra to reuse the circuit components and model the modified
 circuit that is depicted on Figure \ref{figCircuit2}:
 
+\begin{samepage}
 \begin{code}
 simpleCircuit2 :: SR ()
 simpleCircuit2 =
@@ -294,21 +313,7 @@ simpleCircuit2 =
                    (parallel  (serial  (resistor 1)  (iCapacitor  0 1))
                               (serial  (resistor 1)  (iInductor   0 1)))
 \end{code}
-
-In \citet{Giorgidze2008c} we describe a syntactic sugar for specifying
-noncausal connections. In this thesis we implement the same approach using
-higher-order modelling combinators. In both cases we were able to describe
-noncausal connections without a special semantic language construct. In this
-aspect, Hydra is simpler than other noncausal modelling languages such as
-\citet{Modelica}, MKL \citep{Broman2007a}, and Chi \citep{Beek2008a}, as these
-languages feature special language constructs for specifying noncausal
-connections. It is worthwhile to mention, that although the aforementioned
-approaches to noncausal connections serve the same purpose they are very
-different from each other, both in their syntax and in their semantics.
-
-Detailed comparison of approaches to noncausal connections still lies ahead,
-including devising of a minimal set of higher-order combinators expressive
-enough to capture all possible noncausal interconnections.
+\end{samepage}
 
 \section{Simulation}
 
