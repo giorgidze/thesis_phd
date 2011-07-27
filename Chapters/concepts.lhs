@@ -219,12 +219,12 @@ type |SR a|). The first argument (of type |SR a|) is a signal relation that is
 initially active. The second argument is a signal function (of type |SF a
 Real|). Starting from the first point in time when the signal (of type |Signal
 Real|) that is computed by applying the signal function to the signal
-constrained by the composite signal relation crosses zero (i.e., changes its
-sign from negative to positive or from positive to negative), the composite
-behaviour is defined by the signal relation that is computed by applying the
-third argument (a function of type |a -> SR a|) to the instantaneous value of
-the constrained signal at that point in time. A formally defined meaning of
-the |switch| combinator is given in Chapter \ref{chapDefinition}.
+constrained by the composite signal relation is about to cross zero (i.e.,
+when it is zero and its left derivative is nonzero), the composite behaviour
+is defined by the signal relation that is computed by applying the third
+argument (a function of type |a -> SR a|) to the instantaneous value of the
+constrained signal at that point in time. A formally defined meaning of the
+|switch| combinator is given in Chapter \ref{chapDefinition}.
 
 The |switch| combinator allows for definition of a signal relation whose
 equational description changes over time. In addition, the |switch|
