@@ -32,7 +32,7 @@ particular domain of physics.
 Figure \ref{figCircuit1} depicts a simple electrical circuit. The circuit is
 grounded and consists of four two-pin electrical components: a voltage source,
 a resistor, an inductor and a capacitor. The following system of equations is
-a equational model of the circuit.
+an equational model of the circuit.
 
 \begin{figure}
 \begin{center}
@@ -212,11 +212,9 @@ differential vector at the discrete points of time given in Equation
 
 In the case of the simple electrical circuit model, the algebraic variables
 can be solved by adding more directed equations in the function that
-numerically integrates the system of equations. Output equations are explicit
-algebraic equations where the algebraic variables are defined in terms of the
-differential variables. The Haskell code given in Figure
-\ref{figIntegrateSimpleCircuit2} refines the integration function by adding
-the directed equation that solves the algebraic variable $i_1$. Figure
+numerically integrates the system of equations. The Haskell code given in
+Figure \ref{figIntegrateSimpleCircuit2} refines the integration function by
+adding the directed equation that solves the algebraic variable $i_1$. Figure
 \ref{figCircuitPlot1} shows a partial simulation result obtained by evaluating
 the function with the additional directed equation.
 
@@ -266,7 +264,7 @@ phases mentioned above as discussed in the following sections of this chapter.
 
 The block diagram depicted in Figure \ref{figCircuitBlockDiagram1} is a model
 of the simple electrical circuit from Figure \ref{figCircuit1}. Note that the
-diagram uses causal blocks (with input and outputs) for multiplication,
+diagram uses causal blocks (with inputs and outputs) for multiplication,
 summation and integration.
 
 \begin{figure}
@@ -280,14 +278,11 @@ circuit depicted in Figure \ref{figCircuit1}.}
 \end{figure}
 
 Block diagrams in causal languages correspond to systems of ODEs in explicit
-form. That is, the causality is explicit: the input and differential variables
-are used to define the derivatives and the output variables. The construction
-of a block diagram is closely related to the process of causalisation.
+form. The construction of a block diagram is closely related to the process of
+causalisation. The causal model given in Figure \ref{figCircuitBlockDiagram1}
+can be simulated by graphical block diagramming tools such as Simulink.
 Derivation of simulation code from a block diagram is done much in the same
-way as described in Section \ref{secModelling}, but using more sophisticated
-numerical methods. The causal model given in Figure
-\ref{figCircuitBlockDiagram1} can be simulated by graphical block diagramming
-tools such as Simulink.
+way as described earlier, but using more sophisticated numerical methods.
 
 Structurally, the block diagram in Figure \ref{figCircuitBlockDiagram1} is
 quite far removed from the circuit it models. Because of this, construction of
@@ -331,11 +326,12 @@ circuit depicted in Figure \ref{figCircuit2}.}
 The block diagramming tool Simulink can be used to model bounded structurally
 dynamic systems: special blocks are used to \emph{switch} between block
 diagrams as a response to discrete events. This makes Simulink very useful for
-modelling of bounded structurally dynamic systems. The number of modes (i.e.,
-structural configurations) must be finite and all modes must be predetermined
-before simulation. Thus Simulink does not enable modelling and simulation of
-unbounded structurally dynamic systems. In addition, Simulink block diagrams
-are first order, thus Simulink does not support higher-order causal modelling.
+modelling of bounded structurally dynamic systems. However, the number of
+modes (i.e., structural configurations) must be finite and all modes must be
+predetermined before simulation. Thus Simulink does not enable modelling and
+simulation of unbounded structurally dynamic systems. In addition, Simulink
+block diagrams are first order, thus Simulink does not support higher-order
+causal modelling.
 
 
 \section{Noncausal Modelling Illustrated through Modelica}
@@ -403,11 +399,12 @@ components.}
 \end{figure}
 
 By \emph{extending} the |TwoPin| model with component-specific equations
-Figure \ref{figModelicaComponents} defines the models representing resistor,
-capacitor, inductor and voltage source. Figure \ref{figModelicaComponents}
-also defines the model that represents the ground pin. Note the use of the
-concept of \emph{inheritance} known from object-oriented programming languages
-for reusing the equations from the |TwoPin| model.
+Figure \ref{figModelicaComponents} defines the models representing a resistor,
+a capacitor, an inductor and a voltage source. Figure
+\ref{figModelicaComponents} also defines the model that represents the ground
+pin. Note the use of the concept of \emph{inheritance} known from
+object-oriented programming languages for reusing the equations from the
+|TwoPin| model.
 
 Variables qualified as |parameter| or as |constant| remain unchanged during
 simulation. The value of a constant is defined once and for all in the source
