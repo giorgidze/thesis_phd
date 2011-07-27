@@ -142,7 +142,7 @@ turned into an internal representation, an abstract syntax tree (AST), that
 then is used for compilation into simulation code (see Chapter
 \ref{chapImplementation} for the details). Note that, although Hydra is
 embedded in Haskell, the two-level language design outlined earlier in this
-section and the notion of first-class signal relation are not predicated on
+section and the notion of first-class signal relations are not predicated on
 the embedding approach.
 
 The Haskell-embedded implementation of Hydra adopts the following syntax for
@@ -154,7 +154,7 @@ defining signal relations:
 
 The symbol | [rel|| | is the opening quasiquote and the symbol | ||] | is the
 closing quasiquote. The pattern binds \emph{signal variables} that scope over
-the equations that follow. An equations can be an equality constrain and a
+the equations that follow. An equation can be an equality constrain or a
 \emph{signal relation applications} (stated by using the operator |<>|).
 Signal relation application is how the constraints embodied by a signal
 relation are imposed on particular signals. In addition to the signal
@@ -167,9 +167,9 @@ relation application |sr <> s|. Here, if |sr| has the type |SR alpha| then |s|
 must have the type |Signal alpha|.
 
 Hydra provides a conventional syntax for specifying equality constrains. For
-example, the equation |x * x = 0| is an equality constrain. Here, |0| is a
-constant signal, |*| is a primitive signal function, and |x| is a signal
-variable.
+example, the equation |x * y = 0| is an equality constrain. Here, |0| is a
+constant signal, |*| is a primitive signal function, and |x| and |y| are
+signal variables.
 
 In addition to user-defined signal relations, Hydra provides for user-defined
 signal functions. Hydra uses the following syntax for defining signal
