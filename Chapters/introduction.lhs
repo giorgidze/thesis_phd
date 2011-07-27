@@ -64,10 +64,13 @@ MathWorks (Simscape).
 
 A language entity is \emph{first-class} if it can be (1) passed as a parameter
 to functions, (2) returned as a result from functions, (3) constructed at
-runtime and (4) placed in data structures \citep{Scott2009a}. Current,
-main-stream noncausal languages do not treat models as first-class values
-\citep{Nilsson2003a}. This limits their expressiveness for \emph{higher-order}
-and \emph{structurally dynamic} modelling.
+runtime and (4) placed in data structures \citep{Scott2009a}. To my knowledge,
+this notion was first introduced by Christopher Strachey \citep{Burstall2000a}
+in the context of functions being first-class values in higher-order,
+functional programming languages. Current, main-stream noncausal languages do
+not treat models as first-class values \citep{Nilsson2003a}. This limits their
+expressiveness for \emph{higher-order} and \emph{structurally dynamic}
+modelling.
 
 \subsection{Higher-order Modelling}
 
