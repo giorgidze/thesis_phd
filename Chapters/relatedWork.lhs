@@ -20,12 +20,12 @@ networks \citep{Mainland2008}. However, we had to use a different approach to
 type checking. A Flask program is type checked by a domain-specific type
 checker after being generated, just before the subsequent compilation into the
 code to be deployed on the sensor network nodes. This happens at host-language
-run-time. Because Hydra is iteratively staged, we cannot use this approach: we
+runtime. Because Hydra is iteratively staged, we cannot use this approach: we
 need to move type checking back to host-language compile-time. The Hydra
 implementation thus translates embedded programs into typed combinators at the
 stage of quasiquoting, charging the host-language type checker with checking
 the embedded terms. This ensures that only well-typed programs are generated
-at run-time.
+at runtime.
 
 The FHM design was originally inspired by Functional Reactive Programming
 (FRP) \citep{Elliott1997}, particularly Yampa \citep{Nilsson2002a}. A key
