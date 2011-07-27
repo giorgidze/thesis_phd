@@ -7,11 +7,11 @@ engineering. Examples include electronics, mechanics, thermodynamics, chemical
 reaction kinetics, population dynamics and neural networks
 \citep{Cellier1991}. To cope with the increasing size and complexity of
 physical models, a number of modelling and simulation languages have been
-developed. The modelling and simulation languages can be divided in two broad
-categories: \emph{causal} and \emph{noncausal}.
+developed. The modelling and simulation languages can be divided into two
+broad categories: \emph{causal} and \emph{noncausal}.
 
 A causal model is formulated in terms of \emph{explicit} equations, for
-example, \emph{ordinary differential equations} (ODEs) in explicit form. That
+example, \emph{ordinary differential equations} (ODEs) in explicit form; that
 is, the cause-effect relationship is explicitly specified by the modeller
 \citep{Cellier2006}. In other words, the equations are directed: only
 \emph{unknown} variables can appear on the left hand side of the equal sign,
@@ -34,7 +34,7 @@ state-of-the-art representative of noncausal modelling languages
 \citep[2010]{Modelica}.
 
 Noncausal modelling has a number of advantages over causal modelling. The most
-important ones are:
+important ones are outlined below.
 
 \begin{itemize}
 
@@ -107,8 +107,8 @@ structures were not considered.
 
 Major system behaviour changes are often modelled by changing the equations
 that describe the system \citep{Mosterman1997}. A model where the equational
-description changes over time is called structurally dynamic. Each structural
-configuration of the model is known as a \emph{mode} of operation.
+description changes over time is called \emph{structurally dynamic}. Each
+structural configuration of the model is known as a \emph{mode} of operation.
 \citet{Cellier2006} refer to structurally dynamic systems as
 \emph{variable-structure} systems. Structurally dynamic systems are an example
 of the more general notion of hybrid systems \citep{Nilsson2003a}. The term
@@ -415,8 +415,8 @@ syntax of Hydra. Predicate logic is used for explaining the language concepts
 and to give the ideal semantics of Hydra.
 
 Readers unfamiliar with Haskell may refer to the language report by
-\citet{Haskell98} or one of the following books: \citet{Hutton2007a},
-\cite{Thompson1999a}, \citet{Hudak1999a} or \citet{O'Sullivan2008a}. Having
+\citet{Haskell98} or one of the following books: \cite{Thompson1999a},
+\citet{Hutton2007a}, \citet{Hudak1999a} or \citet{O'Sullivan2008a}. Having
 said that, readers familiar with other higher-order, typed functional
 programming languages, such as Standard ML \citep{Milner1997a}, should also be
 able to follow the thesis in its entirety.
@@ -431,7 +431,7 @@ The rest of the dissertation is organised as follows:
 and the state-of-the-art causal and noncausal modelling languages.
 
 \item Chapter \ref{chapConcepts} introduces the central concepts of the Hydra
-language.
+language and its design.
 
 \item Chapter \ref{chapHydra} explains how to model physical systems in Hydra
 by means of instructive examples. The examples were carefully chosen to
@@ -439,15 +439,13 @@ showcase those language features that are absent in other noncausal modelling
 languages.
 
 \item Chapter \ref{chapDefinition} formally defines Hydra's concrete syntax,
-abstract syntax, type system and ideal semantics. The chapter defines the the
-equational part (i.e., the signal level) of the Hydra language. The reader is
-referred to \citet{Haskell98} for the semi-formal definition of the host
-functional language.
+abstract syntax, type system and ideal semantics. The chapter formally defines
+the equational part of Hydra. The reader is referred to \citet{Haskell98} for
+the semi-formal definition of the host functional language.
 
 \item Chapter \ref{chapImplementation} describes how Hydra is implemented.
 
-\item Chapter \ref{chapRelatedWork} overviews the related work and, in light
-of it, positions the contributions of this thesis in further detail.
+\item Chapter \ref{chapRelatedWork} overviews the related work.
 
 \item Chapter \ref{chapConclusions} concludes the thesis.
 
