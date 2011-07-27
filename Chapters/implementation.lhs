@@ -451,7 +451,7 @@ of those zero-crossings that did not occur.
 
 The |time| field is for current time. Initially the simulator places the
 starting time given in the experiment description in this field. The |time|
-fieled is modified at each structural change with the time of an event
+field is modified at each structural change with the time of an event
 occurrence.
 
 The |instants| field is for storing instantaneous values of signals. The
