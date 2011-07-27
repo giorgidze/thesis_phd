@@ -310,7 +310,10 @@ solver.
 The |Var| constructor is not used at the stage of quasiquoting. Instead, the
 constructor is used later at the stage of runtime symbolic processing to
 instantiate each local signal variable to a distinct signal variable by using
-the constructor's |Integer| field.
+the constructor's |Integer| field. This is similar to the usage of the
+|Signal| constructor in the language definition in Chapter
+\ref{chapDefinition}. There, the |Signal| constructor is not used in the first
+three steps of the definition. It is only used in the ideal semantics.
 
 The implementation of Hydra supports the same set of primitive functions as
 defined in the language definition. Hence, in the implementation we use the
@@ -426,8 +429,8 @@ The |model| field stores the currently active top-level signal relation. At
 the start of the simulation, the |simulate| function binds this field to the
 result of applying its signal relation argument of type |SR ()| to the |Unit|
 signal. In other words, the |model| field contains currently active system of
-hierarchical equations that contains signal relation applications and temporal
-compositions.
+hierarchical equations that contains equality constrains, signal relation
+applications and temporal compositions.
 
 The |equations| field is for a flat list of equations that describe an active
 mode of operation. By flat we mean that the list of equations only contain
@@ -437,14 +440,14 @@ function places an empty list in this field.
 The |events| field is for a list of zero-crossing signal expressions defining
 the event occurrences. Recall the type signature of the |switch| combinator
 given in Section \ref{secEmbedding}. A signal function that detects events
-returns a real valued signal. The simulator places the signal expressions that
-describe an event occurrence at each structural change. Initially, at the
-start of the simulation, the simulator places an empty list in the |events|
-field of the symbol table. The |events| field is used to communicate all the
-switching guards to the JIT compiler and the numerical solver, and then, once
-some events actually have occurred, to communicate back this information to
-the symbolic processor by deleting the signal expressions of those
-zero-crossings that did not occur.
+returns a real valued signal. At each structural change the simulator places
+the signal expressions describing event occurrences in the |events| field.
+Initially, at the start of the simulation, the simulator places an empty list
+in the |events| field of the symbol table. The |events| field is used to
+communicate all the switching guards to the JIT compiler and the numerical
+solver, and then, once some events actually have occurred, to communicate back
+this information to the symbolic processor by deleting the signal expressions
+of those zero-crossings that did not occur.
 
 The |time| field is for current time. Initially the simulator places the
 starting time given in the experiment description in this field. The |time|
@@ -814,7 +817,7 @@ van der Pol oscillator.}
 \section{Numerical Simulation}
 
 The default numerical solver used in the current implementation of Hydra is
-SUNDIALS \citep{Sundials2005}. The solve components we use are KINSOL, a
+SUNDIALS \citep{Sundials2005}. The solver components we use are KINSOL, a
 nonlinear algebraic equation systems solver, and IDA, a differential algebraic
 equation systems solver. The code for the function $i$ is passed to KINSOL
 that numerically solves the system and returns initial values (at time
