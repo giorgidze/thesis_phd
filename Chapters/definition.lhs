@@ -350,9 +350,8 @@ The typed abstract syntax embodies Hydra's type system features that were only
 informally introduced in earlier sections of the thesis. Let us outline
 several key features. The type of a signal relation is determined by its
 pattern. A type of a structurally dynamic signal relation remains unchanged
-despite the structural changes. Signal relation and signal function
-applications must be well typed. This includes the application of the built-in
-equality signal relation.
+despite the structural changes. Equality constraints, and signal relation and
+signal function applications must be well typed.
 
 Note that the type system says nothing about the solvability of signal
 relations. It is possible to define a type correct signal relation that does
@@ -501,10 +500,10 @@ The ideal semantics of Hydra are given in Figure \ref{figSigRelSigFunSem} and
 in Figure \ref{figSigSem}. Note that the translation targets are the same as
 the conceptual definitions of signals, signal functions, and signal relations
 given in Chapter \ref{chapHydra}. Specifically, signal relations are mapped to
-functions from starting time and signal to second-order logic proposition,
-signal functions are mapped to functions from signal to signal, and signals
-are mapped to function from time to value. Time is represented as a real
-number.
+functions from starting time, stopping time and signal to second-order logic
+proposition, signal functions are mapped to functions from signal to signal,
+and signals are mapped to function from time to value. Time is represented as
+a real number.
 
 A signal relation translation may involve existentially quantified function
 symbols (i.e., signals). This is what makes the target predicates second-order
@@ -582,7 +581,8 @@ semF3 (f)  =  \  i  t1  t2  s eqs  ->  semEqs (i + 1,t1,t2,f (Signal s) ++ eqs)
 \end{code}
 
 \caption{\label{figSigRelSigFunSem} Translation of signal relations, signal
-functions and equations.}
+functions and equations. Note that, $\frac{d_{ - }}{dt}$ denotes left
+derivative.}
 
 \end{figure}
 
