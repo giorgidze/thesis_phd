@@ -27,7 +27,7 @@ modelling languages such as Modelica.
 
 \item Investigate properties of the ideal semantics developed in this thesis.
 
-\item Make use of the ideal semantics to for verification of simulation
+\item Make use of the ideal semantics for verification of simulation
 results.
 
 \item Apply the ideal semantics to the problem of verification of the language
