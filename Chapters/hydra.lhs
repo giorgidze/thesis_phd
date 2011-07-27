@@ -26,8 +26,8 @@ twoPin = [rel| (((p_i,p_v),(n_i,n_v)),u) ->
 The signal variables |p_i| and |p_v|, which are bound in the pattern,
 represent the current into the positive pin and the voltage at the positive
 pin, respectively. The signal variables |n_i| and |n_v|, which are also bound
-in the pattern, represent the current into the negative and the voltage at the
-negative pin, respectively. The signal variable |u| represents the voltage
+in the pattern, represent the current into the negative pin and the voltage at
+the negative pin, respectively. The signal variable |u| represents the voltage
 drop across the electrical component.
 
 \begin{figure}
@@ -303,7 +303,7 @@ capable of specifying noncausal connections by connecting noncausal models
 directly.
 
 It is trivial in Hydra to reuse the circuit components and model the modified
-circuit that is depicted on Figure \ref{figCircuit2}:
+circuit that is depicted in Figure \ref{figCircuit2}:
 
 \begin{samepage}
 \begin{code}
@@ -661,9 +661,10 @@ half-wave rectifier circuit with in-line inductor.}
 
 Simulation of the full-wave rectifier circuit given in Figure
 \ref{figRectifierFullWave} is more challenging than simulating the half-wave
-rectifier. A key difficulty is that the circuit breaks down into two isolated
-halves when all diodes are open. The lack of a ground reference for the left
-part means the system becomes under-determined and it cannot be simulated.
+rectifier \citep{Nilsson2010a}. A key difficulty is that the circuit breaks
+down into two isolated halves when all diodes are open. The lack of a ground
+reference for the left part means the system becomes under-determined and it
+cannot be simulated.
 
 \begin{figure}
 \begin{center}
@@ -708,13 +709,13 @@ But, additionally, $(dp_{v_{1}} - dn_{v_{1}})$ and $(dp_{v_{1}} - dn_{v_{1}})$
 are related by Equation \ref{eq:ud1=ud3} that is provided by model of the
 overall circuit.
 
-In this case, a simple symbolic simplification pass suffice to eliminate the
+In this case, a simple symbolic simplification pass suffices to eliminate the
 redundant equations in the modes where the diodes are pairwise closed. Using
 Equation \ref{eq:ud1=0} and Equation \ref{eq:ud3=0}, Equation \ref{eq:ud1=ud3}
 can be simplified to the trivially satisfied equation $0 = 0$ that then can be
 eliminated. After this the model can be simulated without further issues. Note
 that dynamic generation of equations followed by symbolic processing, as
-provided by FHM, is crucial to this approach to simulating ideal diodes.
+provided by Hydra, is crucial to this approach to simulating ideal diodes.
 
 As we have already mentioned, the implementation of Hydra provides an
 extensible and configurable symbolic processor. The symbolic processor that
@@ -741,12 +742,12 @@ structural configurations.
 \section{Unbounded Structurally Dynamic Modelling}
 \label{secUnboundedStructDyn}
 
-The breaking pendulum and half-wave rectifier examples feature only two modes
-of operation. In principle (with a suitable language design and
-implementation) it is feasible to generate code for two modes of operation
-prior to simulation. However, despite their simplicity, these are examples
-with which main-stream noncausal languages such as Modelica struggle, as
-mentioned earlier.
+The breaking pendulum, half-wave rectifier and full-wave rectifier examples
+feature a priori bounded number modes of operation. In principle (with a
+suitable language design and implementation) it is feasible to generate code
+for these modes of operation prior to simulation. However, despite their
+simplicity, these are examples with which main-stream noncausal languages such
+as Modelica struggle, as mentioned earlier.
 
 In general, it is not possible to compile Hydra models prior to simulation.
 For example, given a parametrised signal relation |sr' :: Real -> SR Real| and
@@ -765,9 +766,9 @@ parameter in arbitrarily complex ways, there is no way to generate all code
 prior to simulation.
 
 Perhaps the example involving the |sr| signal relation is a bit abstract. In
-the following sections we emphasise the same point by using a variation on the
-familiar bouncing-ball example. Assuming the elastic collision with the floor,
-the bouncing ball system can be modelled in Hydra as follows.
+the following we emphasise the same point by using a variation on the familiar
+bouncing-ball example. Assuming the elastic collision with the floor, the
+bouncing ball system can be modelled in Hydra as follows.
 
 \begin{code}
 bouncingBall :: Body -> SR Body
