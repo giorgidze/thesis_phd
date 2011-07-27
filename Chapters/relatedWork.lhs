@@ -24,8 +24,8 @@ runtime. Because Hydra is iteratively staged, we cannot use this approach: we
 need to move type checking back to host-language compile-time. The Hydra
 implementation thus translates embedded programs into typed combinators at the
 stage of quasiquoting, charging the host-language type checker with checking
-the embedded terms. This ensures that only well-typed programs are generated
-at runtime.
+the embedded terms. This also ensures that only well-typed programs are
+generated at runtime.
 
 The FHM design was originally inspired by Functional Reactive Programming
 (FRP) \citep{Elliott1997}, particularly Yampa \citep{Nilsson2002a}. A key
