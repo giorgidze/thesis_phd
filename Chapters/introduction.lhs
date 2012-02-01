@@ -1,10 +1,10 @@
 \chapter{Introduction}
 \label{chapIntroduction}
 
-Physical modelling and simulation plays a vital role in the design,
-implementation and analysis of systems in numerous areas of science and
-engineering. Examples include electronics, mechanics, thermodynamics, chemical
-reaction kinetics, population dynamics and neural networks
+The field of physical modelling and simulation plays a vital role in the
+design, implementation and analysis of systems in numerous areas of science
+and engineering. Examples include electronics, mechanics, thermodynamics,
+chemical reaction kinetics, population dynamics and neural networks
 \citep{Cellier1991}. To cope with the increasing size and complexity of
 physical models, a number of modelling and simulation languages have been
 developed. The modelling and simulation languages can be divided into two
@@ -14,9 +14,9 @@ A causal model is formulated in terms of \emph{explicit} equations, for
 example, \emph{ordinary differential equations} (ODEs) in explicit form; that
 is, the cause-effect relationship is explicitly specified by the modeller
 \citep{Cellier2006}. In other words, the equations are directed: only
-\emph{unknown} variables can appear on the left hand side of the equal sign,
+\emph{unknown} variables can appear on the left hand side of the equals sign,
 and only \emph{known} variables on the other side. Since the equations are
-directed, it is relatively straightforward to translate a causal model into a
+directed, it is relatively straightforward to translate a causal model into
 low-level simulation code (e.g., into a sequence of assignment statements) and
 simulate it. Simulink is a prominent representative of causal modelling
 languages \citep[2008]{Simulink}.
@@ -24,7 +24,7 @@ languages \citep[2008]{Simulink}.
 A noncausal model is formulated in terms of \emph{implicit} equations, for
 example, \emph{differential algebraic equations} (DAEs) in implicit form. In
 other words, the equations are undirected: both known and unknown variables
-may appear on both sides of the equal sign \citep{Cellier2006}. The
+may appear on both sides of the equals sign \citep{Cellier2006}. The
 translation of noncausal models into simulation code involves additional
 symbolic processing and numerical simulation methods that are not required for
 causal modelling and simulation. Examples include symbolic transformations
@@ -42,9 +42,9 @@ important ones are outlined below.
 noncausal equations, and in some physical domains models cannot be represented
 using only causal equations.
 
-\item Noncausal languages are more declarative and approach modelling problems
-from a higher level of abstraction by focusing on \emph{what} to model rather
-than \emph{how} to model to enable simulation.
+\item Noncausal languages are declarative and approach modelling problems from
+a higher level of abstraction by focusing on \emph{what} to model rather than
+\emph{how} to model to enable simulation.
 
 \item Noncausal models are more reusable as equations can be used in a number
 of different ways depending on their context of usage (i.e., effectively
@@ -78,11 +78,11 @@ Higher-order modelling allows parametrisation of models on other models
 \citep{Nilsson2003a}. For instance, a car model can be parametrised on the
 list of tyres it is using, and an electrical transmission line model can be
 parametrised on the list of electrical components on the line. Main-stream,
-noncausal languages feature a very limited support for this style of
-modelling. Tool specific and external scripting languages are often used to
-generate noncausal models for particular instances of higher-order models
-\citep{Broman2008a}. Whilst practical for some applications, this defeats the
-purpose of a declarative, noncausal modelling language.
+noncausal languages provide little support for this style of modelling. Tool
+specific and external scripting languages are often used to generate noncausal
+models for particular instances of higher-order models \citep{Broman2008a}.
+Whilst practical for some applications, this defeats the purpose of a
+declarative, noncausal modelling language.
 
 This thesis formally defines a language that supports higher-order modelling
 by treating noncausal models as first-class values in a purely functional
@@ -91,10 +91,10 @@ function from model (or from collections of models placed in a suitable data
 structure) to model can be seen as a higher-order model and an application of
 this function can be seen as an instantiation of the higher-order model.
 
-The idea to treat noncausal models as first-class values in a functional
+The idea of treating noncausal models as first-class values in a functional
 programming language was introduced by \citet{Nilsson2003a} in the context of
 a framework called Functional Hybrid Modelling (FHM) for designing and
-implementing noncausal modelling languages. However, the paper postpones a
+implementing noncausal modelling languages. However, the paper postpones the
 concrete language definition and implementation for future work. In addition,
 the FHM framework proposes to exploit the first-class nature of noncausal
 models for modelling \emph{hybrid} systems (i.e., systems that exhibit both
@@ -127,8 +127,8 @@ that describe the behaviour of the continuous part. Recently, the US National
 Science Foundation identified cyber-physical systems as one of its key
 research areas \citep[2008]{NSF2008a}.
 
-Current, noncausal languages offer limited support for modelling structurally
-dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
+Currently, noncausal languages offer limited support for modelling
+structurally dynamic systems \citep{Mosterman1997, Mosterman1999a, Zauner2007,
 Zimmer2008a}. There are a number of reasons for this. However, this thesis
 concentrates on one particular reason related to the design and implementation
 of modelling and simulation languages: the prevalent assumption that most or
@@ -143,7 +143,7 @@ performance, but such language design and implementation approaches restrict
 the number of modes to be modest as, in general, separate code must be
 generated for each mode. This rules out supporting structurally dynamic
 systems where the number of modes is a priori unbounded. We refer to this kind
-of systems as \emph{unbounded structurally dynamic} systems. Systems with a
+of system as \emph{unbounded structurally dynamic} system. Systems with a
 priori bounded number of modes are referred as \emph{bounded structurally
 dynamic}.
 
@@ -152,7 +152,7 @@ languages with improved support for structural dynamism. Examples include:
 HYBRSIM \citep{Mosterman1998}, MOSILAB \citep{Nytsch-Geusen2005a}, Sol
 \citep{Zimmer2008a} and Acumen \citep{Taha2010a}. However, thus far,
 implementations have either been interpreted (HYBRSIM and Sol) and thus
-sacrificing the efficiency, or languages have been restricted so as to limit
+sacrificing efficiency, or the languages have been restricted so as to limit
 the number of modes to make it feasible to compile code for all modes prior to
 simulation (MOSILAB and Acumen).
 
