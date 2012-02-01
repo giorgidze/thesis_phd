@@ -10,4 +10,4 @@ all: clean
 	$(LATEX)
 
 clean:
-	rm -f *.aux *.blg *.log *.ptb *.toc *.out *.lof *.lot *.tex *.bbl
+	rm -f *.aux *.blg *.log *.ptb *.toc *.out *.lof *.lot *.tex *.bbl *.pdf
