@@ -303,7 +303,7 @@ data Signal a where
 As you can see, this data type definition replaces the |Signal| constructor
 featured in the language definition (see Chapter \ref{chapDefinition}) with
 the |Var| constructor. In the implementation, instead of representing signals
-that need to be solved and functions from time to values we represent them as
+that need to be solved as functions from time to values we represent them as
 signal variables whose approximated values will be determined by the numerical
 solver.
 

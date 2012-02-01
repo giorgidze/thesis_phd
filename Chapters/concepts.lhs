@@ -2,7 +2,7 @@
 \label{chapConcepts}
 
 This chapter introduces the three central concepts of the FHM framework that
-the Hydra language based on: signal, signal function and signal relation.
+the Hydra language is based on: signal, signal function and signal relation.
 These concepts facilitate development of and reasoning about Hydra models, and
 are used both in informal (see Chapter \ref{chapHydra}) and formal (see
 Chapter \ref{chapDefinition}) presentations of the language. This chapter only
@@ -155,12 +155,11 @@ defining signal relations:
 The symbol | [rel|| | is the opening quasiquote and the symbol | ||] | is the
 closing quasiquote. The pattern binds \emph{signal variables} that scope over
 the equations that follow. An equation can be an equality constrain or a
-\emph{signal relation applications} (stated by using the operator |<>|).
-Signal relation application is how the constraints embodied by a signal
-relation are imposed on particular signals. In addition to the signal
-variables bound in the pattern, equations may also introduce local signal
-variables. Concrete examples of signal relations are given in Chapter
-\ref{chapHydra}.
+\emph{signal relation application} (stated by using the operator |<>|). Signal
+relation application is how the constraints embodied by a signal relation are
+imposed on particular signals. In addition to the signal variables bound in
+the pattern, equations may also introduce local signal variables. Concrete
+examples of signal relations are given in Chapter \ref{chapHydra}.
 
 The equations are required to be well typed. For example, consider the signal
 relation application |sr <> s|. Here, if |sr| has the type |SR alpha| then |s|

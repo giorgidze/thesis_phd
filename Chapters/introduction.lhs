@@ -292,10 +292,10 @@ compilation, and execution is a process with a fixed number of stages.
 
 Hydra is iteratively staged and, also, rather than acting merely as a powerful
 meta language that is out of the picture once the generated program is ready
-for execution, the host language is in this case part of the dynamic semantics
-of the embedded language through the shallow parts of the embedding. We thus
-add further tools to the DSL tool box for embedding a class of languages that
-thus far has not been studied much from an embedding and staged programming
+for execution, the host language is part of the dynamic semantics of the
+embedded language through the shallow parts of the embedding. We thus add
+further tools to the DSL tool box for embedding a class of languages that thus
+far has not been studied much from an embedding and staged programming
 perspective.
 
 While embedded DSL development methodology is not the main focus of this work,

@@ -442,10 +442,10 @@ identity of the |serial| higher-order signal relation.}
 \end{figure}
 
 Here by the equality of the signal relations we mean that the signal relations
-introduce mathematically equivalent constrains, and not necessarily the same
-equations. Because the |wire| signal relation is both left and right identity
-of the |serial| binary function, in the definition of the |serialise| signal
-relation we could also use the left fold instead of the right fold.
+introduce equivalent constrains, and not necessarily the same equations.
+Because the |wire| signal relation is both left and right identity of the
+|serial| binary function, in the definition of the |serialise| signal relation
+we could also use the left fold instead of the right fold.
 
 Somewhat similarly to the |serialise| signal relation the higher-order signal
 relation |parallelise| that takes as an argument a list of signal relations
@@ -628,8 +628,8 @@ halfWaveRectifier =
   groundedCircuit  (vSourceAC 1 1)
                    (serialise  [ iInductor 0 1
                                , resistor 1
-                               , icDiode
-                               , parallel (iCapacitor 0 1) (resistor 1)
+                               , parallel   (iCapacitor 0 1)
+                                            (serial icDiode (resistor 1))
                                ]
                    )
 \end{code}
@@ -687,7 +687,7 @@ except that two extra equations, stating the pairwise equality of the voltages
 across the diodes, are needed. That is:
 
 \begin{eqnarray}
-(dp_{v_{1}} - dn_{v_{1}}) & = & (dp_{v_{1}} - dn_{v_{1}}) \label{eq:ud1=ud3} \\
+(dp_{v_{1}} - dn_{v_{1}}) & = & (dp_{v_{3}} - dn_{v_{3}}) \label{eq:ud1=ud3} \\
 (dp_{v_{2}} - dn_{v_{2}}) & = & (dp_{v_{4}} - dn_{v_{4}}) \label{eq:ud2=ud4}
 \end{eqnarray}
 
@@ -695,17 +695,17 @@ However, adding Eq.~(\ref{eq:ud1=ud3}) and Eq.~(\ref{eq:ud2=ud4}) results in
 additional complications for simulation as the system now seemingly becomes
 over-determined when some diodes are closed. It turns out, though, that the
 system is only trivially over-determined; that is, the extra equations are
-mathematically equivalent to other equations in the system. This is easy to
-see: when a diode is closed, there is an equation provided by the model of the
-diode itself that states that the voltage across it is 0. If, for example,
-$D1$ and $D3$ are closed, we have:
+equivalent to other equations in the system. This is easy to see: when a diode
+is closed, there is an equation provided by the model of the diode itself that
+states that the voltage across it is 0. If, for example, $D1$ and $D3$ are
+closed, we have:
 
 \begin{eqnarray}
 (dp_{v_{1}} - dn_{v_{1}}) & = & 0 \label{eq:ud1=0} \\
-(dp_{v_{1}} - dn_{v_{1}}) & = & 0 \label{eq:ud3=0}
+(dp_{v_{3}} - dn_{v_{3}}) & = & 0 \label{eq:ud3=0}
 \end{eqnarray}
 
-But, additionally, $(dp_{v_{1}} - dn_{v_{1}})$ and $(dp_{v_{1}} - dn_{v_{1}})$
+But, additionally, $(dp_{v_{1}} - dn_{v_{1}})$ and $(dp_{v_{3}} - dn_{v_{3}})$
 are related by Equation \ref{eq:ud1=ud3} that is provided by model of the
 overall circuit.
 

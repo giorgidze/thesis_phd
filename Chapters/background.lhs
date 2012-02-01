@@ -48,7 +48,7 @@ u_R & = & R \cdot i_1 \\
 i_1 & = & C \cdot \frac{du_C}{dt} \\
 u_L & = & L \cdot \frac{di_2}{dt} \\
 i_1 + i_2 & = & i \\
-u_R + u_C & = & u_s \\
+u_R + u_C & = & u_S \\
 u_S & = & u_L
 \end{eqnarray}
 \end{subequations}
@@ -168,7 +168,7 @@ Let us make use of Equation \ref{eqExplODE} and substitute the derivative.
 Let us also fix the step size $h$ and construct the following discrete
 sequences:
 \begin{equation}
-t_0  = 0, t_1 = t_0 + h, \ t_2 = t_1 + 2h, ...,  t_n = t_{n-1} + nh, ...
+t_0  = 0, t_1 = t_0 + h, \ t_2 = t_1 + h, ...,  t_n = t_{n-1} + h, ...
 \end{equation}
 \begin{equation}
 \vec{x}_0 = \vec{x}(t_0), ..., \vec{x}_{n+1} = \vec{x}_n + h \cdot f(\vec{x}_n,t_n), \ ... \label{eqStateVectorDiscreteSeq}

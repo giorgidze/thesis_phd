@@ -9,10 +9,9 @@ extensive work on compiling embedded, staged DSLs. Examples include
 \citet{Elliott2000} and \citet{Mainland2008}. However, these works are
 concerned with compiling programs all at once, meaning the host language is
 used only for meta-programming, not for running the actual programs. Hydra
-combines the the aforementioned deep-embedding techniques with shallow
-embedding techniques in order to allow the host language to participate in
-runtime generation, optimisation, compilation and execution of embedded
-programs.
+combines the aforementioned deep-embedding techniques with shallow embedding
+techniques in order to allow the host language to participate in runtime
+generation, optimisation, compilation and execution of embedded programs.
 
 The use of quasiquoting in the implementation of Hydra draws its inspiration
 from Flask, a domain-specific embedded language for programming sensor
