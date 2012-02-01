@@ -26,7 +26,7 @@
   \Large{\textbf{GEORGE GIORGIDZE, BSc, MSc}} \\[2cm]
   \Large{Thesis submitted to The University of Nottingham} \\
   \Large{for the degree of Doctor of Philosophy} \\[2cm]
-  \Large{July 2011}
+  \Large{February 2012}
 }
 \author{}
 \date{}
