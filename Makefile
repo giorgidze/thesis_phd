@@ -2,7 +2,7 @@ LHS2TEX  = lhs2TeX --poly --output=main.tex main.lhs
 LATEX    = pdflatex -halt-on-error -file-line-error main.tex
 BIBTEX   = bibtex main
 
-all: clean
+all:
 	$(LHS2TEX)
 	$(LATEX)
 	$(BIBTEX)
