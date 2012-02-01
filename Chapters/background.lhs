@@ -302,7 +302,7 @@ electrical circuit by adding one more resistor, as shown in Figure
 \ref{figCircuit2}, and then causally model it as shown in Figure
 \ref{figCircuitBlockDiagram2}. Note that we were unable to reuse the resistor
 model from the original circuit diagram. Furthermore, a simple addition to the
-physical system caused changes to the causal model that hardly are obvious.
+physical system caused changes to the causal model that are hardly obvious.
 
 \begin{figure}
 \begin{center}
