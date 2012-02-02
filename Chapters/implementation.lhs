@@ -434,7 +434,8 @@ applications and temporal compositions.
 
 The |equations| field is for a flat list of equations that describe an active
 mode of operation. By flat we mean that the list of equations only contain
-|Init| and |Equal| equations. At the start of the simulation, the |simulate|
+|Init| and |Equal| equations. A detailed description of the flattening process
+is given later in this section. At the start of the simulation, the |simulate|
 function places an empty list in this field.
 
 The |events| field is for a list of zero-crossing signal expressions defining
@@ -476,7 +477,7 @@ data SymTab = SymTab {
 
 \end{figure}
 
-The task of the symbolic processor is to handle occurred events by modifying
+The task of the symbolic processor is to handle event occurrences by modifying
 the |model| field of the symbol table, to generate a flat list of events that
 may occur in the active mode of operation by updating the |events| field of
 the symbol table, and to generate the flat list of equations describing the
@@ -716,8 +717,8 @@ type Residual = FunPtr  (       Real
 The first function argument is time. The second argument is a vector of
 instantaneous values of real valued signal. The third argument is a vector of
 instantaneous values of differentials of real-valued signals. The forth
-argument is a vector of residual results, or in the case of the event
-specification vector of zero-crossing signal values. The residual functions
+argument is a vector of residual results, or, in the case of the event
+specification, a vector of zero-crossing signal values. The residual functions
 read the first three arguments and write the residual values in the fourth
 argument. As these functions are passed to numerical solvers it is critical to
 allow for fast positional access of vector elements and in-place vector
