@@ -154,15 +154,15 @@ a voltage source and a ground reference.}
 \section{Noncausal Connections}
 \label{secConnections}
 
-In \citet{Giorgidze2008c} we describe a syntactic sugar for specifying
-noncausal connections. In this thesis we implement the same approach using
-higher-order modelling combinators. In both cases we were able to describe
-noncausal connections without a special semantic language construct. In this
-aspect, Hydra is simpler than other noncausal modelling languages such as
+In \citet{Giorgidze2008c} we describe syntactic sugar for specifying noncausal
+connections. In this thesis we implement the same approach using higher-order
+modelling combinators. In both cases we are able to describe noncausal
+connections without a special semantic language construct. In this aspect,
+Hydra is simpler than other noncausal modelling languages such as
 \citet{Modelica}, MKL \citep{Broman2007a}, and Chi \citep{Beek2008a}, as these
 languages feature special language constructs for specifying noncausal
-connections. It is worthwhile to mention, that although the aforementioned
-approaches to noncausal connections serve the same purpose they are very
+connections. It is worthwhile mentioning that although the aforementioned
+approaches to noncausal connections serve the same purpose, they are very
 different from each other, both in their syntax and in their semantics.
 Detailed comparison of approaches to noncausal connections still lies ahead,
 including devising of a minimal set of higher-order combinators expressive
@@ -442,7 +442,7 @@ identity of the |serial| higher-order signal relation.}
 \end{figure}
 
 Here by the equality of the signal relations we mean that the signal relations
-introduce equivalent constrains, and not necessarily the same equations.
+introduce equivalent constraints, and not necessarily the same equations.
 Because the |wire| signal relation is both left and right identity of the
 |serial| binary function, in the definition of the |serialise| signal relation
 we could also use the left fold instead of the right fold.
@@ -732,7 +732,7 @@ need to search among the up to $2^n$ possibilities for a consistent successor
 mode.
 
 As a result, we have obtained a model of an ideal full-wave rectifier that is
-constructed modularly from individual, reusable components. The proper
+constructed in a modular way from individual, reusable components. The proper
 behaviour emerges from simply assembling the components, with just some minor
 additional guidance from the modeller in the form of a couple of extra
 equations. There is no need for any heavyweight, auxiliary mechanisms, such as
