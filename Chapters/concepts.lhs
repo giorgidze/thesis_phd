@@ -53,11 +53,11 @@ A signal function of type |SF alpha beta| can be applied to an input signal of
 type |Signal alpha|; it produces an output signal of type |Signal beta|.
 
 Because a pair of signals, say |(Signal alpha,Signal beta)|, is isomorphic to
-a signal of the pair of the carried types, in this case |Signal (alpha,
-beta)|, unary signal functions suffice for handling signal functions of any
-arity; for example, the binary signal function |add| that takes two signals
-and computes the sum of their values at each point in time can be given the
-following type and conceptual definition:
+a signal of the pair of the signal types, in this case |Signal (alpha, beta)|,
+unary signal functions suffice for handling signal functions of any arity; for
+example, the binary signal function |add| that takes two signals and computes
+the sum of their values at each point in time can be given the following type
+and conceptual definition:
 
 \begin{code}
 add :: SF (Real,Real) Real
@@ -154,7 +154,7 @@ defining signal relations:
 
 The symbol | [rel|| | is the opening quasiquote and the symbol | ||] | is the
 closing quasiquote. The pattern binds \emph{signal variables} that scope over
-the equations that follow. An equation can be an equality constrain or a
+the equations that follow. An equation can be an equality constraint or a
 \emph{signal relation application} (stated by using the operator |<>|). Signal
 relation application is how the constraints embodied by a signal relation are
 imposed on particular signals. In addition to the signal variables bound in
@@ -165,7 +165,7 @@ The equations are required to be well typed. For example, consider the signal
 relation application |sr <> s|. Here, if |sr| has the type |SR alpha| then |s|
 must have the type |Signal alpha|.
 
-Hydra provides a conventional syntax for specifying equality constrains. For
+Hydra provides a conventional syntax for specifying equality constraints. For
 example, the equation |x * y = 0| is an equality constrain. Here, |0| is a
 constant signal, |*| is a primitive signal function, and |x| and |y| are
 signal variables.
