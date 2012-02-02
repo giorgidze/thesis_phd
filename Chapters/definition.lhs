@@ -40,7 +40,10 @@ combinator and not the quasiquotes.
 The syntactic structure of Hydra is given in Figure \ref{figSyntax}, which
 uses BNF notation. Non-terminals are enclosed between $\langle$ and $\rangle$.
 The symbols {\arrow} (production), {\delimit} (union) and {\emptyP} (empty
-rule) belong to BNF notation. All other symbols are terminals.
+rule) belong to BNF notation. All other symbols are terminals\footnote{Note
+that in Chapter \ref{chapConcepts}, Chapter \ref{chapHydra} and Chapter
+\ref{chapImplementation} the terminal symbols {\terminal{{$-$}{$>$}}} and
+{\terminal{{$<$}{$>$}}} are typeset as |->| and |<>| respectively.}.
 
 \begin{figure}
 
@@ -462,7 +465,7 @@ implementing the forward Euler method.
 
 Implementations of noncausal modelling languages typically allow modellers to
 choose floating-point representations (e.g., single or double precision),
-symbolic processing methods and numerical simulation methods that needs to be
+symbolic processing methods and numerical simulation methods that need to be
 used during the simulation. This amounts to allowing modellers to choose a
 combination of approximations prior to simulation.
 
@@ -501,9 +504,9 @@ in Figure \ref{figSigSem}. Note that the translation targets are the same as
 the conceptual definitions of signals, signal functions, and signal relations
 given in Chapter \ref{chapHydra}. Specifically, signal relations are mapped to
 functions from starting time, stopping time and signal to second-order logic
-proposition, signal functions are mapped to functions from signal to signal,
-and signals are mapped to function from time to value. Time is represented as
-a real number.
+propositions, signal functions are mapped to functions from signal to signal,
+and signals are mapped to function from time to value. Time is represented by
+the real number.
 
 A signal relation translation may involve existentially quantified function
 symbols (i.e., signals). This is what makes the target predicates second-order
@@ -521,23 +524,20 @@ unbounded number of modes, and consequently the ideal semantics would map such
 infinite representation to the predicate with infinite chain of disjunctions.
 This is not to say that it is not possible to solve such constraints. Quite
 the opposite, in Section \ref{secUnboundedStructDyn} we modelled and simulated
-one such system.
-
-It would be interesting to precisely characterise under what circumstances can
-a model of an unbounded structurally dynamic system be simulated. We
-conjecture that if in a finite period of time the model switches finite number
-of times it is possible to simulate it, assuming of course that individual
-modes of operations can be solved in the given period. Interestingly, in the
-context of ideal semantics of FRP languages, similar requirements have been
-proposed by \citet{Wan2000} and \citet{Sculthorpe2011b} for characterising
-when an unbounded structurally dynamic causal model can be simulated.
+one such system. If in a finite period of time the model switches finite
+number of times it is possible to simulate it, assuming of course that
+individual modes of operations can be solved in the given period.
+Interestingly, in the context of ideal semantics of FRP languages, similar
+requirements have been proposed by \citet{Wan2000} and \citet{Sculthorpe2011b}
+for characterising when an unbounded structurally dynamic causal model can be
+simulated.
 
 To our knowledge, Hydra is the first language that features a formal
 specification capturing both continuous and discrete aspects of a noncausal
 language that supports unbounded structural dynamism. Although detailed
-studies of the ideal semantics and its properties still lay ahead, we think
-that the semantics given in this section provides for a good starting point
-for such undertaking.
+studies of the ideal semantics and its properties still lie ahead, we think
+that the semantics given in this section provides a good starting point for
+such an undertaking.
 
 \begin{figure}
 \begin{code}
