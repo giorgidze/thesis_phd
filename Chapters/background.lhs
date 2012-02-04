@@ -23,9 +23,7 @@ main-stream modelling languages.
 In addition, by modelling and simulating the example physical systems, basic
 concepts of modelling and simulation are introduced. Where necessary, the
 presentation abstracts from the concrete examples and defines the basic
-concepts more generally. Also note that in this thesis we focus on modelling
-languages capable of simulating mathematical models without assuming a
-particular domain of physics.
+concepts more generally.
 
 \section{Equational Modelling}
 
@@ -103,6 +101,7 @@ known and rest of the variables are solved. In this case this technique
 suffices and we get the following explicit DAE:
 
 \begin{subequations}
+\label{eqSimpleCircuitExplicit}
 \begin{eqnarray}
 u_S  & = & sin (2 \pi t) \\
 u_L  & = & u_S \\
@@ -265,7 +264,10 @@ phases mentioned above as discussed in the following sections of this chapter.
 The block diagram depicted in Figure \ref{figCircuitBlockDiagram1} is a model
 of the simple electrical circuit from Figure \ref{figCircuit1}. Note that the
 diagram uses causal blocks (with inputs and outputs) for multiplication,
-summation and integration.
+summation and integration. The block diagram is a graphical representation of
+Equation \ref{eqSimpleCircuitExplicit}. To make the correspondence clear the
+block outputs for the variables $U_S$, $i_1$, $i_2$ and $i$ are labelled with
+the corresponding variable name.
 
 \begin{figure}
 \begin{center}
@@ -411,7 +413,9 @@ simulation. The value of a constant is defined once and for all in the source
 code, while a parameter can be set when an object of the class is
 instantiated. In this example all parameters are provided with default values
 allowing for instantiations with the default parameter values. All other
-variables represent dynamic, time-varying entities.
+variables represent dynamic, time-varying entities. Note that the expressions
+|der(u)| and |der(i)| denote time derivatives of the variables |u| and |i|
+respectively.
 
 \begin{figure}
 
@@ -647,5 +651,46 @@ that arise when there is a need to change the number of variables in the
 system. In addition, the Modelica compilers carry out the symbolic processing
 and generate the simulation code all at once, prior to simulation, which
 introduces further limitations.
+
+There are a number of efforts to improve the support for structural dynamism
+in Modelica. The works by \citet{Nytsch-Geusen2005a} and \citet{Zimmer2008a}
+the most recent examples.
+
+\citet{Nytsch-Geusen2005a} designed and implemented a language extension to
+Modellica called MOSILAB. The language is extended with constructs allowing
+for description of statecharts specifying discrete switches between Modelica
+objects. The statechart approach enables modelling of structurally dynamic
+systems. MOSILAB does not support unbounded structural dynamism because
+statecharts are required to be static and can not be extended at simulation
+runtime.
+
+MOSILAB features a sophisticated compiled implementation producing efficient
+numerical simulation code for all modes of operation before the simulation.
+This implementation approach works well for small number of modes. Simulation
+of bounded structurally-dynamic systems with large number modes is
+problematic.
+
+\citet{Zimmer2008a} designed and implemented a Modelica-like language called
+Sol. The language introduces constructs allowing for description of noncausal
+models where equations and variables can be added and removed at runtime. Sol
+language solves many of the problems with the Modelica language outlined in
+this section. However, the increase in the language expressivity comes at a
+cost of efficiency. Currently, Sol only features an interpreted
+implementation. Compilation-based implementation approaches for Sol have not
+been explored. The ultimate goal of the work on Sol is to port its language
+features for tructurally-dynamic noncausal modelling to Modelica.
+
+There are also a number of efforts to design and implement new
+structurally-dynamic noncausal modelling languages. The works on HYBRSIM
+\citep{Mosterman1998} and Acumen \citep{Taha2010a} deserve a particular
+mention. Both languages take a very different language design approach from
+languages that are based on Modelica. However, when it comes to
+structurally-dynamic modelling and simulation the expressive power of HYBRSIM
+and its interpreted implementation is comparable to Sol, while the expressive
+power of Acumen and its compiled implementation is comparable to MOSILAB.
+
+To my knowledge none of the previous language design and implementation
+approaches support both unbounded structural dynamism and compilation for
+efficiency.
 
 %}
