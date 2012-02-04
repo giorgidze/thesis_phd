@@ -40,15 +40,17 @@ important ones are outlined below.
 
 \item In many physical domains models are more naturally represented using
 noncausal equations, and in some physical domains models cannot be represented
-using only causal equations.
+using only causal equations \citep{Cellier1991,Brenan1996a}.
 
 \item Noncausal languages are declarative and approach modelling problems from
 a higher level of abstraction by focusing on \emph{what} to model rather than
-\emph{how} to model to enable simulation.
+\emph{how} to model to enable simulation
+\citep{Cellier1991,Cellier1996,Nilsson2003a}.
 
 \item Noncausal models are more reusable as equations can be used in a number
 of different ways depending on their context of usage (i.e., effectively
-causalised in a number of different ways).
+causalised in a number of different ways)
+\citep{Cellier1991,Cellier1996,Cellier2006}.
 
 \end{itemize}
 
@@ -81,8 +83,9 @@ parametrised on the list of electrical components on the line. Main-stream,
 noncausal languages provide little support for this style of modelling. Tool
 specific and external scripting languages are often used to generate noncausal
 models for particular instances of higher-order models \citep{Broman2008a}.
-Whilst practical for some applications, this defeats the purpose of a
-declarative, noncausal modelling language.
+This is practical for some applications, but the aforementioned advantages of
+noncausal languages can be better realised with a coherent language supporting
+noncausal as well as higher-order modelling.
 
 This thesis formally defines a language that supports higher-order modelling
 by treating noncausal models as first-class values in a purely functional
@@ -251,32 +254,37 @@ compilation \citep{Hudak1998}. This is a more heavy-weight approach, but also
 more flexible one. Indeed, it is often necessary to inspect the embedded
 language terms for optimisation or compilation. To benefit from the advantages
 of both shallow and deep embeddings, a combined approach called
-\emph{mixed-level} embedding can be used \citep{Giorgidze2010a}.
+\emph{mixed-level} embedding can be used \citep{Giorgidze2010a}. The
+aforementioned embedding approaches are not specific to Haskell. They can be
+realised in other higher-order programming languages (e.g., languages in ML
+and Lisp families).
 
 As mentioned in Section \ref{secFirstClassModels}, Hydra supports runtime
 generation and JIT compilation of noncausal models. Specifically, in response
 to \emph{events} occurring at discrete points in time, the simulation is
 stopped and, depending on the simulation results thus far, new equations are
-generated for further simulation \citep{Giorgidze2009a}. This kind of DSL is
-referred to as \emph{iteratively staged}, emphasising that the domain is
-characterised by repeated program generation, compilation and execution
-\citep{Giorgidze2010a}.
+generated for further simulation \citep{Giorgidze2009a}. In this thesis and in
+\citet{Giorgidze2010a} this kind of DSLs are referred to as \emph{iteratively
+staged}, emphasising that the domain is characterised by repeated program
+generation, compilation and execution. An iteratively-staged language is a
+special kind of \emph{multi-staged} language \citep{Taha2004} with the
+aforementioned characteristics.
 
-Because performance is a primary concern in the domain, the simulation code
-for each mode of the model has to be compiled. As this code is determined
-dynamically this necessitates JIT compilation. For this part of the language
-Hydra employs deep embedding techniques, along with the Low Level Virtual
-Machine (LLVM) compiler infrastructure \citep{Lattner2002a}, a
-language-independent, portable, optimising, compiler backend with JIT support.
-In contrast, shallow embedding techniques are used for the parts of Hydra
-concerned with high-level, symbolic computations \citep{Giorgidze2010a}.
+Because performance is a primary concern in the domain, the numerical
+simulation code for each mode of the model has to be compiled. As this code is
+determined dynamically this necessitates JIT compilation. For the numerical
+part of the language Hydra employs deep embedding techniques, along with the
+Low Level Virtual Machine (LLVM) compiler infrastructure \citep{Lattner2002a},
+a language-independent, portable, optimising, compiler backend with JIT
+support. In contrast, shallow embedding techniques are used for the parts of
+Hydra concerned with high-level, symbolic computations \citep{Giorgidze2010a}.
 
-An alternative might have been to use a \emph{multi-staged} host language like
+An alternative might have been to use a multi-staged host language like
 MetaOCaml \citep{Taha2004}. The built-in runtime code generation capabilities
 of the host language then would have been used instead of relying on an
 external code generation framework such as LLVM. This approach has not been
-pursued, as the tight control over the dynamically generated code is essential
-in this application domain.
+pursued, as the tight control over the dynamically generated numerical code is
+essential in this application domain.
 
 \section{Contributions to the Field of DSL Embedding}
 
@@ -290,13 +298,12 @@ compiled is generated once and for all, meaning the host language acts as a
 powerful but fundamentally conventional macro language: program generation,
 compilation, and execution is a process with a fixed number of stages.
 
-Hydra is iteratively staged and, also, rather than acting merely as a powerful
-meta language that is out of the picture once the generated program is ready
-for execution, the host language is part of the dynamic semantics of the
-embedded language through the shallow parts of the embedding. We thus add
-further tools to the DSL tool box for embedding a class of languages that thus
-far has not been studied much from an embedding and staged programming
-perspective.
+Hydra is iteratively staged and the host language is part of the dynamic
+semantics of the embedded language through the shallow parts of the embedding
+(instead of acting merely as a meta language that is out of the picture once
+the generated program is ready for execution). We thus add further tools to
+the DSL tool box for embedding a class of languages that thus far has not been
+studied much from an embedding and staged programming perspective.
 
 While embedded DSL development methodology is not the main focus of this work,
 I nevertheless think that the thesis should be of interest to embedded DSL
