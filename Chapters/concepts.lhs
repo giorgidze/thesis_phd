@@ -98,7 +98,8 @@ Given two points in time and a signal, a signal relation defines a proposition
 constraining the signal starting from the first point in time and ending with
 the second point in time. Here, |Prop| is a type for propositions defined in
 second-order logic. \emph{Solving} a relation for a given period of time thus
-means finding a signal that satisfies the predicate.
+means finding a signal that satisfies the predicate. We say that in this
+period of time the signal relation instance is \emph{active}.
 
 Just like for signal functions, unary signal relations suffice for handling
 signal relations of any arity; for example, the following pseudo code
@@ -111,6 +112,56 @@ equal t1 t2 s ~= {-" \forall \, t \in \mathbb{R} . \, "-}  t1  <= t && t <= t2  
 
 \noindent This signal relation asserts that the first and second components of
 the signal |s| are equal from |t1| to |t2|.
+
+Let us consider a slightly more elaborate example of a signal relation. The
+following conceptual definition gives a signal relation imposing constraints
+characteristic to electrical components with two connectors (see Figure
+\ref{figTwoPin}).
+
+\begin{code}
+twoPin ::  SR (((Real,Real),(Real,Real)),Real)
+twoPin t1 t2 s ~=
+  {-" \forall \, t \in \mathbb{R} . \, "-} t1 <= t && t <= t2 => twoPinProp (s t)
+  where
+  twoPinProp (((p_i,p_v),(n_i,n_v)),u) ~=    {-" "-}     p_v  -  n_v  =  u
+                                             &&          p_i  +  n_i  =  0
+\end{code}
+
+Here, |p_i|, |p_v|, |p_i|, |p_v| and |u| are the components of the tuple
+carried by the signal |s|. The tuple components |p_i| and |p_v| represent the
+current into the positive pin and the voltage at the positive pin,
+respectively. The tuple components |p_i| and |p_v| represent the current into
+the negative pin and the voltage at the negative pin, respectively. The tuple
+component |u| represents the voltage drop across the electrical component.
+
+\begin{figure}
+\begin{center}
+\includegraphics{Graphics/twoPin}
+\end{center}
+\caption{\label{figTwoPin} Electrical component with two connectors.}
+\end{figure}
+
+By \emph{applying} signal relations to signals (in the sense of predicate
+application) it is possible to reuse the equational constraints. Application
+of signal relations also allows for definition of hierarchically structured
+systems of equations. The following conceptual definition gives a signal
+relation imposing constrains characteristic to a resistor (with
+resistance~|r|).
+
+\begin{code}
+resistor :: Real -> SR (((Real,Real),(Real,Real)),Real)
+resistor r t1 t2 s ~=
+  {-" \forall \, t \in \mathbb{R} . \, "-}  t1  <= t && t <= t2 => {-" \exists \, u \in Signal \, \mathbb{R} . \, "-}   {-" "-}   twoPin t1 t2 (pairS s u)
+                                                                                                                        &&        resistorProp (s t) (u t)
+  where
+  pairS s u t                           ~=    (s t, u t)
+  resistorProp ((p_i,p_v),(n_i,n_v)) u  ~=    r * p_i = u
+\end{code}
+
+Note how the signal relation |resistor| is defined in terms of the signal
+relation application of |twoPin| and one additional equation. As we will see
+in the next section and in Chapter \ref{chapHydra}, Hydra provides a
+convenient syntax for defining and applying signal relations.
 
 \section{Design of Hydra}
 
@@ -131,7 +182,10 @@ functional level as the latter are time-invariant, known parameters as far as
 solving the signal-level equations are concerned. However, the opposite is not
 allowed; that is, a time-varying entity is confined to the signal level. The
 signal-level notions that exist at the functional level are signal relation
-and signal function. These notions are time-invariant.
+and signal function. These notions are time-invariant. Concrete examples of
+signal-level and functional-level definitions as well as definitions where
+these two levels interact with each other are given in Chapter
+\ref{chapHydra}.
 
 Hydra is implemented as a Haskell-embedded DSL using quasiquoting
 \citep{Mainland2007,Mainland2008}. As a result, Haskell provides the

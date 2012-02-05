@@ -30,15 +30,6 @@ in the pattern, represent the current into the negative pin and the voltage at
 the negative pin, respectively. The signal variable |u| represents the voltage
 drop across the electrical component.
 
-\begin{figure}
-\begin{center}
-\includegraphics{Graphics/twoPin}
-\end{center}
-
-\caption{\label{figTwoPin} Electrical component with two connectors.}
-
-\end{figure}
-
 We can now use the |twoPin| signal relation to define a signal relation that
 models a resistor:
 
