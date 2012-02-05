@@ -23,17 +23,36 @@ given below.
 \begin{itemize}
 
 \item Introduce the notion of first-class models in main-stream noncausal
-modelling languages such as Modelica.
+modelling languages such as Modelica. Modelica already supports first-class
+functions. Taking this development one step further by supporting first-class
+models would allow for improved higher-order and structurally dynamic
+modelling capabilities as demonstrated in this thesis.
 
-\item Investigate properties of the ideal semantics developed in this thesis.
+\item Make use of the ideal semantics for verification of simulation results.
+In particular, based on the ideal semantics, it should be possible to develop
+a tool for automatic verification of simulation results.
 
-\item Make use of the ideal semantics for verification of simulation
-results.
-
-\item Apply the ideal semantics to the problem of verification of the language
-implementation.
+\item Investigate properties of the ideal semantics developed in this thesis
+and apply them to the problem of verification of the language implementation.
+Although challenging, it would be interesting to investigate possibilities of
+producing formally verified symbolic processors and numerical simulators for
+noncausal languages like Hydra.
 
 \item Develop symbolic methods for reducing mode switching overheads,
 especially those overheads that are associated to just-in-time compilation.
+Merging of Hydra's implementation approach to that of Sol would be a good
+starting point.
+
+\item Entirely avoid recompilation for discrete changes that are not
+structural changes. Introduction of the notion of impulses in Hydra would be a
+good starting point.
+
+\item Combine FHM and FRP frameworks in a single coherent language. The first
+step into this direction would be to introduce support for statefull signal
+functions in Hydra.
+
+\item Investigate the relationship between different approaches for specifying
+of noncausal connections, including the approach based on combinators used in
+this thesis.
 
 \end{itemize}
