@@ -69,7 +69,7 @@ to functions, (2) returned as a result from functions, (3) constructed at
 runtime and (4) placed in data structures \citep{Scott2009a}. To my knowledge,
 this notion was first introduced by Christopher Strachey \citep{Burstall2000a}
 in the context of functions being first-class values in higher-order,
-functional programming languages. Current, main-stream noncausal languages do
+functional programming languages. Current, mainstream noncausal languages do
 not treat models as first-class values \citep{Nilsson2003a}. This limits their
 expressiveness for \emph{higher-order} and \emph{structurally dynamic}
 modelling.
@@ -283,7 +283,7 @@ An alternative might have been to use a multi-staged host language like
 MetaOCaml \citep{Taha2004}. The built-in runtime code generation capabilities
 of the host language then would have been used instead of relying on an
 external code generation framework such as LLVM. This approach has not been
-pursued, as the tight control over the dynamically generated numerical code is
+pursued, as tight control over the dynamically generated numerical code is
 essential in this application domain.
 
 \section{Contributions to the Field of DSL Embedding}

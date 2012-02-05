@@ -66,7 +66,7 @@ abstractions in Hydra and MKL leads to a similar style of modelling in both
 languages.
 
 The work on MKL has not considered support for structural dynamics, meaning
-that its expressive power in that respect is similar to current main-stream,
+that its expressive power in that respect is similar to current mainstream,
 noncausal modelling and simulation languages like Modelica. However, given the
 similarities between MKL and Hydra, MKL should be a good setting for exploring
 support for structural dynamics, which ultimately could carry over to better

@@ -3,7 +3,7 @@
 
 This chapter describes how Hydra is embedded in Haskell and how embedded
 noncausal models are simulated. Performance of the simulator is evaluated by
-focussing on the implementation aspects that are absent from main-stream
+focussing on the implementation aspects that are absent from mainstream
 noncausal modelling language implementations (i.e., runtime symbolic
 processing and JIT compilation).
 
@@ -482,13 +482,13 @@ data SymTab = SymTab {
 
 \end{figure}
 
-The task of the symbolic processor is to handle event occurrences by modifying
-the |model| field of the symbol table, to generate a flat list of events that
-may occur in the active mode of operation by updating the |events| field of
-the symbol table, and to generate the flat list of equations describing the
-active mode of operation by updating the |equations| field of the symbol
-table. The implementation of Hydra provides the default symbolic processor
-that is defined as follows:
+The task of the symbolic processor is to handle events by modifying the
+|model| field of the symbol table, to generate a flat list of events that may
+occur in the active mode of operation by updating the |events| field of the
+symbol table, and to generate the flat list of equations describing the active
+mode of operation by updating the |equations| field of the symbol table. The
+implementation of Hydra provides the default symbolic processor that is
+defined as follows:
 
 \begin{code}
 defaultSymbolicProcessor  ::  SymTab -> SymTab
@@ -897,7 +897,7 @@ programming library.
 In this section we provide a performance evaluation of the implementation of
 Hydra. The aim of the evaluation is to communicate to noncausal modelling
 language designers and implementers performance overheads of Hydra's language
-constructs and implementation techniques that are absent from main-stream
+constructs and implementation techniques that are absent from mainstream
 noncausal languages. Specifically, we are mainly concerned with the overheads
 of mode switching (computing new structural configurations at events, runtime
 symbolic processing of the equations, and JIT compilation) and how this scales

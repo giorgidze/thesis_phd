@@ -2,7 +2,7 @@
 \label{chapDefinition}
 
 This is a technical chapter giving a formal definition of the Hydra language.
-Note that this chapters defines Hydra's signal-level sublanguage. The
+Note that this chapter defines Hydra's signal-level sublanguage. The
 functional-level sublanguage is provided by Haskell. The definition of Haskell
 is given in the book by \cite{Haskell98}.
 
@@ -465,9 +465,9 @@ implementing the forward Euler method.
 
 Implementations of noncausal modelling languages typically allow modellers to
 choose floating-point representations (e.g., single or double precision),
-symbolic processing methods and numerical simulation methods that need to be
-used during the simulation. This amounts to allowing modellers to choose a
-combination of approximations prior to simulation.
+symbolic processing methods and numerical simulation methods to be used during
+the simulation. This amounts to allowing modellers to choose a combination of
+approximations prior to simulation.
 
 The fact that the implementations are only expected to approximate noncausal
 models needs to be taken into account when defining a formal semantics for a

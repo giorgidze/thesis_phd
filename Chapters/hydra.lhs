@@ -544,7 +544,7 @@ and an in-line inductor.}
 
 The half-wave rectifier circuit can be modelled easily in languages like
 Modelica. However, any attempt to simulate this model assuming fixed
-causality, as current main-stream noncausal language implementations tend to,
+causality, as current mainstream noncausal language implementations tend to,
 will fail as the causalised model will lead to a division by zero when the
 switch is open: there simply is no one fixed causality model that is valid
 both when the switch is open and closed.
@@ -700,7 +700,7 @@ The breaking pendulum, half-wave rectifier and full-wave rectifier examples
 feature a priori bounded number modes of operation. In principle (with a
 suitable language design and implementation) it is feasible to generate code
 for these modes of operation prior to simulation. However, despite their
-simplicity, these are examples with which main-stream noncausal languages such
+simplicity, these are examples with which mainstream noncausal languages such
 as Modelica struggle, as mentioned earlier.
 
 In general, it is not possible to compile Hydra models prior to simulation.
@@ -721,8 +721,8 @@ prior to simulation.
 
 Perhaps the example involving the |sr| signal relation is a bit abstract. In
 the following we emphasise the same point by using a variation on the familiar
-bouncing-ball example. Assuming the elastic collision with the floor, the
-bouncing ball system can be modelled in Hydra as follows.
+bouncing-ball example. Assuming elastic collision with the floor, the bouncing
+ball system can be modelled in Hydra as follows.
 
 \begin{code}
 bouncingBall :: Body -> SR Body
@@ -799,6 +799,6 @@ simple electrical-circuit example. This example allows readers familiar with
 object-oriented, noncausal languages like Modelica to compare the Hydra model
 given in this Chapter to the Modelica model given in Chapter
 \ref{chapBackground}. The rest of the Chapter focuses on the features of Hydra
-that are absent from main-stream, noncausal modelling languages. Specifically,
+that are absent from mainstream, noncausal modelling languages. Specifically,
 we discuss the higher-order and structurally dynamic modelling capabilities of
 the Hydra language.

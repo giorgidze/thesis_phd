@@ -18,7 +18,7 @@ This chapter illustrates the aforementioned three steps by using simple and
 instructive examples. We start by conducting these steps manually. We then
 demonstrate how causal and noncausal modelling languages and tools can be used
 to automate this process, and discuss advantages and disadvantages of current,
-main-stream modelling languages.
+mainstream modelling languages.
 
 In addition, by modelling and simulating the example physical systems, basic
 concepts of modelling and simulation are introduced. Where necessary, the
@@ -252,7 +252,7 @@ introduction of this chapter.
 As we have already seen, for some systems, it is feasible to conduct this
 process manually. Indeed translation of systems of equations into code in
 general purpose programming languages like Fortran, C, Java or Haskell is a
-common practise. However, manual translation becomes tedious and error prone
+common practice. However, manual translation becomes tedious and error prone
 with growing complexity. Imagine conducting the process presented in this
 section for a physical system described with hundreds of thousands of
 equations. Modelling languages and simulation tools can help with all three

@@ -22,7 +22,7 @@ given below.
 
 \begin{itemize}
 
-\item Introduce the notion of first-class models in main-stream noncausal
+\item Introduce the notion of first-class models in mainstream noncausal
 modelling languages such as Modelica. Modelica already supports first-class
 functions. Taking this development one step further by supporting first-class
 models would allow for improved higher-order and structurally dynamic
