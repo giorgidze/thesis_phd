@@ -26,22 +26,25 @@ stage of quasiquoting, charging the host-language type checker with checking
 the embedded terms. This also ensures that only well-typed programs are
 generated at runtime.
 
-The FHM design was originally inspired by Functional Reactive Programming
-(FRP) \citep{Elliott1997}, particularly Yampa \citep{Nilsson2002a}. A key
-difference is that FRP provides functions on signals whereas FHM generalises
-this to relations on signals. FRP can thus be seen as a framework for causal
-simulation, while FHM supports noncausal simulation. Signal functions are
-first class entities in most incarnations of FRP, and new ones can be computed
-and integrated into a running system dynamically. As we have seen, this
-capability has also been carried over to FHM. This means that these FRP
-versions, including Yampa, are also examples of iteratively staged languages.
-However, as all FRP versions supporting unbounded structural dynamism so far
-have been interpreted, the program generation aspect is much less pronounced
-than what is the case for Hydra. That said, in Yampa, program fragments are
-generated and then optimised dynamically \citep{Nilsson2005a}. It would be
-interesting to try to apply the implementation approaches described in this
-thesis (i.e., runtime symbolic processing and JIT compilation) to a version of
-FRP, especially in the context of the recently proposed optimisations by
+As we have already discussed in Chapter \ref{chapIntroduction}, many language
+features of Hydra follow closely those proposed by \cite{Nilsson2003a} in the
+context of the FHM framework. The FHM framework itself was originally inspired
+by Functional Reactive Programming (FRP) \citep{Elliott1997}, particularly
+Yampa \citep{Nilsson2002a}. A key difference between FHM and FRP is that FRP
+provides functions on signals whereas FHM generalises this to relations on
+signals. FRP can thus be seen as a framework for causal modelling, while FHM
+is a framework for noncausal modelling. Signal functions are first class
+entities in most incarnations of FRP, and new ones can be computed and
+integrated into a running system dynamically. As we have seen, this capability
+has also been carried over to Hydra. This means that these FRP versions,
+including Yampa, are also examples of iteratively staged languages. However,
+as all FRP versions supporting unbounded structural dynamism so far have been
+interpreted, the program generation aspect is much less pronounced than what
+is the case for Hydra. That said, in Yampa, program fragments are generated
+and then optimised dynamically \citep{Nilsson2005a}. It would be interesting
+to try to apply the implementation approaches described in this thesis (i.e.,
+runtime symbolic processing and JIT compilation) to a version of FRP,
+especially in the context of the recently proposed optimisations by
 \citet{Liu2009a} and \citet{Sculthorpe2011a}.
 
 \section{Noncausal Modelling and Simulation Languages}
