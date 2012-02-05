@@ -168,7 +168,8 @@ formally defines a noncausal modelling language called Hydra and describes its
 implementation in detail. Hydra provides noncausal modelling and simulation
 capabilities that go beyond the state of the art and represents significant
 progress in the field of design and implementation of declarative modelling
-and simulation languages, in particular:
+and simulation languages. The following list summarises the thesis
+contributions to the field of noncausal modelling and simulation.
 
 \begin{itemize}
 
@@ -307,8 +308,9 @@ studied much from an embedding and staged programming perspective.
 
 While embedded DSL development methodology is not the main focus of this work,
 I nevertheless think that the thesis should be of interest to embedded DSL
-implementers, as it presents an application of a new embedding technique. In
-particular:
+implementers, as it presents an application of a new embedding technique. The
+following list summarises the thesis contributions to the field of DSL
+embedding.
 
 \begin{itemize}
 

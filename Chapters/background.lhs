@@ -6,7 +6,7 @@ modelling and simulation of physical systems. In order to make the thesis self
 contained, this chapter gives background information on the language domain.
 
 The three essential steps involved in the process of modelling and simulation
-of a physical system are:
+of a physical system are given in the following list.
 
 \begin{itemize}
 \item Mathematical modelling of the system behaviour
