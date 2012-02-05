@@ -3,8 +3,8 @@
 
 This chapter presents the Hydra language informally, by means of instructive
 examples. The examples are carefully chosen to back up the contributions of
-the thesis by illustrating Hydra's features that are absent from other
-noncausal modelling and simulation languages.
+the thesis by illustrating higher-order and structurally-dynamic modelling and
+simulation in Hydra.
 
 \section{Models with Static Structure}
 
@@ -50,13 +50,15 @@ signal relation, unlike the rest of the variables in the pattern, which can be
 constrained further.
 
 As we have already mentioned, Hydra uses two kinds of variables: the
-functional-level ones representing time-invariant parameters, and the
+functional-level ones representing time-invariant entities, and the
 signal-level ones, representing time-varying entities, the signals.
 Functional-level fragments, such as variable references, are spliced into the
 signal level by enclosing them between antiquotes, \$. On the other hand
 time-varying entities are not allowed to escape to the functional level; that
 is, signal-variables are not in scope between antiquotes and outside the
-quasiquotes.
+quasiquotes. Note that, as discussed in Section~\ref{secDesignOfHydra}, a
+signal relation is a time-invariant entity and thus can be spliced into the
+signal level.
 
 The |resistor| signal relation uses antiquoting to splice in a copy of the
 |twoPin| signal relation; that is, its equations are reused in the context of
@@ -70,12 +72,12 @@ signal relation, let us consider what happens when the resistor model is
 \emph{flattened} as part of flattening of a complete model, a transformation
 that is described in detail in Chapter \ref{chapImplementation}. Intuitively,
 flattening can be understood as inlining of applied signal relations to reduce
-the signal relation into a list of signal equality constraints (i.e., a flat
-DAE). In the process of flattening, the arguments of a signal relation
-application are substituted into the body of the applied signal relation, and
-the entire application is then replaced by the instantiated signal relation
-body, renaming local variables as necessary to avoid name clashes. In our
-case, the result of flattening the signal relation |resistor 10| is:
+the signal relation into a flat list of equations (i.e., a flat DAE). In the
+process of flattening, the arguments of a signal relation application are
+substituted into the body of the applied signal relation, and the entire
+application is then replaced by the instantiated signal relation body,
+renaming local variables as necessary to avoid name clashes. In our case, the
+result of flattening the signal relation |resistor 10| is:
 
 \begin{code}
 [rel| ((p_i,p_v),(n_i,n_v)) ->
@@ -286,8 +288,9 @@ simpleCircuit =
 \end{code}
 \end{samepage}
 
-Note that the above code is a direct textual representation of how the
-components are connected in the circuit. Unlike the Modelica model that
+Here state variables are initially set to zero and all other parameters are
+set to one. Note that the above code is a direct textual representation of how
+the components are connected in the circuit. Unlike the Modelica model that
 specifies the noncausal connections in terms of connections of time-varying
 variables, Hydra allows for definition of higher-order combinators that are
 capable of specifying noncausal connections by connecting noncausal models
@@ -305,50 +308,6 @@ simpleCircuit2 =
                               (serial  (resistor 1)  (iInductor   0 1)))
 \end{code}
 \end{samepage}
-
-\section{Simulation}
-
-In this section we briefly discuss how to simulate Hydra models. The
-Haskell-embedded implementation of Hydra features the following function:
-
-\begin{code}
-simulate :: SR () -> Experiment -> IO ()
-\end{code}
-
-The |simulate| function takes two arguments. The first argument is the signal
-relation that needs to be simulated. The second argument describes the
-\emph{experiment}, essentially a description of what needs to happen during
-the simulation. Using the second argument the modeller can set the simulation
-starting and ending times, desired time step, symbolic processor, numerical
-solver, or how to visualise the trajectories of the constrained signals. The
-definition of the |Experiment| data type and the default experiment
-description are given in Chapter \ref{chapImplementation}.
-
-The simple circuit model can be simulated using the default experiment
-description as follows:
-
-\begin{code}
-simulate simpleCircuit defaultExperiment
-\end{code}
-
-With the |defaultExperiment| parameter the |simpleCircuit| signal relation is
-simulated for 10 seconds of simulation time starting from the time point of
-zero. The time step is set to |0.001| and the trajectories of the constrained
-signals are printed to the standard output in the
-gnuplot\footnote{\url{http://www.gnuplot.info/}} compatible format. The
-default numerical solver is SUNDIALS \citep{Sundials2005}, but users are
-allowed to provide their own symbolic processors and numerical solvers. This
-and other implementation aspects are described in detail in Chapter
-\ref{chapImplementation}.
-
-The earlier sections of this chapter introduced the Hydra language using the
-simple electrical-circuit example. This example allows readers familiar with
-object-oriented, noncausal languages like Modelica to compare the Hydra model
-given in this Chapter to the Modelica model given in Chapter
-\ref{chapBackground}. The rest of the Chapter focuses on the features of Hydra
-that are absent from main-stream, noncausal modelling languages. Specifically,
-we discuss the higher-order and structurally dynamic modelling capabilities of
-the Hydra language.
 
 \section{Higher-order Modelling with Collections of Models}
 
@@ -700,13 +659,17 @@ But, additionally, $(dp_{v_{1}} - dn_{v_{1}})$ and $(dp_{v_{3}} - dn_{v_{3}})$
 are related by Equation \ref{eq:ud1=ud3} that is provided by model of the
 overall circuit.
 
-In this case, a simple symbolic simplification pass suffices to eliminate the
-redundant equations in the modes where the diodes are pairwise closed. Using
-Equation \ref{eq:ud1=0} and Equation \ref{eq:ud3=0}, Equation \ref{eq:ud1=ud3}
-can be simplified to the trivially satisfied equation $0 = 0$ that then can be
+In this case, a simple symbolic simplification pass involving substitution of
+algebraic variables and constant folding suffices to eliminate the redundant
+equations in the modes where the diodes are pairwise closed. Using Equation
+\ref{eq:ud1=0} and Equation \ref{eq:ud3=0}, Equation \ref{eq:ud1=ud3} can be
+simplified to the trivially satisfied equation $0 = 0$ that then can be
 eliminated. After this the model can be simulated without further issues. Note
 that dynamic generation of equations followed by symbolic processing, as
 provided by Hydra, is crucial to this approach to simulating ideal diodes.
+Studies to precisely characterise in which circumstances can over determined
+systems of equations simplified by eliminating the redundant equations still
+lie ahead.
 
 As we have already mentioned, the implementation of Hydra provides an
 extensible and configurable symbolic processor. The symbolic processor that
@@ -792,12 +755,50 @@ divide ((x0,y0),(vx0,vy0)) = [rel| ((x,y),(vx,vy)) ->
 
 The model assumes that the kinetic energy is not lost and the balls divide the
 initial kinetic energy by bouncing in opposite directions. This is an example
-of an unbounded structurally dynamic system; the number of modes cannot be
-determined prior to simulation and it is not feasible to generate the code
-prior to simulation.
+of an unbounded structurally dynamic system where the number of modes cannot
+be determined prior to simulation.
 
-Unfortunately, due to the limitations of main-stream noncausal modelling
-languages, declarative equational modelling of (unbounded) structurally
-dynamic systems remains an elusive application. We believe adoption of the
-Hydra features illustrated in this chapter would mitigate this unfortunate
-situation.
+\section{Simulation}
+
+We conclude this chapter with a brief description of how to simulate Hydra
+models, including the ones that are described in this chapter. The
+Haskell-embedded implementation of Hydra features the following function:
+
+\begin{code}
+simulate :: SR () -> Experiment -> IO ()
+\end{code}
+
+The |simulate| function takes two arguments. The first argument is the signal
+relation that needs to be simulated. The second argument describes the
+\emph{experiment}, essentially a description of what needs to happen during
+the simulation. Using the second argument the modeller can set the simulation
+starting and ending times, desired time step, symbolic processor, numerical
+solver, or how to visualise the trajectories of the constrained signals. The
+definition of the |Experiment| data type and the default experiment
+description are given in Chapter \ref{chapImplementation}.
+
+For example, the simple circuit model can be simulated using the default
+experiment description as follows:
+
+\begin{code}
+simulate simpleCircuit defaultExperiment
+\end{code}
+
+With the |defaultExperiment| parameter the |simpleCircuit| signal relation is
+simulated for 10 seconds of simulation time starting from the time point of
+zero. The time step is set to |0.001| and the trajectories of the constrained
+signals are printed to the standard output in the
+gnuplot\footnote{\url{http://www.gnuplot.info/}} compatible format. The
+default numerical solver is SUNDIALS \citep{Sundials2005}, but users are
+allowed to provide their own symbolic processors and numerical solvers. This
+and other implementation aspects are described in detail in Chapter
+\ref{chapImplementation}.
+
+The earlier sections of this chapter introduced the Hydra language using the
+simple electrical-circuit example. This example allows readers familiar with
+object-oriented, noncausal languages like Modelica to compare the Hydra model
+given in this Chapter to the Modelica model given in Chapter
+\ref{chapBackground}. The rest of the Chapter focuses on the features of Hydra
+that are absent from main-stream, noncausal modelling languages. Specifically,
+we discuss the higher-order and structurally dynamic modelling capabilities of
+the Hydra language.

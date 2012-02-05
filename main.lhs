@@ -1,9 +1,9 @@
-\documentclass[11pt,a4paper]{report}
+\documentclass[12pt,a4paper]{report}
 
 %include polycode.fmt
 %include Format/haskell.lhs
 
-\usepackage[left=1.5in, right=1.5in, top=1.5in, bottom=1.5in]{geometry}
+\usepackage[left=3.8cm, right=2.0cm, top=3.8cm, bottom=3.8cm]{geometry}
 
 \usepackage{graphicx}
 \usepackage{amsmath}

@@ -164,6 +164,7 @@ in the next section and in Chapter \ref{chapHydra}, Hydra provides a
 convenient syntax for defining and applying signal relations.
 
 \section{Design of Hydra}
+\label{secDesignOfHydra}
 
 Hydra is a two-level language. It features the \emph{functional level} and the
 \emph{signal level}. The functional level allows for the definition of
