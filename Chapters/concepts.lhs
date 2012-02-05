@@ -188,17 +188,20 @@ signal-level and functional-level definitions as well as definitions where
 these two levels interact with each other are given in Chapter
 \ref{chapHydra}.
 
-Hydra is implemented as a Haskell-embedded DSL using quasiquoting
-\citep{Mainland2007,Mainland2008}. As a result, Haskell provides the
-functional level for free through shallow embedding. In contrast, the signal
-level is realised through deep embedding; that is, signal relations expressed
-in terms of Hydra-specific syntax are, through the quasiquoting machinery,
-turned into an internal representation, an abstract syntax tree (AST), that
-then is used for compilation into simulation code (see Chapter
-\ref{chapImplementation} for the details). Note that, although Hydra is
-embedded in Haskell, the two-level language design outlined earlier in this
-section and the notion of first-class signal relations are not predicated on
-the embedding approach.
+Hydra is implemented as a Haskell-embedded DSL using
+quasiquoting\footnote{Quasiquoting is not unique to Haskell. It has been
+available in other languages (most notably in the Lisp family of languages).},
+a Haskell extension implemented in Glasgow Haskell Compiler
+(GHC)\footnote{\url{http://www.haskell.org/ghc}}, for providing a convenient
+surface syntax. As a result, Haskell provides the functional level for free
+through shallow embedding. In contrast, the signal level is realised through
+deep embedding; that is, signal relations expressed in terms of Hydra-specific
+syntax are, through the quasiquoting machinery, turned into an internal
+representation, an abstract syntax tree (AST), that then is used for
+compilation into simulation code (see Chapter \ref{chapImplementation} for the
+details). Note that, although Hydra is embedded in Haskell, the two-level
+language design outlined earlier in this section and the notion of first-class
+signal relations are not predicated on the embedding approach.
 
 The Haskell-embedded implementation of Hydra adopts the following syntax for
 defining signal relations:

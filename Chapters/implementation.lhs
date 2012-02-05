@@ -10,16 +10,17 @@ processing and JIT compilation).
 \section{Embedding}
 \label{secEmbedding}
 
-Hydra is implemented as a Haskell embedded DSL. We use quasiquoting, a recent
-Haskell extension implemented in Glasgow Haskell Compiler
-(GHC)\footnote{\url{http://www.haskell.org/ghc}}, to provide a convenient
-surface (i.e., concrete) syntax for Hydra. The implementation uses
-quasiquoting to generate the typed representation of Hydra models from strings
-in the concrete syntax. An opening quasiquote specifies a function (a
-so-called quasiquoter) that performs the aforementioned transformation. In
-GHC, a quasiquoter generates Haskell code using Template Haskell
-\citep{Sheard2002}, a compile-time meta-programming facility implemented in
-GHC.
+Hydra is implemented as a Haskell embedded DSL. In this section we give a
+detailed description of how Hydra is embedded in the host language Haskell.
+
+We use quasiquoting, a recent Haskell extension implemented in GHC
+\citep{Mainland2007}, to provide a convenient surface (i.e., concrete) syntax
+for Hydra. The implementation uses quasiquoting to generate the typed
+representation of Hydra models from strings in the concrete syntax. An opening
+quasiquote specifies a function (a so-called quasiquoter) that performs the
+aforementioned transformation. In GHC, a quasiquoter generates Haskell code
+using Template Haskell \citep{Sheard2002}, a compile-time meta-programming
+facility implemented in GHC.
 
 GHC executes quasiquoters at Haskell compile time, before type checking. As
 the typed abstract syntax of Hydra fully embodies the type system of Hydra, we
@@ -441,14 +442,18 @@ function places an empty list in this field.
 The |events| field is for a list of zero-crossing signal expressions defining
 the event occurrences. Recall the type signature of the |switch| combinator
 given in Section \ref{secEmbedding}. A signal function that detects events
-returns a real valued signal. At each structural change the simulator places
-the signal expressions describing event occurrences in the |events| field.
-Initially, at the start of the simulation, the simulator places an empty list
-in the |events| field of the symbol table. The |events| field is used to
-communicate all the switching guards to the JIT compiler and the numerical
-solver, and then, once some events actually have occurred, to communicate back
-this information to the symbolic processor by deleting the signal expressions
-of those zero-crossings that did not occur.
+returns a real valued zero-crossing signal.
+
+At the start of the simulation, the simulator places the list of zero-crossing
+signals defined in the first mode of operation in the |events| field of the
+symbol table. Once the numerical solver, during the simulation of the first
+mode, detects that one or more signals have crossed zero the simulator deletes
+those signals from the |events| field that have not crossed zero. The updated
+|events| field is then used by the event handler to identify which events have
+occurred and to perform corresponding structural reconfigurations computing
+the next mode of operation. Before the simulation continues, the |events|
+field is populated with the zero-crossing signals that are active in the new
+mode of operation.
 
 The |time| field is for current time. Initially the simulator places the
 starting time given in the experiment description in this field. The |time|
@@ -897,11 +902,13 @@ noncausal languages. Specifically, we are mainly concerned with the overheads
 of mode switching (computing new structural configurations at events, runtime
 symbolic processing of the equations, and JIT compilation) and how this scales
 when the size of the models grow in order to establish the feasibility of our
-approach. The time spent on numerical simulation is of less interest as we are
-using standard numerical solvers, and as our model equations are compiled down
-to native code with efficiency on par with statically generated code, this
-aspect of the overall performance should be roughly similar to what can be
-obtained from other compilation-based modelling and simulation language
+approach.
+
+The time spent on numerical simulation is of less interest as we are using
+standard numerical solvers, and as our model equations are compiled down to
+native code with efficiency on par with statically generated code, this aspect
+of the overall performance should be roughly similar to what can be obtained
+from other compilation-based modelling and simulation language
 implementations. For this reason, and because other compilation-based,
 noncausal modelling and simulation language implementations do not carry out
 dynamic mode switching, we do not compare the performance to other simulation
@@ -1027,7 +1034,7 @@ terms) and grows slowly as model complexity increases.
 \begin{figure}
 \begin{center}
 
-\small
+\footnotesize
 
 %include ../Graphics/benchmark.tex
 
@@ -1052,10 +1059,11 @@ generation aspects in the context of noncausal modelling and simulation of
 structurally dynamic systems, and the suitability of the proposed execution
 model for (soft) real-time simulation. Currently, for large structurally
 dynamic systems, the implementation is only suitable for offline simulation.
+This is also true for other implementations of structurally dynamic noncausal
+modelling languages, such as MOSILAB and Sol.
 
 The implementation of Hydra offers new functionality in that it allows
-noncausal modelling and simulation of structurally dynamic systems that simply
-cannot be handled by static approaches. Thus, when evaluating the feasibility
-of our approach, one should weigh the inherent overheads against the
-limitation and inconvenience of not being able to model and simulate such
-systems noncausally.
+modelling and simulation of structurally dynamic systems that simply cannot be
+handled by static approaches. Thus, when evaluating the inherent overheads of
+our approach, one should weigh them against the limitation and inconvenience
+of not being able to model and simulate such systems at all.
