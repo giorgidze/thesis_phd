@@ -3,7 +3,7 @@
 
 This chapter presents the Hydra language informally, by means of instructive
 examples. The examples are carefully chosen to back up the contributions of
-the thesis by illustrating higher-order and structurally-dynamic modelling and
+the thesis by illustrating higher-order and structurally dynamic modelling and
 simulation in Hydra.
 
 \section{Models with Static Structure}

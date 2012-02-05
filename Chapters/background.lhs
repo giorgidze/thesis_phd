@@ -667,7 +667,7 @@ runtime.
 MOSILAB features a sophisticated compiled implementation producing efficient
 numerical simulation code for all modes of operation before the simulation.
 This implementation approach works well for small number of modes. Simulation
-of bounded structurally-dynamic systems with large number modes is
+of bounded structurally dynamic systems with large number modes is
 problematic.
 
 \citet{Zimmer2008a} designed and implemented a Modelica-like language called
@@ -680,14 +680,14 @@ implementation. Compilation-based implementation approaches for Sol have not
 been explored. The ultimate goal of the work on Sol is to port its language
 features for tructurally-dynamic noncausal modelling to Modelica.
 
-There are also a number of efforts to design and implement new
-structurally-dynamic noncausal modelling languages. The works on HYBRSIM
+There are also a number of efforts to design and implement new structurally
+dynamic noncausal modelling languages. The works on HYBRSIM
 \citep{Mosterman1998} and Acumen \citep{Taha2010a} deserve a particular
 mention. Both languages take a very different language design approach from
-languages that are based on Modelica. However, when it comes to
-structurally-dynamic modelling and simulation the expressive power of HYBRSIM
-and its interpreted implementation is comparable to Sol, while the expressive
-power of Acumen and its compiled implementation is comparable to MOSILAB.
+languages that are based on Modelica. However, when it comes to structurally
+dynamic modelling and simulation the expressive power of HYBRSIM and its
+interpreted implementation is comparable to Sol, while the expressive power of
+Acumen and its compiled implementation is comparable to MOSILAB.
 
 To my knowledge none of the previous language design and implementation
 approaches support both unbounded structural dynamism and compilation for
