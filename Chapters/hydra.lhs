@@ -376,7 +376,7 @@ Just like other two-pin electrical components, the |wire| signal relation is
 modelled by extending the |twoPin| signal relation with a suitable equation.
 
 The |wire| signal relation is both left and right identity of the |serial|
-higher-order signal as stated by the following equation and illustrated in
+higher-order signal relation as stated by the following equation and illustrated in
 Figure \ref{figSerialWire}.
 
 \begin{code}
@@ -391,11 +391,20 @@ identity of the |serial| higher-order signal relation.}
 
 \end{figure}
 
+The |serial| signal relation is also associative:
+
+\begin{code}
+sr1 `serial` (sr2 `serial` sr3) = (sr1 `serial` sr2) `serial` sr3
+\end{code}
+
+
 Here by the equality of the signal relations we mean that the signal relations
-introduce equivalent constraints, and not necessarily the same equations.
-Because the |wire| signal relation is both left and right identity of the
-|serial| binary function, in the definition of the |serialise| signal relation
-we could also use the left fold instead of the right fold.
+introduce equivalent constraints (i.e., one constraint implies the other and
+vice versa), and not necessarily the same equations. Because the |wire| signal
+relation is both left and right identity of the |serial| binary function and
+the |serial| signal relation is also associative, in the definition of the
+|serialise| signal relation we could also use the left fold instead of the
+right fold.
 
 Somewhat similarly to the |serialise| signal relation the higher-order signal
 relation |parallelise| that takes as an argument a list of signal relations
@@ -433,6 +442,13 @@ noWire `parallel` sr = sr `parallel` noWire = sr
 right identity of the |parallel| higher-order signal relation.}
 
 \end{figure}
+
+The |parallel| signal relation is associative:
+
+\begin{code}
+sr1 `parallel` (sr2 `parallel` sr3) = (sr1 `parallel` sr2) `parallel` sr3
+\end{code}
+
 
 \section{Structurally Dynamic Modelling}
 
