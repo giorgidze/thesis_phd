@@ -433,6 +433,35 @@ said that, readers familiar with other higher-order, typed functional
 programming languages, such as Standard ML \citep{Milner1997a}, should also be
 able to follow the thesis in its entirety.
 
+It is worthwhile to mention that only small subset of the Haskell features are
+needed to model and simulate physical systems in Hydra. The modeller should
+know:
+
+\begin{itemize}
+
+\item how to define a function by providing its name, arguments and result,
+
+\item how to apply a function to arguments,
+
+\item how to write a function type signature involving arbitrarily nested
+pairs of basic types,
+
+\item how to write functions that operate on lists (this is only needed for
+higher-order modelling with collections of models),
+
+\item and how to use functions as first class values.
+
+\end{itemize}
+
+Other features of Haskell, most notably laziness and type classes, are not
+needed to model in Hydra. The aforementioned two features are not used in the
+language implementation either. The implementation of Hydra makes use of the
+following two Haskell extensions available in Glasgow Haskell Compiler
+(GHC)\footnote{\url{http://www.haskell.org/ghc}}: quasiquoting
+\citep{Mainland2007} and generalised algebraic data types (GADTs)
+\citep{PeytonJones2006a}.
+
+
 \section{Outline}
 
 The rest of the dissertation is organised as follows:
