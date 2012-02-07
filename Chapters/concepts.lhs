@@ -41,6 +41,24 @@ suitable floating point type, such as |Double|. Indeed, |Double| is used in
 Hydra. However, |Real| is used in most places of the presentation as we
 conceptually are dealing with real numbers.
 
+One can view the treatment of signals as continues as an abstraction over the
+underling discretely sampled implementation. It is cumbersome and error prone
+to directly work with the discrete representation for entities that
+conceptually exhibit continuous dynamics. For example, explicit handling of
+fixed and variable sampling rates, composition of models using different
+sampling rates, and explicit accounting for numerical errors are problematic.
+
+This is not to say that being aware of the underling discretely sampled
+implementation is not useful. In some cases (e.g., when the numerical
+simulation fails or when the simulation performance is unacceptably slow) it
+is necessary to adjust the discrete simulation time step or change other
+simulation parameters. However, in most cases, assuming that the continuous
+model is correct, those adjustments can be made without changes to the model.
+
+Although modelling with discrete streams is out of the scope of this thesis,
+it would be interesting to explore a discrete variant of Hydra featuring
+noncausal equations on discrete streams.
+
 \section{Signal Function}
 
 Conceptually, a \emph{signal function} is a function from signal to signal:
