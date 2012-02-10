@@ -1,6 +1,7 @@
 \chapter{FHM Concepts and Design of Hydra}
 \label{chapConcepts}
 
+
 This chapter introduces the three central concepts of the FHM framework that
 the Hydra language is based on: signal, signal function and signal relation.
 These concepts facilitate development of and reasoning about Hydra models, and
@@ -10,6 +11,32 @@ covers conceptual definitions; how the concepts of Hydra are implemented is
 covered in Chapter \ref{chapImplementation}. This chapter also discusses how
 Hydra's design facilitates the embedding of the aforementioned concepts into a
 functional programming language.
+
+
+\section{FHM and FRP}
+
+The idea of treating noncausal models as first-class values in a functional
+programming language is due to \citet{Nilsson2003a}. The authors propose the
+FHM framework for designing and implementing noncausal modelling languages.
+The framework borrows the notion of signal denoting time-varying values from
+the FRP languages and generalises the notion of signal function (featured in a
+number of variants of FRP, most notably Yampa \citep{Hudak2003}) to signal
+relation.
+
+Intuitively, a signal function can be understood as a block with inputs and
+outputs featured in causal modelling languages. While, a signal relation can
+be understood as a noncausal model without explicitly specified inputs and
+outputs. In other words, FRP extends a functional programming language with
+causal modelling capabilities, while FHM extends a functional programming
+language with noncausal modelling capabilities.
+
+Signal functions are first-class entities in most variants of FRP and this
+property also carries over to signal relations in FHM. As we will see later in
+this chapter and also in Chapter \ref{chapHydra}, the first-class nature of
+signal relations is crucial for higher-order and structurally-dynamic
+modelling in Hydra. To my knowledge, Hydra is the first language that features
+the FHM's notion of signal relation as a first-class entity.
+
 
 \section{Signal}
 \label{secSignal}
@@ -312,3 +339,8 @@ follows the pattern is not necessarily a static one as the equations may
 contain a signal relation application of a structurally dynamic signal
 relation. As we will see in Chapter \ref{chapHydra}, the |switch| combinator
 enables modelling and simulation unbounded structurally dynamic systems.
+
+As we will see in Chapter \ref{chapImplementation}, the two-level nature of
+Hydra also manifests itself in its implementation as a mixed-level embedding.
+The functional level is realised by the shallow part of the embedding, while
+the signal level is realised by the deep part of the embedding.
