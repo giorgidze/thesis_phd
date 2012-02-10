@@ -31,6 +31,18 @@ checker. However, the disadvantage of this approach is the fact that
 type-related error messages are not phrased in domain-specific terms, but
 rather in terms of the Haskell encoding of the domain-specific types.
 
+As we have seen in Chapter \ref{chapDefinition}, the typed system of Hydra
+provides the following guarantees: a type of a structurally dynamic signal
+relation remains unchanged despite the structural changes; arithmetic
+expressions, equations, signal relation applications and signal function
+applications are well typed. A type checked Hydra program may still fail at
+runtime for kinds of errors that are not checked by the type system.
+Specifically, a runtime error will be raised in the following three
+circumstances: the symbolic processor discovers that the number of equations
+and the number of variables for the active mode are not equal, the numerical
+solver can not solve the system of equations, and the numerical solver
+triggers a numerical exception such as division by zero.
+
 The implementation of Hydra provides two quasiquoters: the |rel| quasiquoter
 for generating typed signal relations, and the |fun| quasiquoter for
 generating typed signal functions. The implementation of the quasiquoters is
