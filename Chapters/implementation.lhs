@@ -31,7 +31,7 @@ checker. However, the disadvantage of this approach is the fact that
 type-related error messages are not phrased in domain-specific terms, but
 rather in terms of the Haskell encoding of the domain-specific types.
 
-As we have seen in Chapter \ref{chapDefinition}, the typed system of Hydra
+As we have seen in Chapter \ref{chapDefinition}, the type system of Hydra
 provides the following guarantees: a type of a structurally dynamic signal
 relation remains unchanged despite the structural changes; arithmetic
 expressions, equations, signal relation applications and signal function
