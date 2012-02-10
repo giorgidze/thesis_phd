@@ -178,18 +178,22 @@ embedding noncausal models as first-class entities into a purely functional
 programming language. To my knowledge, Hydra is the first noncausal language
 that faithfully treats equational models as first-class values (i.e., supports
 all four points outlined in the beginning of Section
-\ref{secFirstClassModels}).
+\ref{secFirstClassModels}). See Section \ref{secModelica}, Section
+\ref{secHybridModelling}, Chapter \ref{chapConcepts} and Chapter
+\ref{chapHydra} for details.
 
 \item The thesis shows how to use runtime symbolic processing and
 \emph{just-in-time} (JIT) compilation to enable efficient simulation of
 noncausal models that are generated at simulation runtime. To my knowledge,
 Hydra is the first noncausal language that enables support \emph{both} for
 modelling and simulation of unbounded structurally dynamic systems and for
-compilation of simulation code for efficiency.
+compilation of simulation code for efficiency. See Chapter
+\ref{chapImplementation} for details.
 
 \item The thesis formally defines the Hydra language. To my knowledge, Hydra
 is the first noncausal language that features a formal specification capturing
-both continuous and discrete aspects of unbounded structural dynamism.
+both continuous and discrete aspects of unbounded structural dynamism. See
+Chapter \ref{chapDefinition} for details.
 
 \end{itemize}
 
@@ -316,10 +320,12 @@ embedding.
 
 \item The thesis presents a case study of mixed-level embedding of an
 iteratively staged DSL in a host language that does not provide built-in
-multi-stage programming capabilities.
+multi-stage programming capabilities. See Chapter \ref{chapConcepts} and
+Chapter \ref{chapHydra} for details.
 
 \item The thesis describes how to use JIT compilation to implement an
-iteratively staged embedded DSL efficiently.
+iteratively staged embedded DSL efficiently. See Chapter
+\ref{chapImplementation} for details.
 
 \end{itemize}
 

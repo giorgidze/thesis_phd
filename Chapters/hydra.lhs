@@ -397,7 +397,6 @@ The |serial| signal relation is also associative:
 sr1 `serial` (sr2 `serial` sr3) = (sr1 `serial` sr2) `serial` sr3
 \end{code}
 
-
 Here by the equality of the signal relations we mean that the signal relations
 introduce equivalent constraints (i.e., one constraint implies the other and
 vice versa), and not necessarily the same equations. Because the |wire| signal
