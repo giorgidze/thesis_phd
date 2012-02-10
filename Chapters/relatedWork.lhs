@@ -121,11 +121,15 @@ component can be modelled using a combination of DAEs and partial differential
 equations (PDEs). The implementation of Acumen features advanced symbolic
 processing methods that reduce a combination of DAEs and PDEs to the
 corresponding system of ODEs whenever possible. Acumen supports bounded
-structural dynamism, but unbounded structural dynamism is not supported. The
-symbolic processing methods developed for Acumen and tight integration with an
-FRP variant would benefit Hydra, while Hydra's support for unbounded
-structural dynamism both from the language design and implementation point of
-view would benefit Acumen.
+structural dynamism, but unbounded structural dynamism is not supported.
+
+The symbolic processing methods developed for Acumen and tight integration
+with an FRP variant would benefit Hydra, while Hydra's support for unbounded
+structural dynamism would benefit Acumen. If we take into account the fact
+that from the language design point of view both languages have their roots in
+functional programming and from the language implementation point of view both
+languages make use of staged computation, it would be interesting to combine
+the strengths of Hydra and Acumen into a single language.
 
 \section{Semantics}
 
