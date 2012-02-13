@@ -139,8 +139,8 @@ ground = [rel| (p_i,p_v) where
 |]
 \end{code}
 
-\caption{\label{figHydraComponents} Hydra models for an inductor, a capacitor,
-a voltage source and a ground reference.}
+\caption{\label{figHydraComponents} Hydra models for inductor, capacitor,
+voltage source and ground reference.}
 
 \end{figure}
 

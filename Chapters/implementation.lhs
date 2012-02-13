@@ -408,7 +408,7 @@ data Experiment = Experiment {
   }
 \end{code}
 
-\caption{\label{figExperiment} Data type for experiment descriptions.}
+\caption{\label{figExperiment} Data type for experiment description.}
 
 \end{figure}
 
@@ -879,7 +879,7 @@ data NumericalSolver = NumericalSolver {
   }
 \end{code}
 
-\caption{\label{figNumericalSolver} Numerical solver interface. }
+\caption{\label{figNumericalSolver} Numerical solver interface.}
 
 \end{figure}
 
