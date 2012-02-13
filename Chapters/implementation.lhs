@@ -144,7 +144,7 @@ vanDerPol mu = [rel| () ->
 |]
 \end{code}
 
-\caption{\label{figVanDerPol} Signal relation modelling a parametrised van der
+\caption{\label{figVanDerPol} Signal relation modelling parametrised van der
 Pol oscillator.}
 
 \end{figure}
