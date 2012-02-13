@@ -47,7 +47,7 @@ a higher level of abstraction by focusing on \emph{what} to model rather than
 \emph{how} to model to enable simulation
 \citep{Cellier1991,Cellier1996,Nilsson2003a}.
 
-\item Noncausal models are more reusable as equations can be used in a number
+\item Noncausal models are more reusable, as equations can be used in a number
 of different ways depending on their context of usage (i.e., effectively
 causalised in a number of different ways)
 \citep{Cellier1991,Cellier1996,Cellier2006}.
@@ -95,8 +95,8 @@ structure) to model can be seen as a higher-order model and an application of
 this function can be seen as an instantiation of the higher-order model.
 
 The idea of treating noncausal models as first-class values in a functional
-programming language was introduced by \citet{Nilsson2003a} in the context of
-a framework called Functional Hybrid Modelling (FHM) for designing and
+programming language is introduced by \citet{Nilsson2003a} in the context of a
+framework called Functional Hybrid Modelling (FHM) for designing and
 implementing noncausal modelling languages. However, the paper postpones the
 concrete language definition and implementation for future work. In addition,
 the FHM framework proposes to exploit the first-class nature of noncausal
@@ -168,8 +168,8 @@ formally defines a noncausal modelling language called Hydra and describes its
 implementation in detail. Hydra provides noncausal modelling and simulation
 capabilities that go beyond the state of the art and represents significant
 progress in the field of design and implementation of declarative modelling
-and simulation languages. The following list summarises the thesis
-contributions to the field of noncausal modelling and simulation.
+and simulation languages. The following list summarises the contributions to
+the field of noncausal modelling and simulation.
 
 \begin{itemize}
 
@@ -198,10 +198,10 @@ Chapter \ref{chapDefinition} for details.
 \end{itemize}
 
 In addition to presenting the language definition and implementation, the
-aforementioned claims are also backed up by illustrating a range of example
-physical systems that cannot be modelled and simulated in current, noncausal
-languages. The examples are carefully chosen to showcase those language
-features of Hydra that are lacking in other noncausal modelling languages.
+aforementioned claims are also backed up by a range of example physical
+systems that cannot be modelled and simulated in current, noncausal languages.
+The examples are carefully chosen to showcase those language features of Hydra
+that are lacking in other noncausal modelling languages.
 
 The language design choices and implementation approaches presented here can
 be used to enhance existing noncausal modelling and simulation languages, as
@@ -272,17 +272,17 @@ generated for further simulation \citep{Giorgidze2009a}. In this thesis and in
 \citet{Giorgidze2010a} this kind of DSLs are referred to as \emph{iteratively
 staged}, emphasising that the domain is characterised by repeated program
 generation, compilation and execution. An iteratively-staged language is a
-special kind of \emph{multi-staged} language \citep{Taha2004} with the
+special kind of a \emph{multi-staged} language \citep{Taha2004} with the
 aforementioned characteristics.
 
 Because performance is a primary concern in the domain, the numerical
 simulation code for each mode of the model has to be compiled. As this code is
-determined dynamically this necessitates JIT compilation. For the numerical
-part of the language Hydra employs deep embedding techniques, along with the
-Low Level Virtual Machine (LLVM) compiler infrastructure \citep{Lattner2002a},
-a language-independent, portable, optimising, compiler backend with JIT
-support. In contrast, shallow embedding techniques are used for the parts of
-Hydra concerned with high-level, symbolic computations \citep{Giorgidze2010a}.
+determined dynamically, this necessitates JIT compilation. The numerical part
+of the language Hydra employs deep embedding techniques, along with the Low
+Level Virtual Machine (LLVM) compiler infrastructure \citep{Lattner2002a}, a
+language-independent, portable, optimising, compiler backend with JIT support.
+In contrast, shallow embedding techniques are used for the parts of Hydra
+concerned with high-level, symbolic computations \citep{Giorgidze2010a}.
 
 An alternative might have been to use a multi-staged host language like
 MetaOCaml \citep{Taha2004}. The built-in runtime code generation capabilities
@@ -296,11 +296,11 @@ essential in this application domain.
 Compilation of embedded DSLs is today a standard tool in the DSL-implementer's
 tool box. The seminal example is the work by Elliott et al. on compiling
 embedded languages, specifically the image synthesis and manipulation language
-Pan \citep{Elliott2000}. Pan, like Hydra, provides for program
-generation by leveraging the host language combined with compilation to speed
-up the resulting performance-critical computations. However, the program to be
+Pan \citep{Elliott2000}. Pan, like Hydra, provides for program generation by
+leveraging the host language combined with compilation to speed up the
+resulting performance-critical computations. However, the program to be
 compiled is generated once and for all, meaning the host language acts as a
-powerful but fundamentally conventional macro language: program generation,
+powerful, but fundamentally conventional macro language: program generation,
 compilation, and execution is a process with a fixed number of stages.
 
 Hydra is iteratively staged and the host language is part of the dynamic
@@ -313,8 +313,7 @@ studied much from an embedding and staged programming perspective.
 While embedded DSL development methodology is not the main focus of this work,
 I nevertheless think that the thesis should be of interest to embedded DSL
 implementers, as it presents an application of a new embedding technique. The
-following list summarises the thesis contributions to the field of DSL
-embedding.
+following list summarises the contributions to the field of DSL embedding.
 
 \begin{itemize}
 
@@ -333,9 +332,9 @@ iteratively staged embedded DSL efficiently. See Chapter
 
 The content of this thesis is partly based on the peer-reviewed publications
 that are listed in this section. I wrote the papers in collaboration with my
-coauthors. This thesis was written by myself and presents my contributions. I
-have implemented the Hydra language described in this dissertation and in the
-following papers. The software is available on my
+coauthors. This thesis was written by myself and presents my own
+contributions. I have implemented the Hydra language described in this
+dissertation and in the following papers. The software is available on my
 webpage\footnote{\url{http://www.cs.nott.ac.uk/~ggg/}} under the open source
 BSD3 license.
 
