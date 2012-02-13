@@ -647,38 +647,39 @@ advantages of working in a noncausal modelling language.
 
 Currently, the Modelica language lacks the expressiveness to describe
 structural changes. The breaking pendulum example demonstrates the problems
-that arise when there is a need to change the number of variables in the
-system. In addition, the Modelica compilers carry out the symbolic processing
-and generate the simulation code all at once, prior to simulation, which
-introduces further limitations.
+that arise when the number of variables in the system changes. In addition,
+the Modelica compilers carry out the symbolic processing and generate the
+simulation code all at once, prior to simulation, which introduces further
+limitations.
 
-There are a number of efforts to improve the support for structural dynamism
-in Modelica. The works by \citet{Nytsch-Geusen2005a} and \citet{Zimmer2008a}
+There are a number of efforts to improve support for structural dynamism in
+Modelica. The works by \citet{Nytsch-Geusen2005a} and \citet{Zimmer2008a} are
 the most recent examples.
 
 \citet{Nytsch-Geusen2005a} designed and implemented a language extension to
 Modellica called MOSILAB. The language is extended with constructs allowing
-for description of statecharts specifying discrete switches between Modelica
-objects. The statechart approach enables modelling of structurally dynamic
-systems. MOSILAB does not support unbounded structural dynamism because
-statecharts are required to be static and can not be extended at simulation
-runtime.
+for description of statecharts specifying the discrete switches between
+Modelica objects. The statechart approach enables modelling of structurally
+dynamic systems. However, MOSILAB does not support unbounded structural
+dynamism because statecharts are required to be static and can not be extended
+at simulation runtime.
 
 MOSILAB features a sophisticated compiled implementation producing efficient
 numerical simulation code for all modes of operation before the simulation.
 This implementation approach works well for small number of modes. Simulation
-of bounded structurally dynamic systems with large number modes is
+of bounded structurally dynamic systems with large number of modes is
 problematic.
 
 \citet{Zimmer2008a} designed and implemented a Modelica-like language called
 Sol. The language introduces constructs allowing for description of noncausal
 models where equations and variables can be added and removed at runtime. Sol
 language solves many of the problems with the Modelica language outlined in
-this section. However, the increase in the language expressivity comes at a
-cost of efficiency. Currently, Sol only features an interpreted
+this section. However, the increase in the language expressiveness comes at a
+cost of its efficiency. Currently, Sol only features an interpreted
 implementation. Compilation-based implementation approaches for Sol have not
-been explored. The ultimate goal of the work on Sol is to port its language
-features for tructurally-dynamic noncausal modelling to Modelica.
+yet been explored. The ultimate goal of the work on Sol is to introduce its
+language features for structurally dynamic noncausal modelling in future
+versions Modelica.
 
 There are also a number of efforts to design and implement new structurally
 dynamic noncausal modelling languages. The works on HYBRSIM
@@ -686,8 +687,9 @@ dynamic noncausal modelling languages. The works on HYBRSIM
 mention. Both languages take a very different language design approach from
 languages that are based on Modelica. However, when it comes to structurally
 dynamic modelling and simulation the expressive power of HYBRSIM and its
-interpreted implementation is comparable to Sol, while the expressive power of
-Acumen and its compiled implementation is comparable to MOSILAB.
+interpreted implementation is comparable to that of Sol, while the expressive
+power of Acumen and its compiled implementation is comparable to that of
+MOSILAB.
 
 To my knowledge none of the previous language design and implementation
 approaches support both unbounded structural dynamism and compilation for
