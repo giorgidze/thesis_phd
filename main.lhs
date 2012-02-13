@@ -18,6 +18,8 @@
 \widowpenalty=10000
 \clubpenalty=10000
 
+\hyphenation{para-metri-sa-tion}
+
 \begin{document}
 
 \title{

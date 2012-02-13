@@ -34,7 +34,7 @@ state-of-the-art representative of noncausal modelling languages
 \citep[2010]{Modelica}.
 
 Noncausal modelling has a number of advantages over causal modelling. The most
-important ones are outlined below.
+important ones are outlined in the following list.
 
 \begin{itemize}
 
@@ -79,7 +79,7 @@ modelling.
 Higher-order modelling allows parametrisation of models on other models
 \citep{Nilsson2003a}. For instance, a car model can be parametrised on the
 list of tyres it is using, and an electrical transmission line model can be
-parametrised on the list of electrical components on the line. Main-stream,
+parametrised on the list of electrical components on the line. Mainstream,
 noncausal languages provide little support for this style of modelling. Tool
 specific and external scripting languages are often used to generate noncausal
 models for particular instances of higher-order models \citep{Broman2008a}.
@@ -277,12 +277,13 @@ aforementioned characteristics.
 
 Because performance is a primary concern in the domain, the numerical
 simulation code for each mode of the model has to be compiled. As this code is
-determined dynamically, this necessitates JIT compilation. The numerical part
-of the language Hydra employs deep embedding techniques, along with the Low
-Level Virtual Machine (LLVM) compiler infrastructure \citep{Lattner2002a}, a
-language-independent, portable, optimising, compiler backend with JIT support.
-In contrast, shallow embedding techniques are used for the parts of Hydra
-concerned with high-level, symbolic computations \citep{Giorgidze2010a}.
+determined dynamically, this necessitates JIT compilation. For the numerical
+part of the language Hydra employs deep embedding techniques, along with the
+Low Level Virtual Machine (LLVM) compiler infrastructure \citep{Lattner2002a},
+a language-independent, portable, optimising, compiler backend with JIT
+support. In contrast, shallow embedding techniques are used for the parts of
+Hydra that are concerned with high-level, symbolic computations
+\citep{Giorgidze2010a}.
 
 An alternative might have been to use a multi-staged host language like
 MetaOCaml \citep{Taha2004}. The built-in runtime code generation capabilities
