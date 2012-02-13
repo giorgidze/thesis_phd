@@ -3,14 +3,14 @@
 
 
 This chapter introduces the three central concepts of the FHM framework that
-the Hydra language is based on: signal, signal function and signal relation.
-These concepts facilitate development of and reasoning about Hydra models, and
-are used both in informal (see Chapter \ref{chapHydra}) and formal (see
-Chapter \ref{chapDefinition}) presentations of the language. This chapter only
-covers conceptual definitions; how the concepts of Hydra are implemented is
-covered in Chapter \ref{chapImplementation}. This chapter also discusses how
-Hydra's design facilitates the embedding of the aforementioned concepts into a
-functional programming language.
+the Hydra language is based on, namely: signal, signal function and signal
+relation. These concepts facilitate development of and reasoning about Hydra
+models, and are used both in informal (see Chapter \ref{chapHydra}) and formal
+(see Chapter \ref{chapDefinition}) presentations of the language. This chapter
+only covers conceptual definitions; how the concepts of Hydra are implemented
+is covered in Chapter \ref{chapImplementation}. This chapter also discusses
+how Hydra's design facilitates the embedding of the aforementioned concepts
+into a functional programming language.
 
 
 \section{FHM and FRP}
@@ -18,14 +18,14 @@ functional programming language.
 The idea of treating noncausal models as first-class values in a functional
 programming language is due to \citet{Nilsson2003a}. The authors propose the
 FHM framework for designing and implementing noncausal modelling languages.
-The framework borrows the notion of signal denoting time-varying values from
-the FRP languages and generalises the notion of signal function (featured in a
-number of variants of FRP, most notably Yampa \citep{Hudak2003}) to signal
-relation.
+The FHM framework borrows the notion of signal denoting time-varying values
+from the FRP languages and generalises the notion of signal function (featured
+in a number of variants of FRP, most notably Yampa \citep{Hudak2003}) to
+signal relation.
 
 Intuitively, a signal function can be understood as a block with inputs and
-outputs featured in causal modelling languages. While, a signal relation can
-be understood as a noncausal model without explicitly specified inputs and
+outputs featured in causal modelling languages, while a signal relation can be
+understood as a noncausal model without explicitly specified inputs and
 outputs. In other words, FRP extends a functional programming language with
 causal modelling capabilities, while FHM extends a functional programming
 language with noncausal modelling capabilities.
@@ -68,19 +68,19 @@ suitable floating point type, such as |Double|. Indeed, |Double| is used in
 Hydra. However, |Real| is used in most places of the presentation as we
 conceptually are dealing with real numbers.
 
-One can view the treatment of signals as continues as an abstraction over the
-underling discretely sampled implementation. It is cumbersome and error prone
-to directly work with the discrete representation for entities that
-conceptually exhibit continuous dynamics. For example, explicit handling of
-fixed and variable sampling rates, composition of models using different
-sampling rates, and explicit accounting for numerical errors are problematic.
-
-This is not to say that being aware of the underling discretely sampled
-implementation is not useful. In some cases (e.g., when the numerical
-simulation fails or when the simulation performance is unacceptably slow) it
-is necessary to adjust the discrete simulation time step or change other
-simulation parameters. However, in most cases, assuming that the continuous
-model is correct, those adjustments can be made without changes to the model.
+The aforementioned treatment of signals as continues can be seen an
+abstraction over the underling discretely sampled implementation. It is
+cumbersome and error prone to directly work with the discrete representation
+for entities that conceptually exhibit continuous dynamics. For example,
+explicit handling of fixed and variable sampling rates, composition of models
+using different sampling rates, and explicit accounting for numerical errors
+are problematic. This is not to say that being aware of the underling
+discretely sampled implementation is not useful. In some cases (e.g., when the
+numerical simulation fails or when the simulation performance is unacceptably
+slow) it is necessary to adjust the discrete simulation time step or change
+other simulation parameters. However, in most cases, assuming that the
+continuous model is correct, those adjustments can be made without changes to
+the model.
 
 Although modelling with discrete streams is out of the scope of this thesis,
 it would be interesting to explore a discrete variant of Hydra featuring
@@ -187,8 +187,8 @@ component |u| represents the voltage drop across the electrical component.
 \end{figure}
 
 By \emph{applying} signal relations to signals (in the sense of predicate
-application) it is possible to reuse the equational constraints. Application
-of signal relations also allows for definition of hierarchically structured
+application) it is possible to reuse the equational constraints. Signal
+relation application also allows for definition of hierarchically structured
 systems of equations. The following conceptual definition gives a signal
 relation imposing constrains characteristic to a resistor (with
 resistance~|r|).
