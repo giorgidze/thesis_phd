@@ -23,7 +23,7 @@ mainstream modelling languages.
 In addition, by modelling and simulating the example physical systems, basic
 concepts of modelling and simulation are introduced. Where necessary, the
 presentation abstracts from the concrete examples and defines the basic
-concepts more generally.
+concepts generally.
 
 \section{Equational Modelling}
 
@@ -212,10 +212,10 @@ differential vector at the discrete points of time given in Equation
 In the case of the simple electrical circuit model, the algebraic variables
 can be solved by adding more directed equations in the function that
 numerically integrates the system of equations. The Haskell code given in
-Figure \ref{figIntegrateSimpleCircuit2} refines the integration function by
-adding the directed equation that solves the algebraic variable $i_1$. Figure
-\ref{figCircuitPlot1} shows a partial simulation result obtained by evaluating
-the function with the additional directed equation.
+Figure~\ref{figIntegrateSimpleCircuit2} refines the integration function by
+adding the directed equation that solves the algebraic variable $i_1$.
+Figure~\ref{figCircuitPlot1} shows a partial simulation result obtained by
+evaluating the function with the additional directed equation.
 
 \begin{figure}
 
@@ -265,9 +265,9 @@ The block diagram depicted in Figure \ref{figCircuitBlockDiagram1} is a model
 of the simple electrical circuit from Figure \ref{figCircuit1}. Note that the
 diagram uses causal blocks (with inputs and outputs) for multiplication,
 summation and integration. The block diagram is a graphical representation of
-Equation \ref{eqSimpleCircuitExplicit}. To make the correspondence clear the
-block outputs for the variables $U_S$, $i_1$, $i_2$ and $i$ are labelled with
-the corresponding variable name.
+Equation \ref{eqSimpleCircuitExplicit}. In order to make this correspondence
+clear, the block outputs for the variables $U_S$, $i_1$, $i_2$ and $i$ are
+labelled with the corresponding variable name.
 
 \begin{figure}
 \begin{center}
@@ -525,7 +525,7 @@ AC.p.v  =  R.p.v;
 R.p.v   =  L.p.v;
 \end{code}
 
-Connect-equations can be used in any physical domain where flow variables
+Connect statements can be used in any physical domain where flow variables
 (i.e., variables generating sum-to-zero equations at the connection points)
 and potential variables (i.e, variables generating equality constrains at the
 connection points) can be identified. The Modelica standard library includes
@@ -665,9 +665,9 @@ dynamism because statecharts are required to be static and can not be extended
 at simulation runtime.
 
 MOSILAB features a sophisticated compiled implementation producing efficient
-numerical simulation code for all modes of operation before the simulation.
-This implementation approach works well for small number of modes. Simulation
-of bounded structurally dynamic systems with large number of modes is
+numerical simulation code for all modes of operation prior to simulation. This
+implementation approach works well for small number of modes. Simulation of
+bounded structurally dynamic systems with large number of modes is
 problematic.
 
 \citet{Zimmer2008a} designed and implemented a Modelica-like language called
@@ -679,7 +679,7 @@ cost of its efficiency. Currently, Sol only features an interpreted
 implementation. Compilation-based implementation approaches for Sol have not
 yet been explored. The ultimate goal of the work on Sol is to introduce its
 language features for structurally dynamic noncausal modelling in future
-versions Modelica.
+versions of Modelica.
 
 There are also a number of efforts to design and implement new structurally
 dynamic noncausal modelling languages. The works on HYBRSIM
