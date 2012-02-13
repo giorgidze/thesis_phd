@@ -382,11 +382,12 @@ simulates the system. The |Experiment| data type is defined in Figure
 \ref{figExperiment}. The |timeStart| field specifies the simulation starting
 time. The |timeStop| field specifies the simulation stopping time. The
 |timeStep| field specifies the simulation time step. The |symbolicProcessor|
-specifies the simulator's runtime symbolic processor. The |numericalSolver|
-specifies the simulator's numerical solver. The |trajectoryVisualiser|
-specifies how to visualise the simulation results (i.e., change of signal
-values over time). The data type definitions for |SymTab|, |NumericalSover|
-and |TrajectoryVisualiser| are given later in this chapter.
+field specifies the simulator's runtime symbolic processor. The
+|numericalSolver| field specifies the simulator's numerical solver. The
+|trajectoryVisualiser| field specifies how to visualise the simulation results
+(i.e., change of signal values over time). The data type definitions for
+|SymTab|, |NumericalSover| and |TrajectoryVisualiser| are given later in this
+chapter.
 
 The implementation of Hydra provides the default experiment configuration that
 is given in Figure \ref{figDefaultExperiment}. Note that the last three fields

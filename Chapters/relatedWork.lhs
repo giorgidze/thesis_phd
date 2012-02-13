@@ -26,11 +26,11 @@ stage of quasiquoting, charging the host-language type checker with checking
 the embedded terms. This also ensures that only well-typed programs are
 generated at runtime.
 
-As we have already discussed in Chapter \ref{chapIntroduction}, many language
-features of Hydra follow closely those proposed by \cite{Nilsson2003a} in the
-context of the FHM framework. The FHM framework itself was originally inspired
-by Functional Reactive Programming (FRP) \citep{Elliott1997}, particularly
-Yampa \citep{Nilsson2002a}. A key difference between FHM and FRP is that FRP
+As discussed in Chapter \ref{chapIntroduction}, many language features of
+Hydra follow closely those proposed by \cite{Nilsson2003a}, in the context of
+the FHM framework. The FHM framework itself was originally inspired by
+Functional Reactive Programming (FRP) \citep{Elliott1997}, particularly Yampa
+\citep{Nilsson2002a}. A key difference between FHM and FRP is that FRP
 provides functions on signals whereas FHM generalises this to relations on
 signals. FRP can thus be seen as a framework for causal modelling, while FHM
 is a framework for noncausal modelling. Signal functions are first class
@@ -123,13 +123,12 @@ processing methods that reduce a combination of DAEs and PDEs to the
 corresponding system of ODEs whenever possible. Acumen supports bounded
 structural dynamism, but unbounded structural dynamism is not supported.
 
-The symbolic processing methods developed for Acumen and tight integration
+The symbolic processing methods developed for Acumen and its tight integration
 with an FRP variant would benefit Hydra, while Hydra's support for unbounded
-structural dynamism would benefit Acumen. If we take into account the fact
-that from the language design point of view both languages have their roots in
-functional programming and from the language implementation point of view both
-languages make use of staged computation, it would be interesting to combine
-the strengths of Hydra and Acumen into a single language.
+structural dynamism would benefit Acumen. Taking into account the fact that
+both languages have their roots in functional programming and both languages
+make use of staged computation, it would be interesting to combine the
+strengths of Hydra and Acumen into a single language.
 
 \section{Semantics}
 

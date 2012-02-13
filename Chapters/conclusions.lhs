@@ -51,8 +51,7 @@ good starting point.
 step into this direction would be to introduce support for statefull signal
 functions in Hydra.
 
-\item Investigate the relationship between different approaches for specifying
-of noncausal connections, including the approach based on combinators used in
-this thesis.
+\item Compare different approaches for specifying noncausal connections
+(including the approach based on combinators used in this thesis).
 
 \end{itemize}
