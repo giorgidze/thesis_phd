@@ -285,8 +285,8 @@ As it is evident from the language definition (see Section
 that are returned by the function that is the first argument of the |Local|
 constructor. In contrast, equation generating functions in the |SR|
 constructor are allowed to be passed a signal that is constrained elsewhere.
-This distinction is enforced by the language implementation, as we will see
-later in this chapter.
+As we will see later in this chapter, this distinction is enforced by the
+language implementation.
 
 Initialisation equations, formed by the |Init| constructor, state initial
 conditions. They are only in force when a signal relation instance first
@@ -338,9 +338,9 @@ constructors correspond to the shallow part of the embedding. The rest of the
 data constructors, namely, |Equal|, |Init|, and all constructors of the
 |Signal| data type correspond to the deep part of the embedding, providing an
 explicit representation of language terms for further symbolic processing and
-ultimately compilation. As we will see in more detail below, the continuous
-behaviour of each mode of operation can be described as a flat list of
-equations where each equation is constructed, either, by the |Init|
+ultimately compilation. As we will see in more detail later in this chapter,
+the continuous behaviour of each mode of operation can be described as a flat
+list of equations where each equation is constructed, either, by the |Init|
 constructor or by the |Equal| constructor. It is this representation that
 allows for generation of efficient simulation code. This combination of the
 two embedding techniques allowed us to leverage shallow embedding for
