@@ -381,13 +381,13 @@ The function takes a signal relation and an experiment description and
 simulates the system. The |Experiment| data type is defined in Figure
 \ref{figExperiment}. The |timeStart| field specifies the simulation starting
 time. The |timeStop| field specifies the simulation stopping time. The
-|timeStep| field specifies the simulation time step. The |symbolicProcessor|
-field specifies the simulator's runtime symbolic processor. The
-|numericalSolver| field specifies the simulator's numerical solver. The
-|trajectoryVisualiser| field specifies how to visualise the simulation results
-(i.e., change of signal values over time). The data type definitions for
-|SymTab|, |NumericalSover| and |TrajectoryVisualiser| are given later in this
-chapter.
+|timeStep| field specifies the simulation time step. The
+\emph{symbolicProcessor} field specifies the simulator's runtime symbolic
+processor. The |numericalSolver| field specifies the simulator's numerical
+solver. The \emph{trajectoryVisualiser} field specifies how to visualise the
+simulation results (i.e., change of signal values over time). The data type
+definitions for \emph{ActiveModel}, \emph{NumericalSover} and
+\emph{TrajectoryVisualiser} are given later in this chapter.
 
 The implementation of Hydra provides the default experiment configuration that
 is given in Figure \ref{figDefaultExperiment}. Note that the last three fields
@@ -403,7 +403,7 @@ data Experiment = Experiment {
      timeStart             :: Real
   ,  timeStop              :: Real
   ,  timeStep              :: Real
-  ,  symbolicProcessor     :: SymTab -> SymTab
+  ,  symbolicProcessor     :: ActiveModel -> ActiveModel
   ,  numericalSolver       :: NumericalSolver
   ,  trajectoryVisualiser  :: TrajectoryVisualiser
   }
@@ -434,10 +434,10 @@ defaultExperiment = Experiment {
 \label{secSymbolicProcessing}
 
 In this section we describe the first stage performed by the simulator:
-symbolic processing. A symbolic processor is a function from a symbol table to
-a symbol table. The symbol table data type that is used in the implementation
-of Hydra is given in Figure \ref{figSymTab}. The symbol table record has five
-fields.
+symbolic processing. A symbolic processor is a function from an active model
+to an active model. The active model data type that is used in the
+implementation of Hydra is given in Figure \ref{figActiveModel}. The symbol
+table record has five fields.
 
 The |model| field stores the currently active top-level signal relation. At
 the start of the simulation, the |simulate| function binds this field to the
@@ -459,7 +459,7 @@ returns a real valued zero-crossing signal.
 
 At the start of the simulation, the simulator places the list of zero-crossing
 signals defined in the first mode of operation in the |events| field of the
-symbol table. Once the numerical solver, during the simulation of the first
+active model. Once the numerical solver, during the simulation of the first
 mode, detects that one or more signals have crossed zero the simulator deletes
 those signals from the |events| field that have not crossed zero. The updated
 |events| field is then used by the event handler to identify which events have
@@ -482,7 +482,7 @@ differentials.
 
 \begin{figure}
 \begin{code}
-data SymTab = SymTab {
+data ActiveModel = ActiveModel {
      model         :: [Equation]
   ,  equations     :: [Equation]
   ,  events        :: [Signal Real]
@@ -491,33 +491,33 @@ data SymTab = SymTab {
   }
 \end{code}
 
-\caption{\label{figSymTab} Data type for symbol tables.}
+\caption{\label{figActiveModel} Data type for active models.}
 
 \end{figure}
 
 The task of the symbolic processor is to handle events by modifying the
-|model| field of the symbol table, to generate a flat list of events that may
+|model| field of the active model, to generate a flat list of events that may
 occur in the active mode of operation by updating the |events| field of the
-symbol table, and to generate the flat list of equations describing the active
-mode of operation by updating the |equations| field of the symbol table. The
+active model, and to generate the flat list of equations describing the active
+mode of operation by updating the |equations| field of the active model. The
 implementation of Hydra provides the default symbolic processor that is
 defined as follows:
 
 \begin{code}
-defaultSymbolicProcessor  ::  SymTab -> SymTab
+defaultSymbolicProcessor  ::  ActiveModel -> ActiveModel
 defaultSymbolicProcessor  =   flattenEquations . flattenEvents . handleEvents
 \end{code}
 
 The default symbolic processor is defined as a composition of three symbolic
 processing steps. The first step handles occurred events by modifying the
-|model| field of the symbol table. The event handler is defined in Figure
+|model| field of the active model. The event handler is defined in Figure
 \ref{figHandleEvents}. The second step generates a list of signal expressions
 representing the list of possible events in the active mode of operation as
 defined in Figure \ref{figFlattenEvents}. Note that this step involves
 evaluation of the instantaneous signal values by using the |eval| function.
 The |eval| function is defined in Figure \ref{figEval}. The third step
 flattens the hierarchical system of equations placed in the |model| field of
-the symbol table into the |equations| field of the symbol table. The flat list
+the active model into the |equations| field of the active model. The flat list
 only contains |Init| and |Equal| equations. The |Equal| equations define the
 DAE that describes the active mode of operation. The |Init| equations describe
 the initial conditions for the DAE. The flattening transformation is given in
@@ -526,12 +526,12 @@ Figure \ref{figFlattenEquations}.
 \begin{figure}
 
 \begin{code}
-handleEvents     ::  SymTab -> SymTab
+handleEvents     ::  ActiveModel -> ActiveModel
 handleEvents st  =   st {model = handleEvs (st, events st, model st)}
 \end{code}
 
 \begin{code}
-handleEvs :: (SymTab,[Signal Real],[Equation]) -> [Equation]
+handleEvs :: (ActiveModel,[Signal Real],[Equation]) -> [Equation]
 handleEvs (_,_,[])                                          =  []
 handleEvs (st,evs,(Equal  _ _) : eqs)                       =  eq : handleEvs (st,evs,eqs)
 handleEvs (st,evs,(Init   _ _) : eqs)                       =  handleEvs (st,evs,eqs)
@@ -552,12 +552,12 @@ handleEvs (st,evs,(App (Switch sr (SF sf) f) s) : eqs)      =
 
 \begin{figure}
 \begin{code}
-flattenEvents :: SymTab -> SymTab
+flattenEvents :: ActiveModel -> ActiveModel
 flattenEvents st = st {events = buildEvs (0,st{events = []},model st)}
 \end{code}
 
 \begin{code}
-buildEvs :: (Integer,SymTab,[Equation]) -> SymTab
+buildEvs :: (Integer,ActiveModel,[Equation]) -> ActiveModel
 buildEvs (_,st,[])                                       = st
 buildEvs (i,st,(Local f) : eqs)                          = buildEvs (i + 1,st,f (Var i) ++ eqs)
 buildEvs (i,st,(Equal  _ _) : eqs)                       = buildEvs (i,st,eqs)
@@ -614,7 +614,7 @@ evalPrimSF  Pow    = uncurry (**)
 
 \begin{figure}
 \begin{code}
-flattenEquations :: SymTab -> SymTab
+flattenEquations :: ActiveModel -> ActiveModel
 flattenEquations st = st {equations = flattenEqs (0,model st)}
 \end{code}
 
@@ -677,14 +677,14 @@ algebraic equations, and $\vec{r_e}$ is a vector of zero-crossing signal
 values. The aforementioned vectors are signals; that is, time-varying vectors.
 
 Equation \ref{init-eq} corresponds to the |Init| equations that are placed in
-the |equations| field of the symbol table and determines the initial
+the |equations| field of the active model and determines the initial
 conditions for Equation \ref{main-eq}; that is, the values of
 $\frac{d\vec{x}}{dt}$,$\vec{x}$ and $\vec{y}$ at the starting time of the
 active mode of operation. Equation \ref{main-eq} corresponds to the |Equal|
-equations that are placed in the |equations| field of the symbol table, and
+equations that are placed in the |equations| field of the active model, and
 thus is the main DAE of the system that is integrated over time starting from
 the initial conditions. Equation \ref{event-eq} corresponds to the
-zero-crossing signals placed in the |events| field of the symbol table and
+zero-crossing signals placed in the |events| field of the active model and
 specifies event conditions.
 
 The task of a DAE solver is to find time varying valuations of $\vec{x}$ and
