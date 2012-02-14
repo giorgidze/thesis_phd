@@ -503,7 +503,7 @@ occur in the active mode of operation by updating the |events| field of the
 active model, and to generate the flat list of equations describing the active
 mode of operation by updating the |equations| field of the active model. The
 implementation of Hydra provides the default symbolic processor that is
-defined as follows:
+defined as follows.
 
 \begin{code}
 defaultSymbolicProcessor  ::  ActiveModel -> ActiveModel

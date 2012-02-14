@@ -470,7 +470,7 @@ following two Haskell extensions available in Glasgow Haskell Compiler
 
 \section{Outline}
 
-The rest of the dissertation is organised as follows:
+The rest of the dissertation is organised as follows.
 
 \begin{itemize}
 

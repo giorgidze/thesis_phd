@@ -276,7 +276,7 @@ components.}
 \end{figure}
 
 Now we can assemble the models of the electrical components into the simple
-electrical circuit as follows:
+electrical circuit as follows.
 
 \begin{samepage}
 \begin{code}
@@ -409,14 +409,14 @@ Somewhat similarly to the |serialise| signal relation the higher-order signal
 relation |parallelise| that takes as an argument a list of signal relations
 modelling two-pin electrical components and returns the signal relation that
 models parallel connection of the given electrical components can be defined
-as follows:
+as follows.
 
 \begin{code}
 parallelise :: [SR (Pin,Pin)] -> SR (Pin,Pin)
 parallelise = foldr parallel noWire
 \end{code}
 
-The |noWire| signal relation is defined as follows:
+The |noWire| signal relation is defined as follows.
 
 \begin{code}
 noWire :: SR (Pin,Pin)
@@ -793,7 +793,7 @@ definition of the |Experiment| data type and the default experiment
 description are given in Chapter~\ref{chapImplementation}.
 
 For example, the simple circuit model can be simulated using the default
-experiment description as follows:
+experiment description as follows.
 
 \begin{code}
 simulate simpleCircuit defaultExperiment
