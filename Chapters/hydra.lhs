@@ -593,8 +593,8 @@ halfWaveRectifier =
   groundedCircuit  (vSourceAC 1 1)
                    (serialise  [ iInductor 0 1
                                , resistor 1
-                               , parallel   (iCapacitor 0 1)
-                                            (serial icDiode (resistor 1))
+                               , icDiode
+                               , parallel (iCapacitor 0 1) (resistor 1)
                                ]
                    )
 \end{code}
