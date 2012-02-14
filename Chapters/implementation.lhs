@@ -31,7 +31,7 @@ checker. However, the disadvantage of this approach is the fact that
 type-related error messages are not phrased in domain-specific terms, but
 rather in terms of the Haskell encoding of the domain-specific types.
 
-As we have seen in Chapter \ref{chapDefinition}, the type system of Hydra
+As we have seen in Chapter~\ref{chapDefinition}, the type system of Hydra
 provides the following guarantees: a type of a structurally dynamic signal
 relation remains unchanged despite the structural changes; arithmetic
 expressions, equations, signal relation applications and signal function
@@ -53,10 +53,10 @@ Firstly, the string in the concrete syntax of Hydra is parsed and the
 corresponding untyped representation is generated as an abstract syntax tree
 (AST). The BNF Converter (BNFC), a compiler front-end generator from a
 labelled BNF grammar \citep{BNFC2004}, is used to generate the parser and the
-AST data type. The labelled BNF grammar of Hydra is given in Figure
-\ref{figGrammar}. The generated AST data type and the syntax that the
+AST data type. The labelled BNF grammar of Hydra is given in
+Figure~\ref{figGrammar}. The generated AST data type and the syntax that the
 generated parser implements are exactly the same as given in the language
-definition in Chapter \ref{chapDefinition}. In addition, we use BNFC to
+definition in Chapter~\ref{chapDefinition}. In addition, we use BNFC to
 generate Hydra's layout resolver allowing for a list of equations in |rel|
 quasiquotes to be constructed without curly braces and semicolons. The layout
 rules are the same as for Haskell.
@@ -116,21 +116,22 @@ resolver.}
 \end{figure}
 
 Secondly, the untyped representation is desugared exactly as it is presented
-in the language definition (see Chapter \ref{chapDefinition}).
+in the language definition (see Chapter~\ref{chapDefinition}).
 
 Finally, the desugared untyped representation is translated into the typed
 representation. This step implements the corresponding translation rules given
-in Chapter \ref{chapDefinition}. Note that the translation rules generate
+in Chapter~\ref{chapDefinition}. Note that the translation rules generate
 Haskell code. This is implemented by using the Template Haskell facility of
 GHC.
 
 We illustrate the quasiquoting process by using a signal relation that models
-a parametrised van der Pol oscillator. The oscillator model is given in Figure
-\ref{figVanDerPol}. After the parsing stage the quasiquoted signal relation is
-turned into the AST that is given in Figure \ref{figVanDerPolAst}. After the
-desugaring stage we get the AST that is given in Figure
-\ref{figVanDerPolAstDesugar}. After translation into the typed representation
-we get the typed AST that is given in Figure \ref{figVanDerPolAstTyped}.
+a parametrised van der Pol oscillator. The oscillator model is given in
+Figure~\ref{figVanDerPol}. After the parsing stage the quasiquoted signal
+relation is turned into the AST that is given in Figure~\ref{figVanDerPolAst}.
+After the desugaring stage we get the AST that is given in
+Figure~\ref{figVanDerPolAstDesugar}. After translation into the typed
+representation we get the typed AST that is given in
+Figure~\ref{figVanDerPolAstTyped}.
 
 \begin{figure}
 
@@ -256,7 +257,7 @@ relation by expressing constraints on the signal. The system of equations is
 not necessarily a static one as the equations may refer to signal relations
 that contain switches.
 
-The |switch| combinator, which was introduced in Chapter \ref{chapHydra},
+The |switch| combinator, which was introduced in Chapter~\ref{chapHydra},
 forms a signal relation by temporal composition of two signal relations.
 Internally, in the implementation of Hydra, such a temporal composition is
 represented by a signal relation formed by the |Switch| constructor:
@@ -266,7 +267,7 @@ switch :: SR a -> SF a Real -> (a -> SR a) -> SR a
 switch = Switch
 \end{code}
 
-Recall that (see Section \ref{secSignal}), in the implementation of Hydra, the
+Recall that (see Section~\ref{secSignal}), in the implementation of Hydra, the
 type |Real| is a type synonym of |Double|, which is a standard
 double-precision floating-point type of Haskell.
 
@@ -280,10 +281,10 @@ data Equation where
 \end{code}
 
 The |Local| constructor forms equations that merely introduce local signals.
-As it is evident from the language definition (see Section
-\ref{secSemantics}), such signals can be constrained only by the equations
-that are returned by the function that is the first argument of the |Local|
-constructor. In contrast, equation generating functions in the |SR|
+As it is evident from the language definition (see
+Section~\ref{secSemantics}), such signals can be constrained only by the
+equations that are returned by the function that is the first argument of the
+|Local| constructor. In contrast, equation generating functions in the |SR|
 constructor are allowed to be passed a signal that is constrained elsewhere.
 As we will see later in this chapter, this distinction is enforced by the
 language implementation.
@@ -314,7 +315,7 @@ data Signal a where
 \end{code}
 
 As you can see, this data type definition replaces the |Signal| constructor
-featured in the language definition (see Chapter \ref{chapDefinition}) with
+featured in the language definition (see Chapter~\ref{chapDefinition}) with
 the |Var| constructor. In the implementation, instead of representing signals
 that need to be solved as functions from time to values we represent them as
 signal variables whose approximated values will be determined by the numerical
@@ -324,9 +325,10 @@ The |Var| constructor is not used at the stage of quasiquoting. Instead, the
 constructor is used later at the stage of runtime symbolic processing to
 instantiate each local signal variable to a distinct signal variable by using
 the constructor's |Integer| field. This is similar to the usage of the
-|Signal| constructor in the language definition in Chapter
-\ref{chapDefinition}. There, the |Signal| constructor is not used in the first
-three steps of the definition. It is only used in the ideal semantics.
+|Signal| constructor in the language definition in
+Chapter~\ref{chapDefinition}. There, the |Signal| constructor is not used in
+the first three steps of the definition. It is only used in the ideal
+semantics.
 
 The implementation of Hydra supports the same set of primitive functions as
 defined in the language definition. Hence, in the implementation we use the
@@ -352,9 +354,9 @@ language, such as generation of simulation code for efficiency.
 \label{sec:simulation}
 
 In this section we describe how iteratively staged Hydra models are simulated.
-The process is conceptually divided into three stages as illustrated in Figure
-\ref{figSimulation}. In the first stage, a signal relation is flattened and
-subsequently transformed into a mathematical representation suitable for
+The process is conceptually divided into three stages as illustrated in
+Figure~\ref{figSimulation}. In the first stage, a signal relation is flattened
+and subsequently transformed into a mathematical representation suitable for
 numerical simulation. In the second stage, this representation is JIT compiled
 into efficient machine code. In the third stage, the compiled code is passed
 to a numerical solver that simulates the system until the end of simulation or
@@ -378,10 +380,10 @@ simulate :: SR () -> Experiment -> IO ()
 \end{code}
 
 The function takes a signal relation and an experiment description and
-simulates the system. The |Experiment| data type is defined in Figure
-\ref{figExperiment}. The |timeStart| field specifies the simulation starting
-time. The |timeStop| field specifies the simulation stopping time. The
-|timeStep| field specifies the simulation time step. The
+simulates the system. The |Experiment| data type is defined in
+Figure~\ref{figExperiment}. The |timeStart| field specifies the simulation
+starting time. The |timeStop| field specifies the simulation stopping time.
+The |timeStep| field specifies the simulation time step. The
 \emph{symbolicProcessor} field specifies the simulator's runtime symbolic
 processor. The |numericalSolver| field specifies the simulator's numerical
 solver. The \emph{trajectoryVisualiser} field specifies how to visualise the
@@ -390,7 +392,7 @@ definitions for \emph{ActiveModel}, \emph{NumericalSover} and
 \emph{TrajectoryVisualiser} are given later in this chapter.
 
 The implementation of Hydra provides the default experiment configuration that
-is given in Figure \ref{figDefaultExperiment}. Note that the last three fields
+is given in Figure~\ref{figDefaultExperiment}. Note that the last three fields
 of the experiment description record are expected to be modified by expert
 users willing to provide their own runtime symbolic processor, numerical
 solvers, or trajectory visualisers. The behaviour of the
@@ -436,7 +438,7 @@ defaultExperiment = Experiment {
 In this section we describe the first stage performed by the simulator:
 symbolic processing. A symbolic processor is a function from an active model
 to an active model. The active model data type that is used in the
-implementation of Hydra is given in Figure \ref{figActiveModel}. The symbol
+implementation of Hydra is given in Figure~\ref{figActiveModel}. The symbol
 table record has five fields.
 
 The |model| field stores the currently active top-level signal relation. At
@@ -454,7 +456,7 @@ function places an empty list in this field.
 
 The |events| field is for a list of zero-crossing signal expressions defining
 the event occurrences. Recall the type signature of the |switch| combinator
-given in Section \ref{secEmbedding}. A signal function that detects events
+given in Section~\ref{secEmbedding}. A signal function that detects events
 returns a real valued zero-crossing signal.
 
 At the start of the simulation, the simulator places the list of zero-crossing
@@ -510,18 +512,18 @@ defaultSymbolicProcessor  =   flattenEquations . flattenEvents . handleEvents
 
 The default symbolic processor is defined as a composition of three symbolic
 processing steps. The first step handles occurred events by modifying the
-|model| field of the active model. The event handler is defined in Figure
-\ref{figHandleEvents}. The second step generates a list of signal expressions
-representing the list of possible events in the active mode of operation as
-defined in Figure \ref{figFlattenEvents}. Note that this step involves
-evaluation of the instantaneous signal values by using the |eval| function.
-The |eval| function is defined in Figure \ref{figEval}. The third step
-flattens the hierarchical system of equations placed in the |model| field of
-the active model into the |equations| field of the active model. The flat list
-only contains |Init| and |Equal| equations. The |Equal| equations define the
-DAE that describes the active mode of operation. The |Init| equations describe
-the initial conditions for the DAE. The flattening transformation is given in
-Figure \ref{figFlattenEquations}.
+|model| field of the active model. The event handler is defined in
+Figure~\ref{figHandleEvents}. The second step generates a list of signal
+expressions representing the list of possible events in the active mode of
+operation as defined in Figure~\ref{figFlattenEvents}. Note that this step
+involves evaluation of the instantaneous signal values by using the |eval|
+function. The |eval| function is defined in Figure~\ref{figEval}. The third
+step flattens the hierarchical system of equations placed in the |model| field
+of the active model into the |equations| field of the active model. The flat
+list only contains |Init| and |Equal| equations. The |Equal| equations define
+the DAE that describes the active mode of operation. The |Init| equations
+describe the initial conditions for the DAE. The flattening transformation is
+given in Figure~\ref{figFlattenEquations}.
 
 \begin{figure}
 
@@ -676,14 +678,14 @@ initialisation equations, $\vec{r_f}$ is a residual vector of differential
 algebraic equations, and $\vec{r_e}$ is a vector of zero-crossing signal
 values. The aforementioned vectors are signals; that is, time-varying vectors.
 
-Equation \ref{init-eq} corresponds to the |Init| equations that are placed in
+Equation~\ref{init-eq} corresponds to the |Init| equations that are placed in
 the |equations| field of the active model and determines the initial
-conditions for Equation \ref{main-eq}; that is, the values of
+conditions for Equation~\ref{main-eq}; that is, the values of
 $\frac{d\vec{x}}{dt}$,$\vec{x}$ and $\vec{y}$ at the starting time of the
-active mode of operation. Equation \ref{main-eq} corresponds to the |Equal|
+active mode of operation. Equation~\ref{main-eq} corresponds to the |Equal|
 equations that are placed in the |equations| field of the active model, and
 thus is the main DAE of the system that is integrated over time starting from
-the initial conditions. Equation \ref{event-eq} corresponds to the
+the initial conditions. Equation~\ref{event-eq} corresponds to the
 zero-crossing signals placed in the |events| field of the active model and
 specifies event conditions.
 
@@ -699,7 +701,7 @@ when possible as future work. The generated equations are thus implicitly
 formulated ones. Consequently, a system of implicit equations needs to be
 solved at the start of the simulation of each mode of operation and at every
 integration step. For example, a numerical solution of the implicitly
-formulated DAE given in Equation \ref{main-eq} involves evaluation of the
+formulated DAE given in Equation~\ref{main-eq} involves evaluation of the
 function $f$ a number of times (sometimes hundreds or more at each integration
 step), with varying arguments, until it converges to zero. The number of
 executions of $f$ depends on various factors including the required precision,
@@ -712,7 +714,7 @@ for most applications. However, as Hydra allows the equations to be changed in
 arbitrary ways \emph{during} simulation, the equations have to be compiled
 whenever they change, as opposed to only prior to simulation. As an
 optimisation, the code compiled for equations might be cached for future,
-possible reuse (see Chapter \ref{chapConclusions}). The implementation of
+possible reuse (see Chapter~\ref{chapConclusions}). The implementation of
 Hydra employs JIT machine code generation using the compiler infrastructure
 provided by LLVM. The functions $i$, $f$ and $e$ are compiled into LLVM
 instructions that in turn are compiled by the LLVM JIT compiler into native
@@ -742,9 +744,9 @@ argument. As these functions are passed to numerical solvers it is critical to
 allow for fast positional access of vector elements and in-place vector
 updates. Hence the use of C-style arrays.
 
-Figure \ref{figLLVMCodeUnopt} gives the unoptimised LLVM code that is
+Figure~\ref{figLLVMCodeUnopt} gives the unoptimised LLVM code that is
 generated for the parametrised van der Pol oscillator. The corresponding
-optimised LLVM is given in Figure \ref{figLLVMCodeOpt}.
+optimised LLVM is given in Figure~\ref{figLLVMCodeOpt}.
 
 
 \begin{figure}
@@ -847,10 +849,10 @@ either the simulation is complete or until one of the events defined by the
 function $e$ occurs. Event detection facilities are provided by IDA.
 
 Modellers are allowed to replace the default numerical solver. In fact, any
-solver that implements the interface that is given in Figure
-\ref{figNumericalSolver} can be used. The default numerical solver implements
-this interface by providing Haskell bindings to the SUNDIALS library (which is
-written in C) using Haskell's foreign function interface.
+solver that implements the interface that is given in
+Figure~\ref{figNumericalSolver} can be used. The default numerical solver
+implements this interface by providing Haskell bindings to the SUNDIALS
+library (which is written in C) using Haskell's foreign function interface.
 
 \begin{figure}
 \begin{code}
@@ -1038,7 +1040,7 @@ code generation approach remains low at about 10\,\% or less of the overall
 simulation time.
 
 While JIT compilation remains the dominating part of the time spent at mode
-switches, Figure \ref{fig:benchmark} demonstrates that the performance of the
+switches, Figure~\ref{fig:benchmark} demonstrates that the performance of the
 JIT compiler scales well. In particular, compilation time increases roughly
 linearly in the number of equations. The time spent on symbolic processing and
 event handling remains encouragingly modest (both in relative and absolute

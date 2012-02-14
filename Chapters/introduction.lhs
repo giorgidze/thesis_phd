@@ -177,23 +177,23 @@ the field of noncausal modelling and simulation.
 embedding noncausal models as first-class entities into a purely functional
 programming language. To my knowledge, Hydra is the first noncausal language
 that faithfully treats equational models as first-class values (i.e., supports
-all four points outlined in the beginning of Section
-\ref{secFirstClassModels}). See Section \ref{secModelica}, Section
-\ref{secHybridModelling}, Chapter \ref{chapConcepts} and Chapter
-\ref{chapHydra} for details.
+all four points outlined in the beginning of
+Section~\ref{secFirstClassModels}). See Section~\ref{secModelica},
+Section~\ref{secHybridModelling}, Chapter~\ref{chapConcepts} and
+Chapter~\ref{chapHydra} for details.
 
 \item The thesis shows how to use runtime symbolic processing and
 \emph{just-in-time} (JIT) compilation to enable efficient simulation of
 noncausal models that are generated at simulation runtime. To my knowledge,
 Hydra is the first noncausal language that enables support \emph{both} for
 modelling and simulation of unbounded structurally dynamic systems and for
-compilation of simulation code for efficiency. See Chapter
-\ref{chapImplementation} for details.
+compilation of simulation code for efficiency. See
+Chapter~\ref{chapImplementation} for details.
 
 \item The thesis formally defines the Hydra language. To my knowledge, Hydra
 is the first noncausal language that features a formal specification capturing
 both continuous and discrete aspects of unbounded structural dynamism. See
-Chapter \ref{chapDefinition} for details.
+Chapter~\ref{chapDefinition} for details.
 
 \end{itemize}
 
@@ -264,7 +264,7 @@ aforementioned embedding approaches are not specific to Haskell. They can be
 realised in other higher-order programming languages (e.g., languages in ML
 and Lisp families).
 
-As mentioned in Section \ref{secFirstClassModels}, Hydra supports runtime
+As mentioned in Section~\ref{secFirstClassModels}, Hydra supports runtime
 generation and JIT compilation of noncausal models. Specifically, in response
 to \emph{events} occurring at discrete points in time, the simulation is
 stopped and, depending on the simulation results thus far, new equations are
@@ -320,12 +320,12 @@ following list summarises the contributions to the field of DSL embedding.
 
 \item The thesis presents a case study of mixed-level embedding of an
 iteratively staged DSL in a host language that does not provide built-in
-multi-stage programming capabilities. See Chapter \ref{chapConcepts} and
-Chapter \ref{chapHydra} for details.
+multi-stage programming capabilities. See Chapter~\ref{chapConcepts} and
+Chapter~\ref{chapHydra} for details.
 
 \item The thesis describes how to use JIT compilation to implement an
-iteratively staged embedded DSL efficiently. See Chapter
-\ref{chapImplementation} for details.
+iteratively staged embedded DSL efficiently. See
+Chapter~\ref{chapImplementation} for details.
 
 \end{itemize}
 
@@ -474,26 +474,26 @@ The rest of the dissertation is organised as follows:
 
 \begin{itemize}
 
-\item Chapter \ref{chapBackground} overviews the field of physical modelling,
+\item Chapter~\ref{chapBackground} overviews the field of physical modelling,
 and the state-of-the-art causal and noncausal modelling languages.
 
-\item Chapter \ref{chapConcepts} introduces the central concepts of the Hydra
+\item Chapter~\ref{chapConcepts} introduces the central concepts of the Hydra
 language and its design.
 
-\item Chapter \ref{chapHydra} explains how to model physical systems in Hydra
+\item Chapter~\ref{chapHydra} explains how to model physical systems in Hydra
 by means of instructive examples. The examples were carefully chosen to
 showcase those language features that are absent in other noncausal modelling
 languages.
 
-\item Chapter \ref{chapDefinition} formally defines Hydra's concrete syntax,
+\item Chapter~\ref{chapDefinition} formally defines Hydra's concrete syntax,
 abstract syntax, type system and ideal semantics. The chapter formally defines
 the equational part of Hydra. The reader is referred to \citet{Haskell98} for
 the semi-formal definition of the host functional language.
 
-\item Chapter \ref{chapImplementation} describes how Hydra is implemented.
+\item Chapter~\ref{chapImplementation} describes how Hydra is implemented.
 
-\item Chapter \ref{chapRelatedWork} overviews the related work.
+\item Chapter~\ref{chapRelatedWork} overviews the related work.
 
-\item Chapter \ref{chapConclusions} concludes the thesis.
+\item Chapter~\ref{chapConclusions} concludes the thesis.
 
 \end{itemize}

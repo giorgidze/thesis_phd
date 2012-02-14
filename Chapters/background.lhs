@@ -27,7 +27,7 @@ concepts generally.
 
 \section{Equational Modelling}
 
-Figure \ref{figCircuit1} depicts a simple electrical circuit. The circuit is
+Figure~\ref{figCircuit1} depicts a simple electrical circuit. The circuit is
 grounded and consists of four two-pin electrical components: a voltage source,
 a resistor, an inductor and a capacitor. The following system of equations is
 an equational model of the circuit.
@@ -158,7 +158,7 @@ is to replace the derivatives with the following approximation:
 \noindent Here, $h$ is a \emph{sufficiently small} positive scalar which is
 referred to as the \emph{step size} of the numerical integration.
 
-Let us make use of Equation \ref{eqExplODE} and substitute the derivative.
+Let us make use of Equation~\ref{eqExplODE} and substitute the derivative.
 
 \begin{equation}
 \vec{x}(t + h) \approx \vec{x}(t) + h \cdot f(\vec{x},t)
@@ -183,8 +183,8 @@ book by \citet{Cellier2006}.
 
 Once an initial condition (i.e., a value of the differential vector at time
 zero) is given it is possible to numerically integrate the ODE. The Haskell
-code that is given in Figure \ref{figIntegrateSimpleCircuit} numerically
-integrates the ODE given in Equation \ref{eqSimpleCircuitODE} using the
+code that is given in Figure~\ref{figIntegrateSimpleCircuit} numerically
+integrates the ODE given in Equation~\ref{eqSimpleCircuitODE} using the
 forward Euler method.
 
 \begin{figure}
@@ -199,15 +199,15 @@ integrateSimpleCircuit dt r c l = go 0 0 0
 \end{code}
 
 \caption{\label{figIntegrateSimpleCircuit} Function that numerically
-integrates the ODE given in Equation \ref{eqSimpleCircuitODE} using the
+integrates the ODE given in Equation~\ref{eqSimpleCircuitODE} using the
 forward Euler method.}
 
 \end{figure}
 
 Given the numerical integration time step and the circuit parameters, this
 function computes the approximate solution and delivers the values of the
-differential vector at the discrete points of time given in Equation
-\ref{eqStateVectorDiscreteSeq} as a list.
+differential vector at the discrete points of time given in
+Equation~\ref{eqStateVectorDiscreteSeq} as a list.
 
 In the case of the simple electrical circuit model, the algebraic variables
 can be solved by adding more directed equations in the function that
@@ -231,7 +231,7 @@ integrateSimpleCircuit dt r c l = go 0 0 0
 \end{code}
 
 \caption{\label{figIntegrateSimpleCircuit2} Function that adds one directed
-equation to the function given in Figure \ref{figIntegrateSimpleCircuit}.}
+equation to the function given in Figure~\ref{figIntegrateSimpleCircuit}.}
 
 \end{figure}
 
@@ -261,11 +261,11 @@ phases mentioned above as discussed in the following sections of this chapter.
 \section{Causal Modelling}
 \label{secSimulink}
 
-The block diagram depicted in Figure \ref{figCircuitBlockDiagram1} is a model
-of the simple electrical circuit from Figure \ref{figCircuit1}. Note that the
+The block diagram depicted in Figure~\ref{figCircuitBlockDiagram1} is a model
+of the simple electrical circuit from Figure~\ref{figCircuit1}. Note that the
 diagram uses causal blocks (with inputs and outputs) for multiplication,
 summation and integration. The block diagram is a graphical representation of
-Equation \ref{eqSimpleCircuitExplicit}. In order to make this correspondence
+Equation~\ref{eqSimpleCircuitExplicit}. In order to make this correspondence
 clear, the block outputs for the variables $U_S$, $i_1$, $i_2$ and $i$ are
 labelled with the corresponding variable name.
 
@@ -275,18 +275,18 @@ labelled with the corresponding variable name.
 \end{center}
 
 \caption{\label{figCircuitBlockDiagram1} Block diagram modelling electrical
-circuit depicted in Figure \ref{figCircuit1}.}
+circuit depicted in Figure~\ref{figCircuit1}.}
 
 \end{figure}
 
 Block diagrams in causal languages correspond to systems of ODEs in explicit
 form. The construction of a block diagram is closely related to the process of
-causalisation. The causal model given in Figure \ref{figCircuitBlockDiagram1}
+causalisation. The causal model given in Figure~\ref{figCircuitBlockDiagram1}
 can be simulated by graphical block diagramming tools such as Simulink.
 Derivation of simulation code from a block diagram is done much in the same
 way as described earlier, but using more sophisticated numerical methods.
 
-Structurally, the block diagram in Figure \ref{figCircuitBlockDiagram1} is
+Structurally, the block diagram in Figure~\ref{figCircuitBlockDiagram1} is
 quite far removed from the circuit it models. Because of this, construction of
 block diagrams is generally regarded as a difficult and somewhat involved task
 \citep{Nilsson2007}. Moreover, a slight change in a modelled system might
@@ -300,11 +300,12 @@ need to compute the voltage from the current, we should use the block that
 corresponds to the second equation.
 
 To demonstrate the aforementioned reuse problem, we modify the simple
-electrical circuit by adding one more resistor, as shown in Figure
-\ref{figCircuit2}, and then causally model it as shown in Figure
-\ref{figCircuitBlockDiagram2}. Note that we were unable to reuse the resistor
-model from the original circuit diagram. Furthermore, a simple addition to the
-physical system caused changes to the causal model that are hardly obvious.
+electrical circuit by adding one more resistor, as shown in
+Figure~\ref{figCircuit2}, and then causally model it as shown in
+Figure~\ref{figCircuitBlockDiagram2}. Note that we were unable to reuse the
+resistor model from the original circuit diagram. Furthermore, a simple
+addition to the physical system caused changes to the causal model that are
+hardly obvious.
 
 \begin{figure}
 \begin{center}
@@ -321,7 +322,7 @@ physical system caused changes to the causal model that are hardly obvious.
 \end{center}
 
 \caption{\label{figCircuitBlockDiagram2} Block diagram modelling electrical
-circuit depicted in Figure \ref{figCircuit2}.}
+circuit depicted in Figure~\ref{figCircuit2}.}
 
 \end{figure}
 
@@ -349,10 +350,10 @@ programming languages for structuring equations and for supporting model
 reuse.
 
 This section presents a Modelica model of the simple electrical circuit
-depicted in Figure \ref{figCircuit1} to illustrate basic features of the
+depicted in Figure~\ref{figCircuit1} to illustrate basic features of the
 language.
 
-The Modelica code that is given in Figure \ref{figModelicaConnector} declares
+The Modelica code that is given in Figure~\ref{figModelicaConnector} declares
 the \emph{connector} record for representing electrical connectors. The
 connector record introduces the variable |i| and the variable |v| representing
 the current flowing into the connector and the voltage at the connector
@@ -373,7 +374,7 @@ end Pin;
 
 \end{figure}
 
-The Modelica code that is given in Figure \ref{figModelicaTwoPin} defines the
+The Modelica code that is given in Figure~\ref{figModelicaTwoPin} defines the
 model that captures common properties of electrical components with two
 connectors. The variables |p| and |n| represent the positive and negative pins
 of an electrical component. The variable |u| represents the voltage drop
@@ -401,10 +402,10 @@ components.}
 \end{figure}
 
 By \emph{extending} the |TwoPin| model with component-specific equations
-Figure \ref{figModelicaComponents} defines the models representing a resistor,
-a capacitor, an inductor and a voltage source. Figure
-\ref{figModelicaComponents} also defines the model that represents the ground
-pin. Note the use of the concept of \emph{inheritance} known from
+Figure~\ref{figModelicaComponents} defines the models representing a resistor,
+a capacitor, an inductor and a voltage source.
+Figure~\ref{figModelicaComponents} also defines the model that represents the
+ground pin. Note the use of the concept of \emph{inheritance} known from
 object-oriented programming languages for reusing the equations from the
 |TwoPin| model.
 
@@ -470,9 +471,9 @@ equations.}
 
 \end{figure}
 
-The Modelica model that is given in Figure \ref{figModelicaCircuit1} uses the
+The Modelica model that is given in Figure~\ref{figModelicaCircuit1} uses the
 circuit component models to define the simple electrical circuit model by
-``connecting'' appropriate pins according to Figure \ref{figCircuit1}.
+``connecting'' appropriate pins according to Figure~\ref{figCircuit1}.
 
 \begin{figure}
 
@@ -494,7 +495,7 @@ end SimpleCircuit;
 \end{code}
 
 \caption{\label{figModelicaCircuit1} Modelica model for the circuit given in
-Figure \ref{figCircuit1}.}
+Figure~\ref{figCircuit1}.}
 
 \end{figure}
 
@@ -539,7 +540,7 @@ As we have seen, noncausal languages allow us to model physical systems at a
 high level of abstraction. The structure of the models resemble the modelled
 systems. Consequently, it is easy to reuse or modify existing models. For
 example, it is now trivial to add one more resistor to the Modelica model as
-shown in Figure \ref{figModelicaCircuit2}.
+shown in Figure~\ref{figModelicaCircuit2}.
 
 \begin{figure}
 
@@ -563,7 +564,7 @@ end SimpleCircuit;
 \end{code}
 
 \caption{\label{figModelicaCircuit2} Modelica model for the circuit given in
-Figure \ref{figCircuit2}.}
+Figure~\ref{figCircuit2}.}
 
 \end{figure}
 
@@ -582,7 +583,7 @@ facilities in Modelica implementations.
 
 Let us model a system whose structural configuration changes abruptly during
 simulation: a simple pendulum that can break at a specified point in time; see
-Figure \ref{figPendulum}. The pendulum is modelled as a body represented by a
+Figure~\ref{figPendulum}. The pendulum is modelled as a body represented by a
 point mass $m$ at the end of a rigid, mass-less rod, subject to gravity $m
 \vec{g}$. If the rod breaks, the body will fall freely.
 
@@ -593,7 +594,7 @@ point mass $m$ at the end of a rigid, mass-less rod, subject to gravity $m
 \caption{\label{figPendulum} Pendulum subject to gravity.}
 \end{figure}
 
-The code that is given in Figure \ref{figModelicaBreakingPendulum} is an
+The code that is given in Figure~\ref{figModelicaBreakingPendulum} is an
 attempt to model this system in Modelica that on the surface appears to solve
 the problem. Unfortunately the code fails to compile. The reason is that the
 latest version of the Modelica standard \citep[2010]{Modelica} asserts that

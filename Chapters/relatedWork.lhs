@@ -26,7 +26,7 @@ stage of quasiquoting, charging the host-language type checker with checking
 the embedded terms. This also ensures that only well-typed programs are
 generated at runtime.
 
-As discussed in Chapter \ref{chapIntroduction}, many language features of
+As discussed in Chapter~\ref{chapIntroduction}, many language features of
 Hydra follow closely those proposed by \cite{Nilsson2003a}, in the context of
 the FHM framework. The FHM framework itself was originally inspired by
 Functional Reactive Programming (FRP) \citep{Elliott1997}, particularly Yampa

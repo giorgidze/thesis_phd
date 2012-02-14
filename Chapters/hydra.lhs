@@ -9,9 +9,9 @@ simulation in Hydra.
 \section{Models with Static Structure}
 
 Let us illustrate the Hydra language by modelling the circuit that is depicted
-in Figure \ref{figCircuit1}. Let us first define the |twoPin| signal relation
+in Figure~\ref{figCircuit1}. Let us first define the |twoPin| signal relation
 that captures the common behaviour of electrical components with two
-connectors (see Figure \ref{figTwoPin}):
+connectors (see Figure~\ref{figTwoPin}):
 
 \begin{code}
 type Pin = (Real,Real)
@@ -70,7 +70,7 @@ concrete electrical component, in this case Ohm's law.
 To clearly see how |twoPin| contributes to the definition of the |resistor|
 signal relation, let us consider what happens when the resistor model is
 \emph{flattened} as part of flattening of a complete model, a transformation
-that is described in detail in Chapter \ref{chapImplementation}. Intuitively,
+that is described in detail in Chapter~\ref{chapImplementation}. Intuitively,
 flattening can be understood as inlining of applied signal relations to reduce
 the signal relation into a flat list of equations (i.e., a flat DAE). In the
 process of flattening, the arguments of a signal relation application are
@@ -89,7 +89,7 @@ result of flattening the signal relation |resistor 10| is:
 \end{code}
 
 Models for an inductor, a capacitor, a voltage source and a ground reference
-are defined in Figure \ref{figHydraComponents}. Note that the inductor and the
+are defined in Figure~\ref{figHydraComponents}. Note that the inductor and the
 capacitor signal relations contain |init| equations. An |init| equation is
 enforced only at the point in time when the signal relation becomes active. In
 this example, the |init| equations are used to initialise the differential
@@ -97,7 +97,7 @@ variables involved in the inductor and the capacitor signal relations.
 
 By default, Modelica implicitly initialises differential variables to zero.
 That is why initialisation equations were not considered in the corresponding
-Modelica models given in Chapter \ref{chapBackground}. Hydra does not allow
+Modelica models given in Chapter~\ref{chapBackground}. Hydra does not allow
 for implicit initialisation; that is, all initialisation equations must be
 specified explicitly.
 
@@ -170,8 +170,8 @@ facilitating noncausal connection of two-pin electrical components.
 Firstly, we define a higher-order signal relation that takes two signal
 relations modelling two-pin electrical components and returns the signal
 relation that models the serial connection of the two electrical components.
-The graphical representation of the signal relation is given in Figure
-\ref{figSerial}.
+The graphical representation of the signal relation is given in
+Figure~\ref{figSerial}.
 
 \begin{samepage}
 \begin{code}
@@ -206,8 +206,8 @@ serial sr1 sr2 = [rel| ((p_i, p_v),(n_i, n_v)) ->
 Secondly, we define a higher-order signal relation that takes two signal
 relations modelling two-pin electrical components and returns the signal
 relation that models the parallel connection of the two electrical components.
-The graphical representation of the signal relation is given in Figure
-\ref{figParallel}.
+The graphical representation of the signal relation is given in
+Figure~\ref{figParallel}.
 
 \begin{samepage}
 \begin{code}
@@ -241,7 +241,7 @@ Finally, we define a higher-order signal relation that takes two
 signal relations modelling two-pin electrical components and returns the
 signal relation that models the grounded circuit involving the two electrical
 components. The graphical representation of the signal relation is given
-in Figure \ref{figGroundedCircuit}.
+in Figure~\ref{figGroundedCircuit}.
 
 \begin{samepage}
 \begin{code}
@@ -297,7 +297,7 @@ capable of specifying noncausal connections by connecting noncausal models
 directly.
 
 It is trivial in Hydra to reuse the circuit components and model the modified
-circuit that is depicted in Figure \ref{figCircuit2}:
+circuit that is depicted in Figure~\ref{figCircuit2}:
 
 \begin{samepage}
 \begin{code}
@@ -351,7 +351,7 @@ foldr serial wire [sr1, sr2, ..., srn] =
 
 Here the higher-order signal relation |serial| is in the role of a binary
 operator and the |wire| signal relation is in the role of a starting value
-which is a right identity of the binary operator. Figure \ref{figSerialise}
+which is a right identity of the binary operator. Figure~\ref{figSerialise}
 graphically demonstrates the result of this application of the |foldr|
 function.
 
@@ -377,7 +377,7 @@ modelled by extending the |twoPin| signal relation with a suitable equation.
 
 The |wire| signal relation is both left and right identity of the |serial|
 higher-order signal relation as stated by the following equation and illustrated in
-Figure \ref{figSerialWire}.
+Figure~\ref{figSerialWire}.
 
 \begin{code}
 wire `serial` sr = sr `serial` wire = sr
@@ -428,7 +428,7 @@ noWire = [rel| ((p_i,p_v),(n_i,n_v)) ->
 
 The |noWire| signal relation is both left and right identity of the |parallel|
 higher-order signal relation as stated by the following equation and
-illustrated in Figure \ref{figParallelNoWire}.
+illustrated in Figure~\ref{figParallelNoWire}.
 
 \begin{code}
 noWire `parallel` sr = sr `parallel` noWire = sr
@@ -452,13 +452,13 @@ sr1 `parallel` (sr2 `parallel` sr3) = (sr1 `parallel` sr2) `parallel` sr3
 \section{Structurally Dynamic Modelling}
 
 For a concrete example of structurally dynamic modelling in Hydra, let us
-model the breaking-pendulum system described in Section
-\ref{secHybridModelling}. The system system has two modes of operation. The
-differences between the two modes are sufficiently large that, for example,
-Modelica does not support noncausal modelling of this system, as discussed in
-Section \ref{secHybridModelling}.
+model the breaking-pendulum system described in
+Section~\ref{secHybridModelling}. The system system has two modes of
+operation. The differences between the two modes are sufficiently large that,
+for example, Modelica does not support noncausal modelling of this system, as
+discussed in Section~\ref{secHybridModelling}.
 
-The code that is given in Figure \ref{figHydraBreakingPendulum} shows how to
+The code that is given in Figure~\ref{figHydraBreakingPendulum} shows how to
 model the two modes of the pendulum in Hydra. The type |Body| denotes the
 state of the pendulum body; that is, its position and velocity, where position
 and velocity both are 2-dimensional vectors represented by pairs of reals.
@@ -527,7 +527,7 @@ point in time, but a switching condition can be derived from an arbitrary
 time-varying entity. Note how the succeeding signal relation (i.e.,
 |freeFall|) is initialised so as to ensure the continuity of the position and
 velocity as discussed above. The simulation results obtained by the |simulate|
-function can be seen in Figure \ref{figPendulumPlot}
+function can be seen in Figure~\ref{figPendulumPlot}
 
 \begin{figure}
 \begin{center}
@@ -544,8 +544,8 @@ dynamically add and remove signal variables and noncausal equations. The
 |switch| combinator can also be used when the number of equations and
 variables remain unchanged during the simulation. The book by
 \citet{Cellier2006} gives one such example: the half-wave rectifier circuit
-with an ideal diode and an in-line inductor that is depicted in Figure
-\ref{figRectifier}.
+with an ideal diode and an in-line inductor that is depicted in
+Figure~\ref{figRectifier}.
 
 \begin{figure}
 \begin{center}
@@ -600,8 +600,8 @@ halfWaveRectifier =
 \end{code}
 
 Partial simulation results of the |halfWaveRectifier| signal relation obtained
-by using the |simulate| function are presented in Figure
-\ref{figRectifiedCapVol} and in Figure \ref{figRectifierIndCur}
+by using the |simulate| function are presented in
+Figure~\ref{figRectifiedCapVol} and in Figure~\ref{figRectifierIndCur}
 
 \begin{figure}
 \begin{center}
@@ -624,12 +624,12 @@ half-wave rectifier circuit with in-line inductor.}
 \end{figure}
 
 
-Simulation of the full-wave rectifier circuit given in Figure
-\ref{figRectifierFullWave} is more challenging than simulating the half-wave
-rectifier \citep{Nilsson2010a}. A key difficulty is that the circuit breaks
-down into two isolated halves when all diodes are open. The lack of a ground
-reference for the left part means the system becomes under-determined and it
-cannot be simulated.
+Simulation of the full-wave rectifier circuit given in
+Figure~\ref{figRectifierFullWave} is more challenging than simulating the
+half-wave rectifier \citep{Nilsson2010a}. A key difficulty is that the circuit
+breaks down into two isolated halves when all diodes are open. The lack of a
+ground reference for the left part means the system becomes under-determined
+and it cannot be simulated.
 
 \begin{figure}
 \begin{center}
@@ -671,14 +671,14 @@ closed, we have:
 \end{eqnarray}
 
 But, additionally, $(dp_{v_{1}} - dn_{v_{1}})$ and $(dp_{v_{3}} - dn_{v_{3}})$
-are related by Equation \ref{eq:ud1=ud3} that is provided by model of the
+are related by Equation~\ref{eq:ud1=ud3} that is provided by model of the
 overall circuit.
 
 In this case, a simple symbolic simplification pass involving substitution of
 algebraic variables and constant folding suffices to eliminate the redundant
-equations in the modes where the diodes are pairwise closed. Using Equation
-\ref{eq:ud1=0} and Equation \ref{eq:ud3=0}, Equation \ref{eq:ud1=ud3} can be
-simplified to the trivially satisfied equation $0 = 0$ that then can be
+equations in the modes where the diodes are pairwise closed. Using
+Equation~\ref{eq:ud1=0} and Equation~\ref{eq:ud3=0}, Equation~\ref{eq:ud1=ud3}
+can be simplified to the trivially satisfied equation $0 = 0$ that then can be
 eliminated. After this the model can be simulated without further issues. Note
 that dynamic generation of equations followed by symbolic processing, as
 provided by Hydra, is crucial to this approach to simulating ideal diodes.
@@ -790,7 +790,7 @@ the simulation. Using the second argument the modeller can set the simulation
 starting and ending times, desired time step, symbolic processor, numerical
 solver, or how to visualise the trajectories of the constrained signals. The
 definition of the |Experiment| data type and the default experiment
-description are given in Chapter \ref{chapImplementation}.
+description are given in Chapter~\ref{chapImplementation}.
 
 For example, the simple circuit model can be simulated using the default
 experiment description as follows:
@@ -806,14 +806,14 @@ signals are printed to the standard output in the
 gnuplot\footnote{\url{http://www.gnuplot.info/}} compatible format. The
 default numerical solver is SUNDIALS \citep{Sundials2005}, but users are
 allowed to provide their own symbolic processors and numerical solvers. This
-and other implementation aspects are described in detail in Chapter
-\ref{chapImplementation}.
+and other implementation aspects are described in detail in
+Chapter~\ref{chapImplementation}.
 
 The earlier sections of this chapter introduced the Hydra language using the
 simple electrical-circuit example. This example allows readers familiar with
 object-oriented, noncausal languages like Modelica to compare the Hydra model
-given in this Chapter to the Modelica model given in Chapter
-\ref{chapBackground}. The rest of the Chapter focuses on the features of Hydra
-that are absent from mainstream, noncausal modelling languages. Specifically,
-we discuss the higher-order and structurally dynamic modelling capabilities of
-the Hydra language.
+given in this Chapter to the Modelica model given in
+Chapter~\ref{chapBackground}. The rest of the Chapter focuses on the features
+of Hydra that are absent from mainstream, noncausal modelling languages.
+Specifically, we discuss the higher-order and structurally dynamic modelling
+capabilities of the Hydra language.

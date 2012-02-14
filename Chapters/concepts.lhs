@@ -5,10 +5,10 @@
 This chapter introduces the three central concepts of the FHM framework that
 the Hydra language is based on, namely: signal, signal function and signal
 relation. These concepts facilitate development of and reasoning about Hydra
-models, and are used both in informal (see Chapter \ref{chapHydra}) and formal
-(see Chapter \ref{chapDefinition}) presentations of the language. This chapter
+models, and are used both in informal (see Chapter~\ref{chapHydra}) and formal
+(see Chapter~\ref{chapDefinition}) presentations of the language. This chapter
 only covers conceptual definitions; how the concepts of Hydra are implemented
-is covered in Chapter \ref{chapImplementation}. This chapter also discusses
+is covered in Chapter~\ref{chapImplementation}. This chapter also discusses
 how Hydra's design facilitates the embedding of the aforementioned concepts
 into a functional programming language.
 
@@ -32,7 +32,7 @@ language with noncausal modelling capabilities.
 
 Signal functions are first-class entities in most variants of FRP and this
 property also carries over to signal relations in FHM. As we will see later in
-this chapter and also in Chapter \ref{chapHydra}, the first-class nature of
+this chapter and also in Chapter~\ref{chapHydra}, the first-class nature of
 signal relations is crucial for higher-order and structurally-dynamic
 modelling in Hydra. To my knowledge, Hydra is the first language that features
 the FHM's notion of signal relation as a first-class entity.
@@ -160,8 +160,8 @@ the signal |s| are equal from |t1| to |t2|.
 
 Let us consider a slightly more elaborate example of a signal relation. The
 following conceptual definition gives a signal relation imposing constraints
-characteristic to electrical components with two connectors (see Figure
-\ref{figTwoPin}).
+characteristic to electrical components with two connectors (see
+Figure~\ref{figTwoPin}).
 
 \begin{code}
 twoPin ::  SR (((Real,Real),(Real,Real)),Real)
@@ -205,7 +205,7 @@ resistor r t1 t2 s ~=
 
 Note how the signal relation |resistor| is defined in terms of the signal
 relation application of |twoPin| and one additional equation. As we will see
-in the next section and in Chapter \ref{chapHydra}, Hydra provides a
+in the next section and in Chapter~\ref{chapHydra}, Hydra provides a
 convenient syntax for defining and applying signal relations.
 
 \section{Design of Hydra}
@@ -230,8 +230,8 @@ allowed; that is, a time-varying entity is confined to the signal level. The
 signal-level notions that exist at the functional level are signal relation
 and signal function. These notions are time-invariant. Concrete examples of
 signal-level and functional-level definitions as well as definitions where
-these two levels interact with each other are given in Chapter
-\ref{chapHydra}.
+these two levels interact with each other are given in
+Chapter~\ref{chapHydra}.
 
 Hydra is implemented as a Haskell-embedded DSL using
 quasiquoting\footnote{Quasiquoting is not unique to Haskell. It has been
@@ -242,9 +242,9 @@ functional level for free through shallow embedding. In contrast, the signal
 level is realised through deep embedding; that is, signal relations expressed
 in terms of Hydra-specific syntax are, through the quasiquoting machinery,
 turned into an internal representation, an abstract syntax tree (AST), that
-then is used for compilation into simulation code (see Chapter
-\ref{chapImplementation} for the details). Note that, although Hydra is
-embedded in Haskell, the two-level language design outlined earlier in this
+then is used for compilation into simulation code (see
+Chapter~\ref{chapImplementation} for the details). Note that, although Hydra
+is embedded in Haskell, the two-level language design outlined earlier in this
 section and the notion of first-class signal relations are not predicated on
 the embedding approach.
 
@@ -262,7 +262,7 @@ the equations that follow. An equation can be an equality constraint or a
 relation application is how the constraints embodied by a signal relation are
 imposed on particular signals. In addition to the signal variables bound in
 the pattern, equations may also introduce local signal variables. Concrete
-examples of signal relations are given in Chapter \ref{chapHydra}.
+examples of signal relations are given in Chapter~\ref{chapHydra}.
 
 The equations are required to be well typed. For example, consider the signal
 relation application |sr <> s|. Here, if |sr| has the type |SR alpha| then |s|
@@ -326,7 +326,7 @@ when it is zero and its left derivative is nonzero), the composite behaviour
 is defined by the signal relation that is computed by applying the third
 argument (a function of type |a -> SR a|) to the instantaneous value of the
 constrained signal at that point in time. A formally defined meaning of the
-|switch| combinator is given in Chapter \ref{chapDefinition}.
+|switch| combinator is given in Chapter~\ref{chapDefinition}.
 
 The |switch| combinator allows for definition of a signal relation whose
 equational description changes over time. In addition, the |switch|
@@ -337,10 +337,10 @@ instantaneous value of the constrained signal.
 In the signal relation notation described earlier, the list of equations that
 follows the pattern is not necessarily a static one as the equations may
 contain a signal relation application of a structurally dynamic signal
-relation. As we will see in Chapter \ref{chapHydra}, the |switch| combinator
+relation. As we will see in Chapter~\ref{chapHydra}, the |switch| combinator
 enables modelling and simulation unbounded structurally dynamic systems.
 
-As we will see in Chapter \ref{chapImplementation}, the two-level nature of
+As we will see in Chapter~\ref{chapImplementation}, the two-level nature of
 Hydra also manifests itself in its implementation as a mixed-level embedding.
 The functional level is realised by the shallow part of the embedding, while
 the signal level is realised by the deep part of the embedding.

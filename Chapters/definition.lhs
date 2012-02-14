@@ -37,13 +37,13 @@ combinator and not the quasiquotes.
 \newcommand{\literal}[1]{\mbox{{\texttt {#1}}}}
 \newcommand{\symb}[1]{\mbox{{\texttt {#1}}}}
 
-The syntactic structure of Hydra is given in Figure \ref{figSyntax}, which
+The syntactic structure of Hydra is given in Figure~\ref{figSyntax}, which
 uses BNF notation. Non-terminals are enclosed between $\langle$ and $\rangle$.
 The symbols {\arrow} (production), {\delimit} (union) and {\emptyP} (empty
 rule) belong to BNF notation. All other symbols are terminals\footnote{Note
-that in Chapter \ref{chapConcepts}, Chapter \ref{chapHydra} and Chapter
-\ref{chapImplementation} the terminal symbols {\terminal{{$-$}{$>$}}} and
-{\terminal{{$<$}{$>$}}} are typeset as |->| and |<>| respectively.}.
+that in Chapter~\ref{chapConcepts}, Chapter~\ref{chapHydra} and
+Chapter~\ref{chapImplementation} the terminal symbols {\terminal{{$-$}{$>$}}}
+and {\terminal{{$<$}{$>$}}} are typeset as |->| and |<>| respectively.}.
 
 \begin{figure}
 
@@ -132,7 +132,7 @@ HsExpr literals represent antiquoted Haskell expressions and are recognised by
 the regular expression \(\mbox{`\$'} ({\nonterminal{anychar}} - \mbox{`\$'})*
 \mbox{`\$'}\)
 
-The symbols used in Hydra are given in Figure \ref{figSymbols}. In Hydra,
+The symbols used in Hydra are given in Figure~\ref{figSymbols}. In Hydra,
 single-line comments begin with {\symb{{$-$}{$-$}}} and multiple-line comments
 are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
 
@@ -151,7 +151,7 @@ are enclosed with {\symb{\{{$-$}}} and {\symb{{$-$}\}}}.
 
 \section{Abstract Syntax}
 
-Hydra's abstract syntax is given in Figure \ref{figAbstractSyntax}. The ADT
+Hydra's abstract syntax is given in Figure~\ref{figAbstractSyntax}. The ADT
 definition is derived from the concrete syntax defined in previous section.
 The representation is untyped; that is, it allows for terms that are
 syntactically correct but not necessarily type correct.
@@ -234,7 +234,7 @@ antiquoted Haskell expression to the given signal expression.
 The data type |Expr| is used to represent signal expressions. Common
 mathematical operations, identifiers, antiquoted Haskell expressions, integer
 and real constants, unit signals, and pairs of signals can be used to
-construct signal expressions (see Figure \ref{figAbstractSyntax} for details).
+construct signal expressions (see Figure~\ref{figAbstractSyntax} for details).
 
 \section{Desugaring}
 
@@ -243,7 +243,7 @@ into typed abstract syntax, we describe a translation that desugars all
 equations that assert equality of signal pairs into equations asserting
 equality of scalar signals. This translation allows for a simpler typed
 representation as we show in the following section. The translation is given
-in Figure \ref{figDesugaring} as a Haskell function working with the untyped
+in Figure~\ref{figDesugaring} as a Haskell function working with the untyped
 abstract syntax of Hydra.
 
 \begin{figure}
@@ -270,7 +270,7 @@ desugarPairEquation (eq)                                    =   [eq]
 \section{Typed Abstract Syntax}
 
 The typed abstract syntax that embodies the type system of Hydra is given in
-Figure \ref{figTypedRepresentation} as a GADT definition. The types |Signal
+Figure~\ref{figTypedRepresentation} as a GADT definition. The types |Signal
 alpha| and |PrimSF alpha beta| are genuine GADTs, while the data types |SR
 alpha|, |SF alpha beta| and |Equation| are ADTs that use the GADT notation for
 consistency. Note that the typed abstract syntax uses a technique called
@@ -332,15 +332,15 @@ Hydra.}
 \section{From Untyped to Typed Abstract Syntax}
 
 The translation rules that transform a model in the untyped representation
-into the corresponding model in the typed representation are given in Figure
-\ref{figSigRelSigFunTrans} and Figure \ref{figSigTrans}. These rules translate
-an untyped term into Haskell code that builds the corresponding typed term.
-The pattern matching semantics in the left-hand side of the translation rules
-are that of Haskell.
+into the corresponding model in the typed representation are given in
+Figure~\ref{figSigRelSigFunTrans} and Figure~\ref{figSigTrans}. These rules
+translate an untyped term into Haskell code that builds the corresponding
+typed term. The pattern matching semantics in the left-hand side of the
+translation rules are that of Haskell.
 
 You may have noticed that there are no translation rules that generate the
 |Switch| constructor. The functional-level combinator |switch|, which was
-introduced in Chapter \ref{chapHydra}, generates the |Switch| constructor of
+introduced in Chapter~\ref{chapHydra}, generates the |Switch| constructor of
 the typed abstract syntax. Specifically, the |switch| combinator is defined as
 follows.
 
@@ -390,8 +390,8 @@ translateEqs ((EquLocal (Ident s)) : eqs)           =  [Local  (\ (translateHs s
 and signal relations into typed signal functions and signal relations. The
 translation rule |translateHs| takes a string in the concrete syntax of
 Haskell and generates the corresponding Haskell expression. The translation
-rules |translateExp| and |translateIdent| are given in Figure
-\ref{figSigTrans}.}
+rules |translateExp| and |translateIdent| are given in
+Figure~\ref{figSigTrans}.}
 
 \end{figure}
 
@@ -457,7 +457,7 @@ find out what this meaning is through numerical simulation, we can only ever
 hope to find an approximation to this meaning up to some desired precision.
 
 For example, consider the system of equations modelling the simple electrical
-circuit given in Chapter \ref{chapBackground}. In the process of deriving the
+circuit given in Chapter~\ref{chapBackground}. In the process of deriving the
 simulation code we introduced a number of approximations. The continuous real
 numbers were approximated using the double-precision machine floating-point
 numbers and the system of equations was approximated using the Haskell code
@@ -499,10 +499,10 @@ again under certain approximation; for example, by using the absolute error
 tolerance of the numerical simulation. These two applications of the ideal
 semantics are subjects of future work.
 
-The ideal semantics of Hydra are given in Figure \ref{figSigRelSigFunSem} and
-in Figure \ref{figSigSem}. Note that the translation targets are the same as
+The ideal semantics of Hydra are given in Figure~\ref{figSigRelSigFunSem} and
+in Figure~\ref{figSigSem}. Note that the translation targets are the same as
 the conceptual definitions of signals, signal functions, and signal relations
-given in Chapter \ref{chapHydra}. Specifically, signal relations are mapped to
+given in Chapter~\ref{chapHydra}. Specifically, signal relations are mapped to
 functions from starting time, stopping time and signal to second-order logic
 propositions, signal functions are mapped to functions from signal to signal,
 and signals are mapped to function from time to value. Time is represented by
@@ -512,9 +512,9 @@ A signal relation translation may involve existentially quantified function
 symbols (i.e., signals). This is what makes the target predicates second-order
 logic predicates (i.e., not expressible in first-order logic). In other words,
 solving of a signal relation can be understood as proving of \emph{existence}
-of signals that satisfy the given constraints (see Figure
-\ref{figSigRelSigFunSem} for details). Thus the simulator can be seen as a
-constraint solver that tries to solve the translations of Hydra models.
+of signals that satisfy the given constraints (see
+Figure~\ref{figSigRelSigFunSem} for details). Thus the simulator can be seen
+as a constraint solver that tries to solve the translations of Hydra models.
 
 It is interesting to note that for a model of an unbounded structurally
 dynamic system the semantics gives rise to the predicate in \emph{infinitary}
@@ -523,7 +523,7 @@ of such model would be infinite because of the switches that generate
 unbounded number of modes, and consequently the ideal semantics would map such
 infinite representation to the predicate with infinite chain of disjunctions.
 This is not to say that it is not possible to solve such constraints. Quite
-the opposite, in Section \ref{secUnboundedStructDyn} we modelled and simulated
+the opposite, in Section~\ref{secUnboundedStructDyn} we modelled and simulated
 one such system. If in a finite period of time the model switches finite
 number of times it is possible to simulate it, assuming of course that
 individual modes of operations can be solved in the given period.
