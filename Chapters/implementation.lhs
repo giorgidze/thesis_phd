@@ -62,6 +62,7 @@ quasiquotes to be constructed without curly braces and semicolons. The layout
 rules are the same as for Haskell.
 
 \begin{figure}
+\footnotesize{
 \begin{verbatim}
 entrypoints SigRel, SigFun;
 
@@ -108,6 +109,7 @@ token HsExpr ('$' (char - '$')* '$') ;
 
 layout "->" ;
 \end{verbatim}
+}
 
 \caption{\label{figGrammar} Labelled BNF grammar of Hydra. This labelled BNF
 grammar is used to generate Hydra's parser, untyped abstract syntax and layout
