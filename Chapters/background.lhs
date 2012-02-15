@@ -658,7 +658,7 @@ Modelica. The works by \citet{Nytsch-Geusen2005a} and \citet{Zimmer2008a} are
 the most recent examples.
 
 \citet{Nytsch-Geusen2005a} designed and implemented a language extension to
-Modellica called MOSILAB. The language is extended with constructs allowing
+Modelica called MOSILAB. The language is extended with constructs allowing
 for description of statecharts specifying the discrete switches between
 Modelica objects. The statechart approach enables modelling of structurally
 dynamic systems. However, MOSILAB does not support unbounded structural
