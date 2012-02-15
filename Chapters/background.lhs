@@ -517,6 +517,8 @@ connected potential variables are equal at any point in time. For the
 |SimpleCircuit| model the Modelica compiler generates the six following
 equations:
 
+\pagebreak
+
 \begin{code}
 AC.n.v  =  C.n.v;
 C.n.v   =  L.n.v;

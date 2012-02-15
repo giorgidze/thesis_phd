@@ -207,6 +207,8 @@ relation that models the parallel connection of the two electrical components.
 The graphical representation of the signal relation is given in
 Figure~\ref{figParallel}.
 
+\pagebreak
+
 \begin{code}
 parallel :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR (Pin,Pin)
 parallel sr1 sr2 = [rel| ((p_i, p_v), (n_i, n_v)) ->
@@ -238,6 +240,8 @@ signal relations modelling two-pin electrical components and returns the
 signal relation that models the grounded circuit involving the two electrical
 components. The graphical representation of the signal relation is given
 in Figure~\ref{figGroundedCircuit}.
+
+\pagebreak
 
 \begin{code}
 groundedCircuit :: SR (Pin,Pin) -> SR (Pin,Pin) -> SR ()
@@ -271,6 +275,8 @@ components.}
 
 Now we can assemble the models of the electrical components into the simple
 electrical circuit as follows.
+
+\pagebreak
 
 \begin{code}
 simpleCircuit :: SR ()
@@ -431,6 +437,8 @@ noWire `parallel` sr = sr `parallel` noWire = sr
 right identity of the |parallel| higher-order signal relation.}
 
 \end{figure}
+
+\pagebreak
 
 The |parallel| signal relation is associative:
 
