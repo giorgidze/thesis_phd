@@ -727,7 +727,6 @@ to the numerical solver.
 
 The function pointers for $i$, $f$ and $e$ have the following Haskell type:
 
-\begin{samepage}
 \begin{code}
 data Void
 type Residual = FunPtr  (       Real
@@ -736,7 +735,6 @@ type Residual = FunPtr  (       Real
                             ->  Ptr Real
                             ->  IO Void)
 \end{code}
-\end{samepage}
 
 The first function argument is time. The second argument is a vector of
 instantaneous values of real valued signal. The third argument is a vector of
@@ -896,14 +894,12 @@ vector of active signal variables the simulator calls the
 standard output. Hydra users can provide their own signal trajectory
 visualiser of the following type:
 
-\begin{samepage}
 \begin{code}
 type TrajectoryVisualiser   =   Real       -- Time
                             ->  Int        -- Variable number
                             ->  Ptr Real   -- Variables
                             ->  IO ()
 \end{code}
-\end{samepage}
 
 For example, the user can animate the trajectories using a suitable graphical
 programming library.
