@@ -77,14 +77,14 @@ process of flattening, the arguments of a signal relation application are
 substituted into the body of the applied signal relation, and the entire
 application is then replaced by the instantiated signal relation body,
 renaming local variables as necessary to avoid name clashes. In our case, the
-result of flattening the signal relation |resistor 10| is:
+result of flattening the signal relation |resistor 42| is:
 
 \begin{code}
 [rel| ((p_i,p_v),(n_i,n_v)) ->
   local u
   p_v - n_v   =  u
   p_i + n_i   =  0
-  10 * p_i    =  u
+  42 * p_i    =  u
 |]
 \end{code}
 
@@ -288,13 +288,13 @@ simpleCircuit =
 \end{code}
 \end{samepage}
 
-Here state variables are initially set to zero and all other parameters are
-set to one. Note that the above code is a direct textual representation of how
-the components are connected in the circuit. Unlike the Modelica model that
-specifies the noncausal connections in terms of connections of time-varying
-variables, Hydra allows for definition of higher-order combinators that are
-capable of specifying noncausal connections by connecting noncausal models
-directly.
+Here the state variables are initially set to zero and all other parameters
+are set to one. Note that the above code is a direct textual representation of
+how the components are connected in the circuit. Unlike the Modelica model
+that specifies the noncausal connections in terms of connections of
+time-varying variables, Hydra allows for definition of higher-order
+combinators that are capable of specifying noncausal connections by connecting
+noncausal models directly.
 
 It is trivial in Hydra to reuse the circuit components and model the modified
 circuit that is depicted in Figure~\ref{figCircuit2}:
@@ -391,7 +391,7 @@ identity of the |serial| higher-order signal relation.}
 
 \end{figure}
 
-The |serial| signal relation is also associative:
+The |serial| signal relation is associative:
 
 \begin{code}
 sr1 `serial` (sr2 `serial` sr3) = (sr1 `serial` sr2) `serial` sr3
@@ -401,7 +401,7 @@ Here by the equality of the signal relations we mean that the signal relations
 introduce equivalent constraints (i.e., one constraint implies the other and
 vice versa), and not necessarily the same equations. Because the |wire| signal
 relation is both left and right identity of the |serial| binary function and
-the |serial| signal relation is also associative, in the definition of the
+the |serial| signal relation is associative, in the definition of the
 |serialise| signal relation we could also use the left fold instead of the
 right fold.
 
@@ -448,6 +448,10 @@ The |parallel| signal relation is associative:
 sr1 `parallel` (sr2 `parallel` sr3) = (sr1 `parallel` sr2) `parallel` sr3
 \end{code}
 
+Because the |noWire| signal relation is both left and right identity of the
+|parallel| binary function and the |parallel| signal relation is associative,
+in the definition of the |parallelise| signal relation we could also use the
+left fold instead of the right fold.
 
 \section{Structurally Dynamic Modelling}
 
@@ -540,9 +544,9 @@ the body on the breaking pendulum change over time.}
 \end{figure}
 
 In the breaking pendulum example the |switch| combinator was used to
-dynamically add and remove signal variables and noncausal equations. The
-|switch| combinator can also be used when the number of equations and
-variables remain unchanged during the simulation. The book by
+dynamically add and remove signal variables and noncausal equations from the
+model. The |switch| combinator can also be used when the number of equations
+and variables remain unchanged during the simulation. The book by
 \citet{Cellier2006} gives one such example: the half-wave rectifier circuit
 with an ideal diode and an in-line inductor that is depicted in
 Figure~\ref{figRectifier}.
@@ -656,14 +660,14 @@ across the diodes, are needed. That is:
 (dp_{v_{2}} - dn_{v_{2}}) & = & (dp_{v_{4}} - dn_{v_{4}}) \label{eq:ud2=ud4}
 \end{eqnarray}
 
-However, adding Eq.~(\ref{eq:ud1=ud3}) and Eq.~(\ref{eq:ud2=ud4}) results in
-additional complications for simulation as the system now seemingly becomes
-over-determined when some diodes are closed. It turns out, though, that the
-system is only trivially over-determined; that is, the extra equations are
-equivalent to other equations in the system. This is easy to see: when a diode
-is closed, there is an equation provided by the model of the diode itself that
-states that the voltage across it is 0. If, for example, $D1$ and $D3$ are
-closed, we have:
+However, adding Equation~(\ref{eq:ud1=ud3}) and Equation~(\ref{eq:ud2=ud4})
+results in additional complications for simulation as the system now seemingly
+becomes over-determined when some diodes are closed. It turns out, though,
+that the system is only trivially over-determined; that is, the extra
+equations are equivalent to other equations in the system. This is easy to
+see: when a diode is closed, there is an equation provided by the model of the
+diode itself that states that the voltage across it is 0. If, for example,
+$D1$ and $D3$ are closed, we have:
 
 \begin{eqnarray}
 (dp_{v_{1}} - dn_{v_{1}}) & = & 0 \label{eq:ud1=0} \\
@@ -686,11 +690,12 @@ Studies to precisely characterise in which circumstances can over determined
 systems of equations simplified by eliminating the redundant equations still
 lie ahead.
 
-As we have already mentioned, the implementation of Hydra provides an
-extensible and configurable symbolic processor. The symbolic processor that
-simplifies trivially over-determined equations is provided with the
-implementation of Hydra and can be activated through the experiment
-description passed to the |simulate| function.
+The implementation of Hydra provides an extensible and configurable symbolic
+processor. The symbolic processor that simplifies trivially over-determined
+equations is provided with the implementation of Hydra and can be activated
+through the experiment description passed to the |simulate| function (see
+Section~\ref{chapHydraSecSimulation} and
+Section~\ref{chapImplementationSecSimulation} for details).
 
 It should be pointed out that changes caused by an instance of a switch only
 concern equations originating from that switch instance. All other equations
@@ -749,7 +754,7 @@ bouncingBall b = switch   (freeFall b)
 This example involves stringing of the |bouncingBall| signal relation. But
 even here, in principle, it is possible to generate the code prior to
 simulation, because the active equations always remain the same; that is, only
-initial the condition is changing.
+the initial condition is changing.
 
 The following code models a variation of the bouncing ball example where the
 ball breaks at every collision with the floor.
@@ -774,6 +779,7 @@ of an unbounded structurally dynamic system where the number of modes cannot
 be determined prior to simulation.
 
 \section{Simulation}
+\label{chapHydraSecSimulation}
 
 We conclude this chapter with a brief description of how to simulate Hydra
 models, including the ones that are described in this chapter. The
@@ -808,12 +814,3 @@ default numerical solver is SUNDIALS \citep{Sundials2005}, but users are
 allowed to provide their own symbolic processors and numerical solvers. This
 and other implementation aspects are described in detail in
 Chapter~\ref{chapImplementation}.
-
-The earlier sections of this chapter introduced the Hydra language using the
-simple electrical-circuit example. This example allows readers familiar with
-object-oriented, noncausal languages like Modelica to compare the Hydra model
-given in this Chapter to the Modelica model given in
-Chapter~\ref{chapBackground}. The rest of the Chapter focuses on the features
-of Hydra that are absent from mainstream, noncausal modelling languages.
-Specifically, we discuss the higher-order and structurally dynamic modelling
-capabilities of the Hydra language.

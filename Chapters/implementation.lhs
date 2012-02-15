@@ -351,7 +351,7 @@ temporal composition, and deep embedding for low-level aspects of the embedded
 language, such as generation of simulation code for efficiency.
 
 \section{Simulation}
-\label{sec:simulation}
+\label{chapImplementationSecSimulation}
 
 In this section we describe how iteratively staged Hydra models are simulated.
 The process is conceptually divided into three stages as illustrated in
