@@ -48,10 +48,7 @@ structural changes. Introduction of the notion of impulses in Hydra would be a
 good starting point.
 
 \item Combine FHM and FRP frameworks in a single coherent language. The first
-step into this direction would be to introduce support for statefull signal
+step into this direction would be to introduce support for stateful signal
 functions in Hydra.
-
-\item Compare different approaches for specifying noncausal connections
-(including the approach based on combinators used in this thesis).
 
 \end{itemize}
