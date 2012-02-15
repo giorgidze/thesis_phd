@@ -68,7 +68,7 @@ suitable floating point type, such as |Double|. Indeed, |Double| is used in
 Hydra. However, |Real| is used in most places of the presentation as we
 conceptually are dealing with real numbers.
 
-The aforementioned treatment of signals as continues can be seen an
+The aforementioned treatment of signals as continues can be seen as an
 abstraction over the underling discretely sampled implementation. It is
 cumbersome and error prone to directly work with the discrete representation
 for entities that conceptually exhibit continuous dynamics. For example,
@@ -82,9 +82,10 @@ other simulation parameters. However, in most cases, assuming that the
 continuous model is correct, those adjustments can be made without changes to
 the model.
 
-Although modelling with discrete streams is out of the scope of this thesis,
-it would be interesting to explore a discrete variant of Hydra featuring
-noncausal equations on discrete streams.
+Although modelling with discrete streams for conceptually discrete systems
+(such as digital controllers) is out of the scope of this thesis, it would be
+interesting to explore a discrete variant of Hydra featuring noncausal
+equations on discrete streams.
 
 \section{Signal Function}
 
@@ -172,10 +173,10 @@ twoPin t1 t2 s ~=
                                              &&          p_i  +  n_i  =  0
 \end{code}
 
-Here, |p_i|, |p_v|, |p_i|, |p_v| and |u| are the components of the tuple
+Here, |p_i|, |p_v|, |n_i|, |n_v| and |u| are the components of the tuple
 carried by the signal |s|. The tuple components |p_i| and |p_v| represent the
 current into the positive pin and the voltage at the positive pin,
-respectively. The tuple components |p_i| and |p_v| represent the current into
+respectively. The tuple components |n_i| and |n_v| represent the current into
 the negative pin and the voltage at the negative pin, respectively. The tuple
 component |u| represents the voltage drop across the electrical component.
 
@@ -199,7 +200,7 @@ resistor r t1 t2 s ~=
   {-" \forall \, t \in \mathbb{R} . \, "-}  t1  <= t && t <= t2 => {-" \exists \, u \in Signal \, \mathbb{R} . \, "-}   {-" "-}   twoPin t1 t2 (pairS s u)
                                                                                                                         &&        resistorProp (s t) (u t)
   where
-  pairS s u t                           ~=    (s t, u t)
+  pairS s u t'                          ~=    (s t', u t')
   resistorProp ((p_i,p_v),(n_i,n_v)) u  ~=    r * p_i = u
 \end{code}
 
@@ -233,20 +234,19 @@ signal-level and functional-level definitions as well as definitions where
 these two levels interact with each other are given in
 Chapter~\ref{chapHydra}.
 
-Hydra is implemented as a Haskell-embedded DSL using
-quasiquoting\footnote{Quasiquoting is not unique to Haskell. It has been
-available in other languages (most notably in the Lisp family of languages).},
-a Haskell extension implemented in Glasgow Haskell Compiler (GHC), for
-providing a convenient surface syntax. As a result, Haskell provides the
-functional level for free through shallow embedding. In contrast, the signal
-level is realised through deep embedding; that is, signal relations expressed
-in terms of Hydra-specific syntax are, through the quasiquoting machinery,
-turned into an internal representation, an abstract syntax tree (AST), that
-then is used for compilation into simulation code (see
-Chapter~\ref{chapImplementation} for the details). Note that, although Hydra
-is embedded in Haskell, the two-level language design outlined earlier in this
-section and the notion of first-class signal relations are not predicated on
-the embedding approach.
+Hydra is implemented as a Haskell-embedded DSL using quasiquoting, a Haskell
+extension implemented in GHC, for providing a convenient surface
+syntax\footnote{Quasiquoting is not unique to Haskell. It has been available
+in other languages (most notably in the Lisp family of languages).}. As a
+result, Haskell provides the functional level for free through shallow
+embedding. In contrast, the signal level is realised through deep embedding;
+that is, signal relations expressed in terms of Hydra-specific syntax are,
+through the quasiquoting machinery, turned into an internal representation, an
+abstract syntax tree (AST), that then is used for compilation into simulation
+code (see Chapter~\ref{chapImplementation} for details). Note that, although
+Hydra is embedded in Haskell, the two-level language design outlined earlier
+in this section and the notion of first-class signal relations are not
+predicated on the embedding approach.
 
 The Haskell-embedded implementation of Hydra adopts the following syntax for
 defining signal relations:
@@ -269,7 +269,7 @@ relation application |sr <> s|. Here, if |sr| has the type |SR alpha| then |s|
 must have the type |Signal alpha|.
 
 Hydra provides a conventional syntax for specifying equality constraints. For
-example, the equation |x * y = 0| is an equality constrain. Here, |0| is a
+example, the equation |x * y = 0| is an equality constraint. Here, |0| is a
 constant signal, |*| is a primitive signal function, and |x| and |y| are
 signal variables.
 
@@ -337,8 +337,8 @@ instantaneous value of the constrained signal.
 In the signal relation notation described earlier, the list of equations that
 follows the pattern is not necessarily a static one as the equations may
 contain a signal relation application of a structurally dynamic signal
-relation. As we will see in Chapter~\ref{chapHydra}, the |switch| combinator
-enables modelling and simulation unbounded structurally dynamic systems.
+relation. We show how to use the |switch| combinator for modelling and
+simulation unbounded structurally dynamic systems in Chapter~\ref{chapHydra}.
 
 As we will see in Chapter~\ref{chapImplementation}, the two-level nature of
 Hydra also manifests itself in its implementation as a mixed-level embedding.
