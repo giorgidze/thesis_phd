@@ -532,7 +532,7 @@ requirements have been proposed by \citet{Wan2000} and \citet{Sculthorpe2011b}
 for characterising when an unbounded structurally dynamic causal model can be
 simulated.
 
-To our knowledge, Hydra is the first language that features a formal
+To my knowledge, Hydra is the first language that features a formal
 specification capturing both continuous and discrete aspects of a noncausal
 language that supports unbounded structural dynamism. Although detailed
 studies of the ideal semantics and its properties still lie ahead, we think
