@@ -361,7 +361,7 @@ numerical simulation. In the second stage, this representation is JIT compiled
 into efficient machine code. In the third stage, the compiled code is passed
 to a numerical solver that simulates the system until the end of simulation or
 an event occurrence. In the case of an event occurrence, the process is
-repeated from the first stage by staring the new iteration.
+repeated from the first stage by starting the new iteration.
 
 \begin{figure}
 \begin{center}
@@ -394,7 +394,7 @@ definitions for \emph{ActiveModel}, \emph{NumericalSover} and
 The implementation of Hydra provides the default experiment configuration that
 is given in Figure~\ref{figDefaultExperiment}. Note that the last three fields
 of the experiment description record are expected to be modified by expert
-users willing to provide their own runtime symbolic processor, numerical
+users willing to provide their own runtime symbolic processors, numerical
 solvers, or trajectory visualisers. The behaviour of the
 |defaultSymbolicProcessor|, |defaultNumericalSolver| and
 |defaultTrajectoryVisualiser| are described in detail later in this chapter.
@@ -459,16 +459,17 @@ the event occurrences. Recall the type signature of the |switch| combinator
 given in Section~\ref{secEmbedding}. A signal function that detects events
 returns a real valued zero-crossing signal.
 
-At the start of the simulation, the simulator places the list of zero-crossing
-signals defined in the first mode of operation in the |events| field of the
-active model. Once the numerical solver, during the simulation of the first
-mode, detects that one or more signals have crossed zero the simulator deletes
-those signals from the |events| field that have not crossed zero. The updated
-|events| field is then used by the event handler to identify which events have
-occurred and to perform corresponding structural reconfigurations computing
-the next mode of operation. Before the simulation continues, the |events|
-field is populated with the zero-crossing signals that are active in the new
-mode of operation.
+At the start of the simulation, the |simulate| function places an empty list
+in the |events| field. After the first iteration of symbolic processing, the
+simulator places the list of zero-crossing signals defined in the first mode
+of operation in the |events| field of the active model. Once the numerical
+solver, during the simulation of the first mode, detects that one or more
+signals have crossed zero the simulator deletes those signals from the
+|events| field that have not crossed zero. The updated |events| field is then
+used by the event handler to identify which events have occurred and to
+perform corresponding structural reconfigurations computing the next mode of
+operation. Before the simulation continues, the |events| field is populated
+with the zero-crossing signals that are active in the new mode of operation.
 
 The |time| field is for current time. Initially the simulator places the
 starting time given in the experiment description in this field. The |time|
@@ -1074,8 +1075,8 @@ generation aspects in the context of noncausal modelling and simulation of
 structurally dynamic systems, and the suitability of the proposed execution
 model for (soft) real-time simulation. Currently, for large structurally
 dynamic systems, the implementation is only suitable for offline simulation.
-This is also true for other implementations of structurally dynamic noncausal
-modelling languages, such as MOSILAB and Sol.
+This is also true for other implementations of unbounded structurally dynamic
+languages, such as Sol.
 
 The implementation of Hydra offers new functionality in that it allows
 modelling and simulation of structurally dynamic systems that simply cannot be
