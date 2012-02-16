@@ -514,7 +514,7 @@ AC.p.i  +  R.p.i  +  L.p.i          = 0;
 
 Connected potential variables generate equality constraints stating that all
 connected potential variables are equal at any point in time. For the
-|SimpleCircuit| model the Modelica compiler generates the six following
+|SimpleCircuit| model the Modelica compiler generates the following six
 equations:
 
 \pagebreak
