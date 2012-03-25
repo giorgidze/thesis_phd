@@ -20,8 +20,8 @@ programming language is due to \citet{Nilsson2003a}. The authors propose the
 FHM framework for designing and implementing noncausal modelling languages.
 The FHM framework borrows the notion of signal denoting time-varying values
 from the FRP languages and generalises the notion of signal function (featured
-in a number of variants of FRP, most notably Yampa \citep{Hudak2003}) to
-signal relation.
+in a number of variants of FRP, most notably Yampa
+\citep{Nilsson2002a,Hudak2003}) to signal relation.
 
 Intuitively, a signal function can be understood as a block with inputs and
 outputs featured in causal modelling languages, while a signal relation can be
@@ -75,12 +75,12 @@ for entities that conceptually exhibit continuous dynamics. For example,
 explicit handling of fixed and variable sampling rates, composition of models
 using different sampling rates, and explicit accounting for numerical errors
 are problematic. This is not to say that being aware of the underling
-discretely sampled implementation is not useful. In some cases (e.g., when the
-numerical simulation fails or when the simulation performance is unacceptably
-slow) it is necessary to adjust the discrete simulation time step or change
-other simulation parameters. However, in most cases, assuming that the
-continuous model is correct, those adjustments can be made without changes to
-the model.
+discretely sampled implementation is not important. In some cases (e.g., when
+the numerical simulation fails or when the simulation performance is
+unacceptably slow) it is necessary to adjust the discrete simulation time step
+or change other simulation parameters. However, in most cases, assuming that
+the continuous model is correct, those adjustments can be made without changes
+to the model.
 
 Although modelling with discrete streams for conceptually discrete systems
 (such as digital controllers) is out of the scope of this thesis, it would be

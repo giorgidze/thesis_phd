@@ -80,7 +80,7 @@ Higher-order modelling allows parametrisation of models on other models
 \citep{Nilsson2003a}. For instance, a car model can be parametrised on the
 list of tyres it is using, and an electrical transmission line model can be
 parametrised on the list of electrical components on the line. Mainstream,
-noncausal languages provide little support for this style of modelling. Tool
+noncausal languages provide limited support for this style of modelling. Tool
 specific and external scripting languages are often used to generate noncausal
 models for particular instances of higher-order models \citep{Broman2008a}.
 This is practical for some applications, but the aforementioned advantages of
@@ -111,7 +111,7 @@ structures were not considered.
 
 \subsection{Structurally Dynamic Modelling}
 
-Major system behaviour changes are often modelled by changing the equations
+Major changes in system behaviour are often modelled by changing the equations
 that describe the system \citep{Mosterman1997}. A model where the equational
 description changes over time is called \emph{structurally dynamic}. Each
 structural configuration of the model is known as a \emph{mode} of operation.
@@ -146,9 +146,8 @@ performance, but such language design and implementation approaches restrict
 the number of modes to be modest as, in general, separate code must be
 generated for each mode. This rules out supporting structurally dynamic
 systems where the number of modes is a priori unbounded. We refer to this kind
-of system as \emph{unbounded structurally dynamic} system. Systems with a
-priori bounded number of modes are referred as \emph{bounded structurally
-dynamic}.
+of system as \emph{unbounded structurally dynamic}. Systems with a priori
+bounded number of modes are referred as \emph{bounded structurally dynamic}.
 
 There are a number of efforts to design and implement modelling and simulation
 languages with improved support for structural dynamism. Examples include:
