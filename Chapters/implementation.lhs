@@ -441,8 +441,8 @@ defaultExperiment = Experiment {
 In this section we describe the first stage performed by the simulator:
 symbolic processing. A symbolic processor is a function from an active model
 to an active model. The active model data type that is used in the
-implementation of Hydra is given in Figure~\ref{figActiveModel}. The symbol
-table record has five fields.
+implementation of Hydra is given in Figure~\ref{figActiveModel}. The active
+model record has five fields.
 
 The |model| field stores the currently active top-level signal relation. At
 the start of the simulation, the |simulate| function binds this field to the
