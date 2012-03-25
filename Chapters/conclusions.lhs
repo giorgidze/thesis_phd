@@ -23,10 +23,16 @@ given below.
 \begin{itemize}
 
 \item Introduce the notion of first-class models in mainstream noncausal
-modelling languages such as Modelica. Modelica already supports first-class
-functions. Taking this development one step further by supporting first-class
-models would allow for improved higher-order and structurally dynamic
-modelling capabilities as demonstrated in this thesis.
+modelling languages such as Modelica. The latest standard of Modelica
+introduces first-class functions \citep[2010]{Modelica}. Taking this
+development one step further by supporting first-class models would allow for
+improved higher-order and structurally dynamic modelling capabilities as
+demonstrated in this thesis. Sol \citep{Zimmer2008a}, which is a Modelica-like
+language, already supports language constructs for dynamic addition and
+removal of equational constraints. Coupling the Modelica language extensions
+suggested by \citet{Zimmer2007} with the just-in-time compilation techniques
+described in this thesis would be a good starting point for extending Modelica
+and its implementations.
 
 \item Make use of the ideal semantics for verification of simulation results.
 In particular, based on the ideal semantics, it should be possible to develop

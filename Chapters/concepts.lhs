@@ -343,4 +343,8 @@ simulation unbounded structurally dynamic systems in Chapter~\ref{chapHydra}.
 As we will see in Chapter~\ref{chapImplementation}, the two-level nature of
 Hydra also manifests itself in its implementation as a mixed-level embedding.
 The functional level is realised by the shallow part of the embedding, while
-the signal level is realised by the deep part of the embedding.
+the signal level is realised by the deep part of the embedding. This
+combination of the two embedding techniques allowed us to maximise the reuse
+of the host language features and thus simplify the language implementation.
+Hydra's two-level design can also be realised as a deep embedding or as a
+standalone implementation.
