@@ -128,7 +128,11 @@ with an FRP variant would benefit Hydra, while Hydra's support for unbounded
 structural dynamism would benefit Acumen. Taking into account the fact that
 both languages have their roots in functional programming and both languages
 make use of staged computation, it would be interesting to combine the
-strengths of Hydra and Acumen into a single language.
+strengths of Hydra and Acumen into a single language. Such a combination is
+feasible. Currently, the work is underway to add support for modelling and
+simulation of unbounded structurally dynamic systems to Acumen\footnote{The
+development is being documented on the \url{www.acumen-language.org}
+website.}.
 
 \section{Semantics}
 
