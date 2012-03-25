@@ -345,6 +345,6 @@ Hydra also manifests itself in its implementation as a mixed-level embedding.
 The functional level is realised by the shallow part of the embedding, while
 the signal level is realised by the deep part of the embedding. This
 combination of the two embedding techniques allowed us to maximise the reuse
-of the host language features and thus simplify the language implementation.
-Hydra's two-level design can also be realised as a deep embedding or as a
-standalone implementation.
+of the host language features and, as a result, to simplify the language
+implementation. Hydra's two-level design can also be realised as a deep
+embedding or as a standalone implementation.
