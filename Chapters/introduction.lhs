@@ -225,6 +225,7 @@ cross-fertilisation and the exchange of ideas between these research
 communities.
 
 \section{Embedding}
+\label{secEmbedding}
 
 Hydra is a Haskell-embedded \emph{domain-specific language} (DSL). Here, the
 domain is noncausal modelling and simulation using implicitly formulated DAEs.

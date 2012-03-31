@@ -340,11 +340,40 @@ contain a signal relation application of a structurally dynamic signal
 relation. We show how to use the |switch| combinator for modelling and
 simulation unbounded structurally dynamic systems in Chapter~\ref{chapHydra}.
 
-As we will see in Chapter~\ref{chapImplementation}, the two-level nature of
-Hydra also manifests itself in its implementation as a mixed-level embedding.
-The functional level is realised by the shallow part of the embedding, while
-the signal level is realised by the deep part of the embedding. This
-combination of the two embedding techniques allowed us to maximise the reuse
-of the host language features and, as a result, to simplify the language
-implementation. Hydra's two-level design can also be realised as a deep
-embedding or as a standalone implementation.
+The two-level nature of Hydra also manifests itself in its implementation as a
+mixed-level embedding. The functional level and the signal-level notions that
+exist at the functional level are realised by the shallow part of the
+embedding. The notions that exist only at the signal level are realised by the
+deep part of the embedding. Specifically, we use shallow embedding techniques
+to represent signal relations (including higher-order signal relations),
+signal functions, signal relation applications, signal function applications,
+hierarchical compositions of signal relations and temporal compositions of
+signal relations; and we use deep embedding techniques to represent signal
+expressions and equality constraints on signal expressions. Note that in
+Section~\ref{secEmbedding} we used more general terminology referring to the
+parts of Hydra realised through shallow and deep embeddings as high-level,
+symbolic and low-level, numerical, respectively.
+
+The aforementioned combination of the two embedding techniques allowed us to
+maximise the reuse of the host language features and, as a result, to simplify
+the language implementation. As performance is a primary concern in the domain
+of physical modelling and simulation, the numerical simulation code for each
+mode of the model has to be compiled. As we will see in
+Chapter~\ref{chapImplementation}, a mode of operation is represented as
+equality constraints on signal expressions and zero-crossing signal
+expressions. This necessitates the use of deep embedding techniques for
+representing signal expressions and equality constraints on signal expressions
+and for compiling them into efficient numerical simulation code. For the rest
+of the language we use shallow embedding for the maximum leverage of the host
+language.
+
+Hydra's two-level design can also be realised as a deep embedding or as a
+standalone implementation. The particular combination of the embedding
+techniques used in this work reflects on the primary focus of this thesis on
+runtime code generation for efficient simulation of structurally dynamic
+systems. A different combination of the shallow and deep embedding techniques
+would be needed if one would focus on orthogonal issues requiring more
+advanced symbolic processing (beyond producing a flat list of equations for
+each mode of operations) of hierarchical systems of equations, such as those
+performed in the implementations of Sol \citep{Zimmer2008a} and Acumen
+\citep{Taha2010a} (see Chapter~\ref{chapRelatedWork} for details).
