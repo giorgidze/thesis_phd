@@ -361,20 +361,20 @@ of physical modelling and simulation, the numerical simulation code for each
 mode of the model has to be compiled. As we will see in
 Chapter~\ref{chapImplementation}, a mode of operation is represented as
 equality constraints on signal expressions and zero-crossing signal
-expressions. This necessitates the use of deep embedding techniques for
-representing signal expressions and equality constraints on signal expressions
-and for compiling them into efficient numerical simulation code. For the rest
-of the language we use shallow embedding for the maximum leverage of the host
-language.
+expressions. The aforementioned need for compilation into efficient numerical
+simulation code necessitates the use of deep embedding techniques for
+representing signal expressions and equality constraints on signal
+expressions. For the rest of the language we use shallow embedding for the
+maximum leverage of the host language.
 
 Hydra's two-level design can also be realised as a deep embedding or as a
 standalone implementation. The particular combination of the embedding
-techniques used in this work reflects on the fact that advanced symbolic
-processing of hierarchical systems of equations (beyond producing a flat list
-of equations for each mode of operations, for which the shallow embedding
-suffices) is not the main focus of this work. A different combination of
-shallow and deep embedding techniques would be needed if one would focus on
-more symbolic processing. Sol \citep{Zimmer2008a} and Acumen \citep{Taha2010a}
-are examples of noncausal languages that feature implementations with more
-advanced symbolic processing solving problems that are orthogonal to ours (see
-Chapter~\ref{chapRelatedWork} for details).
+techniques used in this work reflects the fact that advanced symbolic
+processing of hierarchical systems of equations, beyond producing a flat list
+of equations for each mode of operation (for which shallow embedding
+techniques suffice), is not the main focus of this work. Sol
+\citep{Zimmer2008a} and Acumen \citep{Taha2010a} are examples of noncausal
+languages that feature implementations with more involved symbolic processing
+of hierarchical systems of equations in order to solve problems that are
+orthogonal to those treated in this thesis (see Chapter~\ref{chapRelatedWork}
+for details).
