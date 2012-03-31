@@ -369,11 +369,12 @@ language.
 
 Hydra's two-level design can also be realised as a deep embedding or as a
 standalone implementation. The particular combination of the embedding
-techniques used in this work reflects on the primary focus of this thesis on
-runtime code generation for efficient simulation of structurally dynamic
-systems. A different combination of the shallow and deep embedding techniques
-would be needed if one would focus on orthogonal issues requiring more
-advanced symbolic processing (beyond producing a flat list of equations for
-each mode of operations) of hierarchical systems of equations, such as those
-performed in the implementations of Sol \citep{Zimmer2008a} and Acumen
-\citep{Taha2010a} (see Chapter~\ref{chapRelatedWork} for details).
+techniques used in this work reflects on the fact that advanced symbolic
+processing of hierarchical systems of equations (beyond producing a flat list
+of equations for each mode of operations, for which the shallow embedding
+suffices) is not the main focus of this work. A different combination of
+shallow and deep embedding techniques would be needed if one would focus on
+more symbolic processing. Sol \citep{Zimmer2008a} and Acumen \citep{Taha2010a}
+are examples of noncausal languages that feature implementations with more
+advanced symbolic processing solving problems that are orthogonal to ours (see
+Chapter~\ref{chapRelatedWork} for details).
