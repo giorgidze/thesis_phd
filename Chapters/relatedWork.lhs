@@ -125,14 +125,18 @@ structural dynamism, but unbounded structural dynamism is not supported.
 
 The symbolic processing methods developed for Acumen and its tight integration
 with an FRP variant would benefit Hydra, while Hydra's support for unbounded
-structural dynamism would benefit Acumen. Taking into account the fact that
-both languages have their roots in functional programming and both languages
-make use of staged computation, it would be interesting to combine the
-strengths of Hydra and Acumen into a single language. Such a combination is
-feasible. Currently, the work is underway to add support for modelling and
-simulation of unbounded structurally dynamic systems to Acumen\footnote{The
+structural dynamism would benefit Acumen. Such a combination is feasible.
+Currently, the development of a new version of Acumen is underway\footnote{The
 development is being documented on the \url{www.acumen-language.org}
-website.}.
+website.}. This new version aims to support modelling and simulation of
+unbounded structurally dynamic systems. New language constructs for dynamic
+addition and removal of equational constraints at discrete points in time have
+already been introduced (see the work-in-progress report by \citet{Taha2011a}
+for details). In this new version of Acumen, which is still under development,
+simulation is carried out through interpretation. Because Acumen models are
+converted into flat list of differential equations, it is feasible to
+integrate the JIT compilation approach described in this thesis in the
+implementation of Acumen.
 
 \section{Semantics}
 
