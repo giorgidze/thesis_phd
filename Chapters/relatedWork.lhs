@@ -132,11 +132,10 @@ website.}. This new version aims to support modelling and simulation of
 unbounded structurally dynamic systems. New language constructs for dynamic
 addition and removal of equational constraints at discrete points in time have
 already been introduced (see the work-in-progress report by \citet{Taha2011a}
-for details). In this new version of Acumen, which is still under development,
-simulation is carried out through interpretation. Because Acumen models are
-converted into flat list of differential equations, it is feasible to
-integrate the JIT compilation approach described in this thesis in the
-implementation of Acumen.
+for details). In this new version of Acumen simulation is carried out through
+interpretation. Because Acumen models are converted into flat list of
+differential equations, it is feasible to integrate the JIT compilation
+approach described in this thesis in the implementation of Acumen.
 
 \section{Semantics}
 
