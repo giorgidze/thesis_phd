@@ -23,16 +23,22 @@ given below.
 \begin{itemize}
 
 \item Introduce the notion of first-class models in mainstream noncausal
-modelling languages such as Modelica. The latest standard of Modelica
-introduces first-class functions \citep[2010]{Modelica}. Taking this
-development one step further by supporting first-class models would allow for
-improved higher-order and structurally dynamic modelling capabilities as
-demonstrated in this thesis. Sol \citep{Zimmer2008a}, which is a Modelica-like
-language, already supports language constructs for dynamic addition and
-removal of equational constraints. Coupling the Modelica language extensions
-suggested by \citet{Zimmer2007} with the just-in-time compilation techniques
-described in this thesis would be a good starting point for extending Modelica
-and its implementations.
+modelling languages such as Modelica. This would allow for improved
+higher-order and structurally dynamic modelling capabilities, as demonstrated
+in this thesis. Sol \citep{Zimmer2008a}, which is a Modelica-like language,
+already supports language constructs for dynamic addition and removal of
+equational constraints. Coupling the Modelica language extensions suggested by
+\citet{Zimmer2007} with the just-in-time compilation techniques described in
+this thesis would be a good starting point for extending Modelica and its
+implementations. Although the notion of first-class models and the
+aforementioned just-in-time complication techniques would benefit Modelica,
+full realisation of Hydra's two-level design integrating functional
+programming and noncausal modelling in the Modelica setting will be
+challenging. This is because Modelica's syntax and semantics are deeply rooted
+in the object-oriented paradigm. Integration of Hydra's design into Modelica
+would be an instance of a more general problem of integration of functional
+and object-oriented programming paradigms. This is something that we have not
+yet considered.
 
 \item Make use of the ideal semantics for verification of simulation results.
 In particular, based on the ideal semantics, it should be possible to develop
