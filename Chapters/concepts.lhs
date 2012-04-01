@@ -364,7 +364,7 @@ equality constraints on signal expressions and zero-crossing signal
 expressions. The aforementioned need for compilation into efficient numerical
 simulation code necessitates the use of deep embedding techniques for
 representing signal expressions and equality constraints on signal
-expressions. For the rest of the language we use shallow embedding for the
+expressions. For the rest of the language we use the shallow embedding for
 maximum leverage of the host language.
 
 Hydra's two-level design can also be realised as a deep embedding or as a
