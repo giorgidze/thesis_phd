@@ -31,14 +31,14 @@ equational constraints. Coupling the Modelica language extensions suggested by
 \citet{Zimmer2007} with the just-in-time compilation techniques described in
 this thesis would be a good starting point for extending Modelica and its
 implementations. Although the notion of first-class models and the
-aforementioned just-in-time complication techniques would benefit Modelica,
-full realisation of Hydra's two-level design integrating functional
-programming and noncausal modelling in the Modelica setting will be
-challenging. This is because Modelica's syntax and semantics are deeply rooted
-in the object-oriented paradigm. Integration of Hydra's design into Modelica
-would be an instance of a more general problem of integration of functional
-and object-oriented programming paradigms. This is something that we have not
-yet considered.
+aforementioned just-in-time compilation techniques would benefit Modelica,
+full realisation of Hydra's two-level design, which extends a purely
+functional programming language with noncausal modelling capabilities, in the
+Modelica setting is difficult. This is because Modelica's syntax and semantics
+are deeply rooted in the object-oriented paradigm. Integration of Hydra's
+design into Modelica is an instance of a more general problem of integration
+of purely functional and object-oriented programming paradigms. This is
+something that we have not yet considered.
 
 \item Make use of the ideal semantics for verification of simulation results.
 In particular, based on the ideal semantics, it should be possible to develop
