@@ -24,21 +24,38 @@ given below.
 
 \item Introduce the notion of first-class models in mainstream noncausal
 modelling languages such as Modelica. This would allow for improved
-higher-order and structurally dynamic modelling capabilities, as demonstrated
-in this thesis. Sol \citep{Zimmer2008a}, which is a Modelica-like language,
-already supports language constructs for dynamic addition and removal of
-equational constraints. Coupling the Modelica language extensions suggested by
-\citet{Zimmer2007} with the just-in-time compilation techniques described in
-this thesis would be a good starting point for extending Modelica and its
-implementations. Although the notion of first-class models and the
-aforementioned just-in-time compilation techniques would benefit Modelica,
-full realisation of Hydra's two-level design, which extends a purely
-functional programming language with noncausal modelling capabilities, in the
-Modelica setting is difficult. This is because Modelica's syntax and semantics
-are deeply rooted in the object-oriented paradigm. Integration of Hydra's
-design into Modelica is an instance of a more general problem of integration
-of purely functional and object-oriented programming paradigms. This is
-something that we have not yet considered.
+higher-order and structurally dynamic modelling capabilities, as
+demonstrated in this thesis. Sol \citep{Zimmer2008a}, which is a
+Modelica-like language, already supports language constructs for dynamic
+addition and removal of equational constraints. Coupling the Modelica
+language extensions suggested by Zimmer with the just-in-time
+compilation techniques described in this thesis would be a good starting
+point for extending Modelica and its implementations.
+
+In addition to enabling the introduction of the aforementioned new
+language constructs to Modelica, the just-in-time compilation techniques
+described in this thesis allow for some restrictions on existing
+language constructs to be lifted. Such restrictions include the
+requirements on conditional equations described in
+Section~\ref{secHybridModelling}. Lifting the restrictions on
+conditional equations would enable bounded structurally dynamic
+modelling. The new language constructs proposed by \citet{Zimmer2008a}
+would still be needed for unbounded structurally dynamic modelling.
+\citet{Zimmer2007} gives a list of restrictions on Modelica language
+constructs that can be lifted with a more dynamic treatment of
+equational constraints. Devising of a comprehensive list of such
+restrictions is a subject of future work.
+
+Although the notion of first-class models and the aforementioned
+just-in-time compilation techniques would benefit Modelica, full
+realisation of Hydra's two-level design, which extends a purely
+functional programming language with noncausal modelling capabilities,
+in the Modelica setting is difficult. This is because Modelica's syntax
+and semantics are deeply rooted in the object-oriented paradigm.
+Integration of Hydra's design into Modelica is an instance of a more
+general problem of integration of purely functional and object-oriented
+programming paradigms. This is something that we have not yet
+considered.
 
 \item Make use of the ideal semantics for verification of simulation results.
 In particular, based on the ideal semantics, it should be possible to develop
